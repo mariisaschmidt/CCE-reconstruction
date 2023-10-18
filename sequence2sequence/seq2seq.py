@@ -12,14 +12,13 @@ from torch.utils.data import TensorDataset, DataLoader, RandomSampler
 import time
 import math
 import matplotlib.pyplot as plt
-plt.switch_backend('agg')
 import matplotlib.ticker as ticker 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 SOS_token = 0
 EOS_token = 1
-MAX_LENGTH = 150
+MAX_LENGTH = 50
 
 class Lang:
     def __init__(self, name):
@@ -51,9 +50,9 @@ def normalizeString(s):
     s = re.sub(r"[^a-zA-Z!?]+", r" ", s)
     return s.strip()
     
-def readLangs(l1, l2, reverse=False):
+def readLangs(l1, l2, reverse):
     print("Reading lines ...")
-    lines = open('sequence2sequence/translation_pairs.txt', encoding='utf-8').read().strip().split('\n')
+    lines = open('sequence2sequence/reduced_pairs.txt', encoding='utf-8').read().strip().split('\n')
     #pairs = [[normalizeString(s) for s in l.split('\t')] for l in lines]
     pairs = [[s for s in l.split('\t')] for l in lines]
 
@@ -66,7 +65,7 @@ def readLangs(l1, l2, reverse=False):
         output_lang = Lang(l2)
     return input_lang, output_lang, pairs
     
-def prepareData(l1, l2, reverse=False):
+def prepareData(l1, l2, reverse):
     input_lang, output_lang, pairs = readLangs(l1, l2, reverse)
     print("Read %s sentence pairs" % len(pairs))
     print("Counting words ...")
@@ -139,6 +138,8 @@ class BahdanauAttention(nn.Module):
         weights = F.softmax(scores, dim=-1)
         context = torch.bmm(weights, keys)
 
+        return context, weights
+
 class AttentionDecoderRNN(nn.Module):
     def __init__(self, hidden_size, output_size, dropout_p=0.1):
         super(AttentionDecoderRNN, self).__init__()
@@ -162,8 +163,9 @@ class AttentionDecoderRNN(nn.Module):
 
             if target_tensor is not None:
                 decoder_input = target_tensor[:, i].unsqueeze(1)
-            else: _, topi = decoder_output.topk(1)
-            decoder_input = topi.squeeze(-1).detech()
+            else: 
+                _, topi = decoder_output.topk(1)
+                decoder_input = topi.squeeze(-1).detach()
         
         decoder_outputs = torch.cat(decoder_outputs, dim=1)
         decoder_outputs = F.log_softmax(decoder_outputs, dim=-1)
@@ -196,8 +198,8 @@ def tensorsFromPair(pair):
     target_tensor = tensorFromSentence(output_lang, pair[1])
     return (input_tensor, target_tensor)
 
-def getDataloader(batch_size):
-    input_lang, output_lang, pairs = prepareData('reduced', 'reconstructed', False)
+def getDataloader(batch_size, reverse):
+    input_lang, output_lang, pairs = prepareData('reduced', 'reconstructed', reverse)
     
     n = len(pairs)
     input_ids = np.zeros((n, MAX_LENGTH), dtype=np.int32)
@@ -249,6 +251,7 @@ def showPlot(points):
     loc = ticker.MultipleLocator(base=0.2)
     ax.yaxis.set_major_locator(loc)
     plt.plot(points)
+    plt.show()
 
 def train(train_dataloader, encoder, decoder, n_epochs, learning_rate=0.001, print_every=100, plot_every=100):
     start = time.time()
@@ -292,7 +295,7 @@ def evaluate(encoder, decoder, sentence, input_lang, output_lang):
             decoded_words.append(output_lang.index2word[idx.item()])
     return decoded_words, decoder_attention
 
-def evaluateRandomly(encoder, decoder, n=10):
+def evaluateRandomly(encoder, decoder, n=5):
     input_lang, output_lang, pairs = prepareData('reduced', 'reconstructed', False)
     for i in range(n):
         pair = random.choice(pairs)
@@ -302,6 +305,7 @@ def evaluateRandomly(encoder, decoder, n=10):
         output_sentence = ' '.join(output_words)
         print('<', output_sentence)
         print('')
+        # add code to compute differences between output_sentence and pair[1] (gold standard)
 
 def showAttention(input_sentence, output_words, attentions):
     fig = plt.figure()
@@ -324,22 +328,22 @@ def evaluateAndShowAttention(input_sentence):
     showAttention(input_sentence, output_words, attentions[0, :len(output_words), :])
 
 if __name__=="__main__":
-    hidden_size = 128
+    hidden_size = 32 # = Embedding Length
     batch_size = 32
 
-    input_lang, output_lang, train_dataloader = getDataloader(batch_size)
+    input_lang, output_lang, train_dataloader = getDataloader(batch_size, False)
 
     encoder = EncoderRNN(input_lang.n_words, hidden_size).to(device)
-    decoder = DecoderRNN(hidden_size, output_lang.n_words)
-    #decoder = AttentionDecoderRNN(hidden_size, output_lang.n_words).to(device)
+    #decoder = DecoderRNN(hidden_size, output_lang.n_words)
+    decoder = AttentionDecoderRNN(hidden_size, output_lang.n_words).to(device)
 
     print("TRAINING ...")
-    train(train_dataloader, encoder, decoder, 80, print_every=5, plot_every=5)
+    train(train_dataloader, encoder, decoder, 20, print_every=2, plot_every=2)
 
     print("EVALUATING ...")
     encoder.eval()
     decoder.eval()
     evaluateRandomly(encoder, decoder)
 
-    #print("EVALUATNG SENTENCE AND SHOWING ATTENTION ...")
-    #evaluateAndShowAttention('ihre unterarme ruhen auf den holzlehnen der kopf mit dem gefarbten schwarzen haar liegt auf ihrer linken schulter eine handtasche befindet sich auf ihrem scho und hinter ihrem stuhl auf dem roten teppich liegt ein altmodischer abgetragener anorak')
+    print("EVALUATNG SENTENCE AND SHOWING ATTENTION ...")
+    evaluateAndShowAttention('Er ist Pragmatiker , er will die Ärmel hochkrempeln .')
