@@ -2,10 +2,14 @@
 
 - [Clausal Coordinate Ellipsis](#clausal-coordinate-ellipsis)
   - [Marisa's local conda-environment](#marisas-local-conda-environment)
+  - [Marisa's VM](#marisas-vm)
   - [First Steps](#first-steps)
   
 ## Marisa's local conda-environment
 conda activate cce
+
+## Marisa's VM
+ssh marisa@141.26.157.105
 
 ## First Steps
 https://pytorch.org/tutorials/intermediate/seq2seq_translation_tutorial.html
