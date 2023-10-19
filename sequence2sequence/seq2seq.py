@@ -328,8 +328,8 @@ def evaluateAndShowAttention(input_sentence):
     showAttention(input_sentence, output_words, attentions[0, :len(output_words), :])
 
 if __name__=="__main__":
-    hidden_size = 32 # = Embedding Length
-    batch_size = 32
+    hidden_size = 128 # = Embedding Length
+    batch_size = 4
 
     input_lang, output_lang, train_dataloader = getDataloader(batch_size, False)
 
@@ -338,7 +338,7 @@ if __name__=="__main__":
     decoder = AttentionDecoderRNN(hidden_size, output_lang.n_words).to(device)
 
     print("TRAINING ...")
-    train(train_dataloader, encoder, decoder, 20, print_every=2, plot_every=2)
+    train(train_dataloader, encoder, decoder, 5, print_every=1, plot_every=1)
 
     print("EVALUATING ...")
     encoder.eval()
