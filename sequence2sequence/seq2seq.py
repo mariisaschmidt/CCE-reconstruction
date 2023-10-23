@@ -13,12 +13,16 @@ import time
 import math
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker 
+from datetime import datetime
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 SOS_token = 0
 EOS_token = 1
 MAX_LENGTH = 50
+
+filename = str(datetime.now().strftime(("%d%m%Y_%H%M%S"))) + "_log.txt"
+log = open(filename, "w")
 
 class Lang:
     def __init__(self, name):
@@ -272,6 +276,7 @@ def train(train_dataloader, encoder, decoder, n_epochs, learning_rate=0.001, pri
             print_loss_avg = print_loss_total / print_every
             print_loss_total = 0
             print('%s (%d %d%%) %.4f' % (timeSince(start, epoch/n_epochs), epoch, epoch/n_epochs*100, print_loss_avg))
+            log.write('%s (%d %d%%) %.4f' % (timeSince(start, epoch/n_epochs), epoch, epoch/n_epochs*100, print_loss_avg) + "\n")
         
         if epoch % plot_every == 0:
             plot_loss_avg = plot_loss_total / plot_every
@@ -301,10 +306,14 @@ def evaluateRandomly(encoder, decoder, n=5):
         pair = random.choice(pairs)
         print('>', pair[0])
         print('=', pair[1])
+        log.write('>' + pair[0] + "\n")
+        log.write('=' + pair[1] + "\n")
         output_words, _ = evaluate(encoder, decoder, pair[0], input_lang, output_lang)
         output_sentence = ' '.join(output_words)
         print('<', output_sentence)
         print('')
+        log.write('<' + output_sentence + "\n")
+        log.write('' + "\n")
         # add code to compute differences between output_sentence and pair[1] (gold standard)
 
 def showAttention(input_sentence, output_words, attentions):
@@ -337,13 +346,22 @@ if __name__=="__main__":
     #decoder = DecoderRNN(hidden_size, output_lang.n_words)
     decoder = AttentionDecoderRNN(hidden_size, output_lang.n_words).to(device)
 
+    log.write(str(datetime.now()) + "\n")
+
+    log.write("PARAMETERS: \n"+ "hidden size: " + str(hidden_size) + "\n" + "batch size: " + str(batch_size) + "\n")
+
     print("TRAINING ...")
+    log.write("TRAINING ... \n")
     train(train_dataloader, encoder, decoder, 5, print_every=1, plot_every=1)
 
-    print("EVALUATING ...")
+    print("EVALUATING ... ")
+    log.write("EVALUATING ... \n")
     encoder.eval()
     decoder.eval()
     evaluateRandomly(encoder, decoder)
 
     print("EVALUATNG SENTENCE AND SHOWING ATTENTION ...")
+    log.write("EVALUATNG SENTENCE AND SHOWING ATTENTION ... \n")
     evaluateAndShowAttention('Er ist Pragmatiker , er will die Ärmel hochkrempeln .')
+
+    log.close()
