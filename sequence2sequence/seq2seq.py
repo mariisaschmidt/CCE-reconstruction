@@ -56,7 +56,7 @@ def normalizeString(s):
     
 def readLangs(l1, l2, reverse):
     print("Reading lines ...")
-    lines = open('sequence2sequence/reduced_pairs.txt', encoding='utf-8').read().strip().split('\n')
+    lines = open('reduced_pairs.txt', encoding='utf-8').read().strip().split('\n')
     #pairs = [[normalizeString(s) for s in l.split('\t')] for l in lines]
     pairs = [[s for s in l.split('\t')] for l in lines]
 
