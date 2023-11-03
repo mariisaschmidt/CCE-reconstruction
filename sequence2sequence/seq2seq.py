@@ -19,7 +19,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 SOS_token = 0
 EOS_token = 1
-MAX_LENGTH = 50
+MAX_LENGTH = 250
 
 filename = str(datetime.now().strftime(("%d%m%Y_%H%M%S"))) + "_log.txt"
 log = open(filename, "w")
@@ -56,7 +56,7 @@ def normalizeString(s):
     
 def readLangs(l1, l2, reverse):
     print("Reading lines ...")
-    lines = open('reduced_pairs.txt', encoding='utf-8').read().strip().split('\n')
+    lines = open('sequence2sequence/tiger_and_bleu.txt', encoding='utf-8').read().strip().split('\n')
     #pairs = [[normalizeString(s) for s in l.split('\t')] for l in lines]
     pairs = [[s for s in l.split('\t')] for l in lines]
 
@@ -338,7 +338,7 @@ def evaluateAndShowAttention(input_sentence):
 
 if __name__=="__main__":
     hidden_size = 128 # = Embedding Length
-    batch_size = 4
+    batch_size = 64
 
     input_lang, output_lang, train_dataloader = getDataloader(batch_size, False)
 
@@ -352,7 +352,7 @@ if __name__=="__main__":
 
     print("TRAINING ...")
     log.write("TRAINING ... \n")
-    train(train_dataloader, encoder, decoder, 5, print_every=1, plot_every=1)
+    train(train_dataloader, encoder, decoder, 10, print_every=1, plot_every=1)
 
     print("EVALUATING ... ")
     log.write("EVALUATING ... \n")
