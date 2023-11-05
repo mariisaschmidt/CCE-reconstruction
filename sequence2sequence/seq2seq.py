@@ -14,6 +14,7 @@ import math
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker 
 from datetime import datetime
+import argparse
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -54,9 +55,9 @@ def normalizeString(s):
     s = re.sub(r"[^a-zA-Z!?]+", r" ", s)
     return s.strip()
     
-def readLangs(l1, l2, reverse):
+def readLangs(l1, l2, reverse, filepath):
     print("Reading lines ...")
-    lines = open('sequence2sequence/tiger_and_bleu.txt', encoding='utf-8').read().strip().split('\n')
+    lines = open(filepath, encoding='utf-8').read().strip().split('\n')
     #pairs = [[normalizeString(s) for s in l.split('\t')] for l in lines]
     pairs = [[s for s in l.split('\t')] for l in lines]
 
@@ -69,8 +70,8 @@ def readLangs(l1, l2, reverse):
         output_lang = Lang(l2)
     return input_lang, output_lang, pairs
     
-def prepareData(l1, l2, reverse):
-    input_lang, output_lang, pairs = readLangs(l1, l2, reverse)
+def prepareData(l1, l2, reverse, filepath):
+    input_lang, output_lang, pairs = readLangs(l1, l2, reverse, filepath)
     print("Read %s sentence pairs" % len(pairs))
     print("Counting words ...")
     for pair in pairs: 
@@ -202,8 +203,8 @@ def tensorsFromPair(pair):
     target_tensor = tensorFromSentence(output_lang, pair[1])
     return (input_tensor, target_tensor)
 
-def getDataloader(batch_size, reverse):
-    input_lang, output_lang, pairs = prepareData('reduced', 'reconstructed', reverse)
+def getDataloader(batch_size, reverse, filepath):
+    input_lang, output_lang, pairs = prepareData('reduced', 'reconstructed', reverse, filepath)
     
     n = len(pairs)
     input_ids = np.zeros((n, MAX_LENGTH), dtype=np.int32)
@@ -301,7 +302,7 @@ def evaluate(encoder, decoder, sentence, input_lang, output_lang):
     return decoded_words, decoder_attention
 
 def evaluateRandomly(encoder, decoder, n=5):
-    input_lang, output_lang, pairs = prepareData('reduced', 'reconstructed', False)
+    input_lang, output_lang, pairs = prepareData('reduced', 'reconstructed', False, filepath)
     for i in range(n):
         pair = random.choice(pairs)
         print('>', pair[0])
@@ -337,22 +338,52 @@ def evaluateAndShowAttention(input_sentence):
     showAttention(input_sentence, output_words, attentions[0, :len(output_words), :])
 
 if __name__=="__main__":
-    hidden_size = 128 # = Embedding Length
-    batch_size = 64
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--hidden_size", type=int)
+    parser.add_argument("--batch_size", type=int)
+    parser.add_argument("--path_to_pairs", type=str)
+    parser.add_argument("--use_attention", type=bool)
+    parser.add_argument("--epochs", type=int)
 
-    input_lang, output_lang, train_dataloader = getDataloader(batch_size, False)
+    args = parser.parse_args()
+
+    if args.hidden_size:
+        hidden_size = args.hidden_size
+    else:
+        hidden_size = 128 # = Embedding Length
+    
+    if args.batch_size:
+        batch_size = args.batch_size
+    else:
+        batch_size = 64
+    
+    if args.path_to_pairs:
+        filepath = args.path_to_pairs
+    else:
+        print("filepath required! add path with --path_to_pairs")
+
+    if args.epochs:
+        num_epochs = args.epochs
+    else:
+        num_epochs = 10
+
+
+    input_lang, output_lang, train_dataloader = getDataloader(batch_size, False, filepath)
 
     encoder = EncoderRNN(input_lang.n_words, hidden_size).to(device)
-    #decoder = DecoderRNN(hidden_size, output_lang.n_words)
-    decoder = AttentionDecoderRNN(hidden_size, output_lang.n_words).to(device)
+
+    if args.use_attention == True:
+        decoder = AttentionDecoderRNN(hidden_size, output_lang.n_words).to(device)
+    else:
+        decoder = DecoderRNN(hidden_size, output_lang.n_words)
 
     log.write(str(datetime.now()) + "\n")
 
-    log.write("PARAMETERS: \n"+ "hidden size: " + str(hidden_size) + "\n" + "batch size: " + str(batch_size) + "\n")
+    log.write("PARAMETERS: \n"+ "hidden size: " + str(hidden_size) + "\n" + "batch size: " + str(batch_size) + "\n" + "epochs: " + str(num_epochs) + "\n" + "filepath: " + filepath + "\n")
 
     print("TRAINING ...")
     log.write("TRAINING ... \n")
-    train(train_dataloader, encoder, decoder, 10, print_every=1, plot_every=1)
+    train(train_dataloader, encoder, decoder, num_epochs, print_every=1, plot_every=1)
 
     print("EVALUATING ... ")
     log.write("EVALUATING ... \n")
