@@ -13,12 +13,17 @@ import time
 import math
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker 
+from datetime import datetime
+import argparse
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 SOS_token = 0
 EOS_token = 1
-MAX_LENGTH = 50
+MAX_LENGTH = 250
+
+filename = str(datetime.now().strftime(("%d%m%Y_%H%M%S"))) + "_log.txt"
+log = open(filename, "w")
 
 class Lang:
     def __init__(self, name):
@@ -50,9 +55,9 @@ def normalizeString(s):
     s = re.sub(r"[^a-zA-Z!?]+", r" ", s)
     return s.strip()
     
-def readLangs(l1, l2, reverse):
+def readLangs(l1, l2, reverse, filepath):
     print("Reading lines ...")
-    lines = open('sequence2sequence/reduced_pairs.txt', encoding='utf-8').read().strip().split('\n')
+    lines = open(filepath, encoding='utf-8').read().strip().split('\n')
     #pairs = [[normalizeString(s) for s in l.split('\t')] for l in lines]
     pairs = [[s for s in l.split('\t')] for l in lines]
 
@@ -65,8 +70,8 @@ def readLangs(l1, l2, reverse):
         output_lang = Lang(l2)
     return input_lang, output_lang, pairs
     
-def prepareData(l1, l2, reverse):
-    input_lang, output_lang, pairs = readLangs(l1, l2, reverse)
+def prepareData(l1, l2, reverse, filepath):
+    input_lang, output_lang, pairs = readLangs(l1, l2, reverse, filepath)
     print("Read %s sentence pairs" % len(pairs))
     print("Counting words ...")
     for pair in pairs: 
@@ -198,8 +203,8 @@ def tensorsFromPair(pair):
     target_tensor = tensorFromSentence(output_lang, pair[1])
     return (input_tensor, target_tensor)
 
-def getDataloader(batch_size, reverse):
-    input_lang, output_lang, pairs = prepareData('reduced', 'reconstructed', reverse)
+def getDataloader(batch_size, reverse, filepath):
+    input_lang, output_lang, pairs = prepareData('reduced', 'reconstructed', reverse, filepath)
     
     n = len(pairs)
     input_ids = np.zeros((n, MAX_LENGTH), dtype=np.int32)
@@ -272,6 +277,7 @@ def train(train_dataloader, encoder, decoder, n_epochs, learning_rate=0.001, pri
             print_loss_avg = print_loss_total / print_every
             print_loss_total = 0
             print('%s (%d %d%%) %.4f' % (timeSince(start, epoch/n_epochs), epoch, epoch/n_epochs*100, print_loss_avg))
+            log.write('%s (%d %d%%) %.4f' % (timeSince(start, epoch/n_epochs), epoch, epoch/n_epochs*100, print_loss_avg) + "\n")
         
         if epoch % plot_every == 0:
             plot_loss_avg = plot_loss_total / plot_every
@@ -296,15 +302,19 @@ def evaluate(encoder, decoder, sentence, input_lang, output_lang):
     return decoded_words, decoder_attention
 
 def evaluateRandomly(encoder, decoder, n=5):
-    input_lang, output_lang, pairs = prepareData('reduced', 'reconstructed', False)
+    input_lang, output_lang, pairs = prepareData('reduced', 'reconstructed', False, filepath)
     for i in range(n):
         pair = random.choice(pairs)
         print('>', pair[0])
         print('=', pair[1])
+        log.write('>' + pair[0] + "\n")
+        log.write('=' + pair[1] + "\n")
         output_words, _ = evaluate(encoder, decoder, pair[0], input_lang, output_lang)
         output_sentence = ' '.join(output_words)
         print('<', output_sentence)
         print('')
+        log.write('<' + output_sentence + "\n")
+        log.write('' + "\n")
         # add code to compute differences between output_sentence and pair[1] (gold standard)
 
 def showAttention(input_sentence, output_words, attentions):
@@ -328,22 +338,61 @@ def evaluateAndShowAttention(input_sentence):
     showAttention(input_sentence, output_words, attentions[0, :len(output_words), :])
 
 if __name__=="__main__":
-    hidden_size = 32 # = Embedding Length
-    batch_size = 32
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--hidden_size", type=int)
+    parser.add_argument("--batch_size", type=int)
+    parser.add_argument("--path_to_pairs", type=str)
+    parser.add_argument("--use_attention", type=bool)
+    parser.add_argument("--epochs", type=int)
 
-    input_lang, output_lang, train_dataloader = getDataloader(batch_size, False)
+    args = parser.parse_args()
+
+    if args.hidden_size:
+        hidden_size = args.hidden_size
+    else:
+        hidden_size = 128 # = Embedding Length
+    
+    if args.batch_size:
+        batch_size = args.batch_size
+    else:
+        batch_size = 64
+    
+    if args.path_to_pairs:
+        filepath = args.path_to_pairs
+    else:
+        print("filepath required! add path with --path_to_pairs")
+
+    if args.epochs:
+        num_epochs = args.epochs
+    else:
+        num_epochs = 10
+
+
+    input_lang, output_lang, train_dataloader = getDataloader(batch_size, False, filepath)
 
     encoder = EncoderRNN(input_lang.n_words, hidden_size).to(device)
-    #decoder = DecoderRNN(hidden_size, output_lang.n_words)
-    decoder = AttentionDecoderRNN(hidden_size, output_lang.n_words).to(device)
+
+    if args.use_attention == True:
+        decoder = AttentionDecoderRNN(hidden_size, output_lang.n_words).to(device)
+    else:
+        decoder = DecoderRNN(hidden_size, output_lang.n_words)
+
+    log.write(str(datetime.now()) + "\n")
+
+    log.write("PARAMETERS: \n"+ "hidden size: " + str(hidden_size) + "\n" + "batch size: " + str(batch_size) + "\n" + "epochs: " + str(num_epochs) + "\n" + "filepath: " + filepath + "\n")
 
     print("TRAINING ...")
-    train(train_dataloader, encoder, decoder, 20, print_every=2, plot_every=2)
+    log.write("TRAINING ... \n")
+    train(train_dataloader, encoder, decoder, num_epochs, print_every=1, plot_every=1)
 
-    print("EVALUATING ...")
+    print("EVALUATING ... ")
+    log.write("EVALUATING ... \n")
     encoder.eval()
     decoder.eval()
     evaluateRandomly(encoder, decoder)
 
     print("EVALUATNG SENTENCE AND SHOWING ATTENTION ...")
+    log.write("EVALUATNG SENTENCE AND SHOWING ATTENTION ... \n")
     evaluateAndShowAttention('Er ist Pragmatiker , er will die Ärmel hochkrempeln .')
+
+    log.close()
