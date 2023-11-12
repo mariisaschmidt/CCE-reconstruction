@@ -18,6 +18,7 @@ pytorch                   2.0.0           cpu_generic_py310h9b0b4f9_3    conda-f
 tokenizers                0.14.1          py310h4a533d7_2    conda-forge
 tqdm                      4.43.0                     py_0    conda-forge
 transformers              4.34.1             pyhd8ed1ab_0    conda-forge
+argparse
 
 ## Marisa's VM
 ssh marisa@141.26.157.90 (via Uni VPN)
