@@ -145,7 +145,7 @@ transformer = transformer.to(DEVICE)
 
 loss_fn = torch.nn.CrossEntropyLoss(ignore_index=PAD_IDX)
 
-optimizer = torch.optim.Adam(transformer.parameters(), lr=0.0001, betas=(0.9, 0.98), eps=1e-9)
+optimizer = torch.optim.Adam(transformer.parameters(), lr=1e-9, betas=(0.9, 0.98), eps=1e-9)
 
 def sequential_transforms(*transforms):
     def func(txt_input):
@@ -192,6 +192,7 @@ def train_epoch(model, optimizer):
 
         optimizer.step()
         losses += loss.item()
+        print("loss: ", loss.item(), " losses: ", losses)
 
     return losses / len(list(train_dataloader))
 
@@ -217,15 +218,13 @@ def evaluate(model):
     
     return losses / len(list(val_dataloader))
 
-NUM_EPOCHS = 18
+NUM_EPOCHS = 5
 
 for epoch in range(1, NUM_EPOCHS+1):
     start_time = timer()
     train_loss = train_epoch(transformer, optimizer)
-    print(train_loss)
     end_time = timer()
     val_loss = evaluate(transformer)
-    print(val_loss)
     print((f"Epoch: {epoch}, Train loss: {train_loss:.3f}, Val loss: {val_loss:.3f}, "f"Epoch time = {(end_time - start_time):.3f}s"))
 
 def greedy_decode(model, src, src_mask, max_len, start_symbol):
