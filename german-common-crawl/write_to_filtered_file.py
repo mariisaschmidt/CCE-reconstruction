@@ -29,3 +29,4 @@ if __name__ == '__main__':
     with open(new_file_name, 'wt') as file_new:
         for part in b:
             file_new.write(part + '\n')
+    print("Saved to " + new_file_name)

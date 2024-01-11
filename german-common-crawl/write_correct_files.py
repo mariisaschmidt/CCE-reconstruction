@@ -10,7 +10,7 @@ def format_json(data):
     return ast.literal_eval(line)
 
 if __name__ == '__main__':
-    dirname = "/base_files"
+    dirname = "base_files"
     for filename in os.listdir(dirname):
         with open(dirname + "/" + filename, "r") as file:
             lines = list(file)
