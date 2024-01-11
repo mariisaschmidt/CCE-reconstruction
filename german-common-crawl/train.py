@@ -83,7 +83,7 @@ if __name__ == '__main__':
     save_total_limit=3,
     num_train_epochs=2,
     predict_with_generate=True,
-    fp16=False, # set true when cuda available
+    fp16=True, # set true when cuda available
     push_to_hub=False,
     )
 
