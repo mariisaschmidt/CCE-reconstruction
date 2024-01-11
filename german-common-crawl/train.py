@@ -44,7 +44,7 @@ def compute_metrics(eval_preds):
     return result
 
 if __name__ == '__main__':
-    data = "/Users/marisa/clausal-coordinate-ellipsis/german-common-crawl/de_de_pairs.jsonl"
+    data = "de_de_pairs.jsonl"
     de_de_dataset = load_dataset("json", data_files=data, split='train')
     print("Loaded Dataset!")
 
