@@ -1,5 +1,10 @@
 # USABLE GERMAN COMMON CRAWL DATASET
 
+## less commands way
+1. chmod +x preprocess.sh
+2. ./preprocess.sh
+3. python3 train.py
+
 ## How to create this dataset 
 0. chmod +x convert_file.sh
 1. download and unzip files: run `download_files.py`
