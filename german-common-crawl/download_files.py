@@ -11,4 +11,3 @@ for url in urls:
     subprocess.call(shlex.split(f"./convert_file.sh {url}"))
     print(numUrls, " left to download.")
     numUrls = numUrls - 1
-    break 
