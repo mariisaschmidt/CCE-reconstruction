@@ -1,7 +1,7 @@
 import subprocess
 import shlex
 
-file = open("/Users/marisa/clausal-coordinate-ellipsis/german-common-crawl/gc4_corpus_head_urls.txt")
+file = open("gc4_corpus_head_urls.txt")
 urls = file.readlines()
 file.close()
 
