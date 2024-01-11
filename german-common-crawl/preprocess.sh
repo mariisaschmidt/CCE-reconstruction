@@ -3,7 +3,7 @@ chmod +x convert_file.sh
 python3 download_files.py
 
 mkdir base_files
-mv *.tar.gz basefiles/
+mv *.jsonl basefiles/
 
 python3 write_correct_files.py
 
