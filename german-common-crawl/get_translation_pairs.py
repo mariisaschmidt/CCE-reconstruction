@@ -12,7 +12,7 @@ def tokenize(text):
 
 if __name__ == '__main__':
     data_files = []
-    dirname = "/correct_files"
+    dirname = "correct_files"
     for filename in os.listdir(dirname):
         data_files.append(dirname + "/" + filename)
 
