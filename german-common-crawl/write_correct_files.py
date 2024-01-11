@@ -15,7 +15,7 @@ if __name__ == '__main__':
         with open(dirname + "/" + filename, "r") as file:
             lines = list(file)
 
-        with open("/correct_files/" + filename, "w") as correct_file:
+        with open("correct_files/" + filename, "w") as correct_file:
             for line in lines:
                 correct_file.write(dump_json(format_json(line)) + '\n')
         print("Done with: " + filename)
