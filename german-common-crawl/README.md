@@ -11,4 +11,4 @@
 2. move files to directory base_files
 3. write files in correct json format: run `write_correct_files.py` 
 4. `get_translation_pairs.py` 
-5. `train model with train.py`
+5. `train.py --model_name <MODELNAME> --pretrained_model <HUGGINGFACE_CHECKPOINT>` only tested on 't5-small'
