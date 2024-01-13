@@ -50,7 +50,7 @@ if __name__ == '__main__':
     parser.add_argument("--pretrained_model", type=str)
     args = parser.parse_args()
 
-    if args.hidden_size:
+    if args.model_name:
         model_name = args.model_name
     else:
         model_name = "de_de_llm"
