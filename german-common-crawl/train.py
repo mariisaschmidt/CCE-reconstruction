@@ -5,11 +5,12 @@ from transformers import DataCollatorForSeq2Seq
 import evaluate
 import numpy as np 
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
+import argparse
 
 def preprocess_function(examples):
     inputs = prefix + examples['text']
     targets = examples["gold_sentence"]
-    model_inputs = tokenizer(inputs, text_target=targets, max_length=128, truncation=True, padding='longest', return_tensors='pt')
+    model_inputs = tokenizer(inputs, text_target=targets, max_length=256, truncation=True, padding='longest', return_tensors='pt')
     return model_inputs
 
 def correct_inputs_masks_labels(examples):
@@ -44,11 +45,24 @@ def compute_metrics(eval_preds):
     return result
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model_name", type=str)
+    parser.add_argument("--pretrained_model", type=str)
+    args = parser.parse_args()
+
+    if args.hidden_size:
+        model_name = args.model_name
+    else:
+        model_name = "de_de_llm"
+    if args.pretrained_model:
+        checkpoint = args.pretrained_model
+    else:
+        checkpoint = "t5-small"
+
     data = "de_de_pairs.jsonl"
     de_de_dataset = load_dataset("json", data_files=data, split='train')
     print("Loaded Dataset!")
 
-    checkpoint = "t5-small"
     tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 
     source_lang = "de"
@@ -74,7 +88,7 @@ if __name__ == '__main__':
     model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
 
     training_args = Seq2SeqTrainingArguments(
-    output_dir="de_de_110124",
+    output_dir=model_name,
     evaluation_strategy="epoch",
     learning_rate=2e-5,
     per_device_train_batch_size=16,
