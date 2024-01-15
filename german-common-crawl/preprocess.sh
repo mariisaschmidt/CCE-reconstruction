@@ -9,4 +9,8 @@ mkdir correct_files
 
 python3 write_correct_files.py
 
+rm -r base_files
+
 python3 get_translation_pairs.py
+
+rm -r correct_files
