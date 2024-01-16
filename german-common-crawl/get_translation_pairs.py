@@ -33,3 +33,5 @@ if __name__ == '__main__':
                 sent_id += 1
                 if sent_id % 100000 == 0:
                     print(sent_id)
+            if sent_id > 100000000:
+                break 

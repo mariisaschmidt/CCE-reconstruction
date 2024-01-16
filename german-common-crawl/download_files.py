@@ -5,7 +5,7 @@ file = open("gc4_corpus_head_urls.txt")
 urls = file.readlines()
 file.close()
 
-numUrls = 16
+numUrls = 30
 for url in urls:
     print(url)
     subprocess.call(shlex.split(f"./convert_file.sh {url}"))
