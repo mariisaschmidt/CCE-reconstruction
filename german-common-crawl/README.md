@@ -3,7 +3,7 @@
 ## less commands way
 1. chmod +x preprocess.sh
 2. ./preprocess.sh
-3. python3 train.py
+3. `train.py --model_name <MODELNAME> --pretrained_model <HUGGINGFACE_CHECKPOINT>` only tested on 't5-small'
 
 ## How to create this dataset 
 0. chmod +x convert_file.sh
@@ -11,4 +11,6 @@
 2. move files to directory base_files
 3. write files in correct json format: run `write_correct_files.py` 
 4. `get_translation_pairs.py` 
-5. `train.py --model_name <MODELNAME> --pretrained_model <HUGGINGFACE_CHECKPOINT>` only tested on 't5-small'
+5. get_ellipsis_data.py
+6. `train.py --model_name <MODELNAME> --pretrained_model <HUGGINGFACE_CHECKPOINT>` only tested on 't5-small'
+7. finetune_for_ellipsis.py

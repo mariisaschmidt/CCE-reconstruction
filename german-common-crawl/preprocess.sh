@@ -14,3 +14,9 @@ rm -r base_files
 python3 get_translation_pairs.py
 
 rm -r correct_files
+
+mkdir tmp_json
+
+python3 get_ellipsis_data.py
+
+rm -r tmp_json
