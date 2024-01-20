@@ -10,7 +10,7 @@ import argparse
 def preprocess_function(examples):
     inputs = prefix + examples['text']
     targets = examples["gold_sentence"]
-    model_inputs = tokenizer(inputs, text_target=targets, max_length=256, truncation=True, padding='longest', return_tensors='pt')
+    model_inputs = tokenizer(inputs, text_target=targets, max_length=1024, truncation=True, padding='longest', return_tensors='pt')
     return model_inputs
 
 def correct_inputs_masks_labels(examples):
@@ -99,6 +99,7 @@ if __name__ == '__main__':
     predict_with_generate=True,
     fp16=True, # set true when cuda available
     push_to_hub=False,
+    generation_max_length=256,
     )
 
     trainer = Seq2SeqTrainer(
