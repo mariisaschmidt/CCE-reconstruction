@@ -10,7 +10,7 @@ import argparse
 def preprocess_function(examples):
     inputs = prefix + examples['text']
     targets = examples["gold_sentence"]
-    model_inputs = tokenizer(inputs, text_target=targets, max_length=512, truncation=True, padding='longest', return_tensors='pt')
+    model_inputs = tokenizer(inputs, text_target=targets, max_length=256, truncation=True, padding='longest', return_tensors='pt')
     return model_inputs
 
 def correct_inputs_masks_labels(examples):
