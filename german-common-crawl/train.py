@@ -29,6 +29,7 @@ def compute_metrics(eval_preds):
     preds, labels = eval_preds
     if isinstance(preds, tuple):
         preds = preds[0]
+    preds = np.where(preds != -100, preds, tokenizer.pad_token_id)
     decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
 
     labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
@@ -83,7 +84,7 @@ if __name__ == '__main__':
 
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
 
-    metric = evaluate.load("sacrebleu")
+    metric = evaluate.load("bleu")
 
     model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
 
