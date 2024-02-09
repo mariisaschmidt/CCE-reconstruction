@@ -31,9 +31,12 @@ if __name__ == '__main__':
                             "In den Wahlkampf wird sein Kandidat nicht eingreifen , er bleibt bis September zu Hause .",
                             "In der Theorie schafft es der Wettbewerb , durch den Konkurrenzgedanken das Streben nach Monopolen und Macht systematisch auszuschalten ."]
     
-    evaluation_inputs = tokenizer.encode(evaluation_sentences, return_tensors="pt")
-    evaluation_outputs = model.generate(evaluation_inputs)
-    predictions = tokenizer.decode(evaluation_outputs[0])
+    predictions = []
+    for s in evaluation_sentences:
+        evaluation_input = (tokenizer.encode(s, return_tensors="pt"))
+        evaluation_output = model.generate(evaluation_input)
+        predictions.append(tokenizer.decode(evaluation_output[0]))
+        
     metric = evaluate.load("bleu")
     results = metric.compute(predictions=predictions, references=evaluation_sentences)
     print(results)
