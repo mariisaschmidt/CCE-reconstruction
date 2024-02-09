@@ -34,8 +34,9 @@ if __name__ == '__main__':
     predictions = []
     for s in evaluation_sentences:
         evaluation_input = (tokenizer.encode(s, return_tensors="pt"))
-        evaluation_output = model.generate(evaluation_input, max_new_tokens=20)
+        evaluation_output = model.generate(evaluation_input, max_new_tokens=200)
         decoded = tokenizer.decode(evaluation_output[0])
+        decoded = decoded[6:len(decoded)-4]
         print(s + " -> " + decoded)
         predictions.append(decoded)
         
