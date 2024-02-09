@@ -35,7 +35,9 @@ if __name__ == '__main__':
     for s in evaluation_sentences:
         evaluation_input = (tokenizer.encode(s, return_tensors="pt"))
         evaluation_output = model.generate(evaluation_input)
-        predictions.append(tokenizer.decode(evaluation_output[0]))
+        decoded = tokenizer.decode(evaluation_output[0])
+        print(s + " -> " + decoded)
+        predictions.append(decoded)
         
     metric = evaluate.load("bleu")
     results = metric.compute(predictions=predictions, references=evaluation_sentences)
