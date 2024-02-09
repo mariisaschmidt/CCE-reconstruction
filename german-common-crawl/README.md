@@ -12,5 +12,7 @@
 3. write files in correct json format: run `write_correct_files.py` 
 4. `get_translation_pairs.py` 
 5. get_ellipsis_data.py
+
+## how to train the model and finetune it for ellipsis
 6. `train.py --model_name <MODELNAME> --pretrained_model <HUGGINGFACE_CHECKPOINT>` only tested on 't5-small'
 7. finetune_for_ellipsis.py
