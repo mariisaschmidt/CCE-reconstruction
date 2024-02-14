@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
 
-    metric = evaluate.load("sacrebleu")
+    metric = evaluate.load("bleu")
 
     model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
 
