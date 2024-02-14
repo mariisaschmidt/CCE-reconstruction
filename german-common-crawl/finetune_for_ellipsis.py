@@ -70,10 +70,8 @@ if __name__ == '__main__':
     target_lang = "de"
     prefix = "reconstruct the ellipsis in this sentence: "
 
-    print(de_de_dataset.shape)
     de_de_dataset = de_de_dataset.filter(lambda example: len(example['Treebank-Sentence']) >= 5)
     de_de_dataset = de_de_dataset.filter(lambda example: len(example['Reconstructed-Sentence']) >= 5)
-    print(de_de_dataset.shape)
 
     print("Preprocess Data: ")
     tokenized_dataset = de_de_dataset.map(preprocess_function, batched=False)
@@ -94,11 +92,11 @@ if __name__ == '__main__':
     output_dir=model_name,
     evaluation_strategy="epoch",
     learning_rate=2e-5,
-    per_device_train_batch_size=16,
-    per_device_eval_batch_size=16,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=4,
     weight_decay=0.01,
     save_total_limit=3,
-    num_train_epochs=2,
+    num_train_epochs=5,
     predict_with_generate=True,
     fp16=True, # set true when cuda available
     push_to_hub=False,
