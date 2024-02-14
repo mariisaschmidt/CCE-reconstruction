@@ -70,10 +70,10 @@ if __name__ == '__main__':
     target_lang = "de"
     prefix = "reconstruct the ellipsis in this sentence: "
 
-    print(de_de_dataset.shape())
+    print(de_de_dataset.shape)
     de_de_dataset = de_de_dataset.filter(lambda example: len(example['Treebank-Sentence']) >= 5)
     de_de_dataset = de_de_dataset.filter(lambda example: len(example['Reconstructed-Sentence']) >= 5)
-    print(de_de_dataset.shape())
+    print(de_de_dataset.shape)
 
     print("Preprocess Data: ")
     tokenized_dataset = de_de_dataset.map(preprocess_function, batched=False)
