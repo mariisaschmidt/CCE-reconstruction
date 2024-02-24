@@ -21,12 +21,12 @@ if __name__ == '__main__':
         df.iloc[i].to_json(filename)
 
     dirname = "tmp_json"
+    i = 0
     for filename in os.listdir(dirname):
         with open("tmp_json/" + filename, "r") as file:
             lines = list(file)
         
         split_indx = (len(lines)//100) * 80
-        i = 0
 
         train_file = open("tüba_train.jsonl", "a")
         test_file = open("tüba_test.jsonl", "a")
