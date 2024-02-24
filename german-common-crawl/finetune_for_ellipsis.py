@@ -6,6 +6,7 @@ import evaluate
 import numpy as np 
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
 import argparse
+from datasets import DatasetDict
 
 def preprocess_function(examples):
     inputs = prefix + examples['Treebank-Sentence']
@@ -60,8 +61,13 @@ if __name__ == '__main__':
     else:
         checkpoint = "de_de_llm"
 
-    data = "cce_bleu.jsonl"
-    de_de_dataset = load_dataset("json", data_files=data, split='train')
+    train_data = "tüba_train.jsonl"
+    test_data = "tüba_test.jsonl"
+    train_dataset = load_dataset("json", data_files=train_data, split='train')
+    test_dataset = load_dataset("json", data_files=test_data, split='train')
+    de_de_dataset = DatasetDict({"train": train_dataset,
+                                 "test": test_dataset
+                                })
     print("Loaded Dataset!")
 
     tokenizer = AutoTokenizer.from_pretrained(checkpoint)
@@ -78,9 +84,6 @@ if __name__ == '__main__':
 
     print("Correct the outputs of preprocess: ")
     tokenized_dataset = tokenized_dataset.map(correct_inputs_masks_labels, batched=False)
-
-    print("Create Train-Test-Split: ")
-    tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2)
 
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
 

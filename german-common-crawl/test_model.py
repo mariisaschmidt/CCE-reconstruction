@@ -40,3 +40,5 @@ if __name__ == '__main__':
     metric = evaluate.load("bleu")
     results = metric.compute(predictions=predictions, references=evaluation_sentences)
     print(results)
+
+    # include eval split of dataset 

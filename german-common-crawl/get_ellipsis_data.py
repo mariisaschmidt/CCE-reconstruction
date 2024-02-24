@@ -24,8 +24,17 @@ if __name__ == '__main__':
     for filename in os.listdir(dirname):
         with open("tmp_json/" + filename, "r") as file:
             lines = list(file)
+        
+        split_indx = (len(lines)//100) * 80
+        i = 0
 
-        with open("cce_bleu.jsonl", "a") as correct_file:
-                for line in lines:
-                    correct_file.write(dump_json(format_json(line)) + '\n')
+        train_file = open("tüba_train.jsonl", "a")
+        test_file = open("tüba_test.jsonl", "a")
+        for line in lines:
+            if(i <= split_indx):
+                train_file.write(dump_json(format_json(line)) + '\n')
+                i += 1
+            else:
+                test_file.write(dump_json(format_json(line)) + '\n')
+                i += 1
         print("Done with: " + filename)
