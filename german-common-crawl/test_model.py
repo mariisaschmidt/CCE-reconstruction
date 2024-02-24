@@ -21,15 +21,12 @@ if __name__ == '__main__':
     tokenizer = AutoTokenizer.from_pretrained(checkpoint)
     model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
 
-    inputs = tokenizer.encode(sentence, return_tensors="pt")
-    outputs = model.generate(inputs)
-    print(tokenizer.decode(outputs[0]))
-
     evaluation_sentences = ["Hallo, wie geht es dir?", 
                             "Die vorhandene Handlungsbereitschaft wurde in Entscheidungen und Arbeitspakete umgesetzt", 
                             "Dabei vermengen sich die Konfliktlagen und die Interessen der Akteure",
                             "In den Wahlkampf wird sein Kandidat nicht eingreifen , er bleibt bis September zu Hause .",
                             "In der Theorie schafft es der Wettbewerb , durch den Konkurrenzgedanken das Streben nach Monopolen und Macht systematisch auszuschalten ."]
+    evaluation_sentences.append(sentence)
     
     predictions = []
     for s in evaluation_sentences:
