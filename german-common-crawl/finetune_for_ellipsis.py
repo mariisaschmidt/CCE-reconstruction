@@ -64,7 +64,9 @@ if __name__ == '__main__':
     train_data = "tüba_train.jsonl"
     test_data = "tüba_test.jsonl"
     train_dataset = load_dataset("json", data_files=train_data, split='train')
+    print("Got train data")
     test_dataset = load_dataset("json", data_files=test_data, split='train')
+    print("Got test data")
     de_de_dataset = DatasetDict({"train": train_dataset,
                                  "test": test_dataset
                                 })
