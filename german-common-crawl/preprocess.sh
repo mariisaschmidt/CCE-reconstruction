@@ -17,6 +17,12 @@ rm -r correct_files
 
 mkdir tmp_json
 
-python3 get_ellipsis_data.py
+python3 get_ellipsis_data_tüba.py
 
 rm -r tmp_json
+
+mkdir tmp_json2
+
+python3 get_ellipsis_data_tiger.py
+
+rm -r tmp_json2

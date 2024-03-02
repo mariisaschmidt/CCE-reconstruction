@@ -41,4 +41,4 @@ if __name__ == '__main__':
     results = metric.compute(predictions=predictions, references=evaluation_sentences)
     print(results)
 
-    # include eval split of dataset 
+    # create test dataset and run model on this 
