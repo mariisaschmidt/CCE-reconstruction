@@ -120,5 +120,8 @@ if __name__ == '__main__':
 
     print("Train Model: ")
     trainer.train()
+    print("Saving Model ..")
+    trainer.save_model()
+    trainer.save_metrics()
 
 
