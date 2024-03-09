@@ -120,5 +120,6 @@ if __name__ == '__main__':
 
     print("Train Model: ")
     trainer.train()
+    trainer.save_model()
 
 
