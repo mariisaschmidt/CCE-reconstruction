@@ -112,8 +112,8 @@ if __name__ == '__main__':
             g = "gold_sentence"
             batchsize = 16
             epochs = 2
-
-        dataset = load_dataset("json", data_files=data, split='train')
+            dataset = load_dataset("json", data_files=data, split='train')
+        
         print("Loaded Dataset!")
 
         tokenizer = AutoTokenizer.from_pretrained(checkpoint)
