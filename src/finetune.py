@@ -147,7 +147,7 @@ if __name__ == '__main__':
         per_device_eval_batch_size=batchsize,
         weight_decay=0.01,
         save_total_limit=3,
-        num_train_epochs=2,
+        num_train_epochs=epochs,
         predict_with_generate=True,
         fp16=True, # set true when cuda available
         push_to_hub=False,
