@@ -26,12 +26,12 @@ if __name__ == '__main__':
         with open("tmp_json2/" + filename, "r") as file:
             lines = list(file)
         
-        split_indx = (len(lines)//100) * 80
+        #split_indx = (len(lines)//100) * 80
 
         train_file = open("tiger_train.jsonl", "a")
         test_file = open("tiger_test.jsonl", "a")
         for line in lines:
-            if(i <= split_indx):
+            if(i <= 2950):
                 train_file.write(dump_json(format_json(line)) + '\n')
                 i += 1
             else:
