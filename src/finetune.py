@@ -1,5 +1,5 @@
 # the all-in-one script to finetune a huggingface model 
-# run like this: python3 finetune.py --dataset gcc --model_name de_de_mar10 --checkpoint t5-small
+# run like this: python3 finetune.py --dataset g4 --model_name de_de_mar10 --checkpoint t5-small
 
 from datasets import load_dataset
 from responses import target
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     if args.dataset:
         dataset_name = args.dataset
     else:
-        print("You need to specify a dataset! Options are: tüba, tiger, gcc")
+        print("You need to specify a dataset! Options are: tüba, tiger, g4")
         dataset_name = ""
     if args.model_name:
         model_name = args.model_name
@@ -68,7 +68,7 @@ if __name__ == '__main__':
     if args.pretrained_model:
         checkpoint = args.pretrained_model
     else:
-        if dataset_name == "gcc":
+        if dataset_name == "g4":
             checkpoint = "t5-small"
         else: 
             print("You need to provide a german llm for finetuning with ellipsis data!")
@@ -104,7 +104,7 @@ if __name__ == '__main__':
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
             epochs = 10
-        if dataset_name == "gcc":
+        if dataset_name == "g4":
             data = "de_de_pairs.jsonl"
             dataset = load_dataset("json", data_files=data, split='train')
             prefix = "translate German to German: "
@@ -112,7 +112,6 @@ if __name__ == '__main__':
             g = "gold_sentence"
             batchsize = 16
             epochs = 2
-            dataset = load_dataset("json", data_files=data, split='train')
         
         print("Loaded Dataset!")
 
