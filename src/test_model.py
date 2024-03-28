@@ -29,8 +29,15 @@ if __name__ == '__main__':
                             "In der Theorie schafft es der Wettbewerb , durch den Konkurrenzgedanken das Streben nach Monopolen und Macht systematisch auszuschalten .",
                             "Da die Kapazität des Stalles nur für 50 Pferde ausreicht , bleiben die Tiere mitunter auf dem Lkw und kommen am folgenden Tag unversorgt auf den nächsten Transporter oder - jetzt fast immer - auf den Zug . ", #Da die Kapazität des Stalles nur für 50 Pferde ausreicht , bleiben die Tiere mitunter auf dem Lkw und die_s Tiere_s kommen am folgenden Tag unversorgt auf den nächsten Transporter oder - jetzt fast immer - auf den Zug . 
                             "Am Freitag wurde in rund 15 Universitäten und Hochschulen protestiert , erstmals auch an Fakultäten in Paris . ", #Am Freitag wurde in rund 15 Universitäten und Hochschulen protestiert , erstmals wurde_g am_g Freitag_g auch an Fakultäten in Paris protestiert_g . 
-                            #"",
-    ]
+                            "Henry lebt in Boston und Peter in Chicago.", #Henry lebt in Boston und Peter [lebt]$_g$ in Chicago.
+                            "Henry lebt in Boston und alle seine Kinder auch.", #Henry lebt in Boston und alle seine Kinder [leben]$_g$ auch [in Boston]$_g$.
+                            "Meine Frau möchte ein Auto kaufen, mein Sohn ein Motorrad.", #Meine Frau möchte ein Auto kaufen, mein Sohn [möchte]$_g$ ein Motorrad [kaufen]$_g$.
+                            "Der Fahrer wurde getötet und die Mitfahrer schwer verletzt.", #Der Fahrer wurde getötet und die Mitfahrer [wurden]$_g$ schwer verletzt.
+                            "Meine Schwester lebt in Berlin und arbeitet in Frankfurt.", #[Meine Schwester lebt in Berlin und [meine Schwester]$_f$ arbeitet in Frankfurt.]
+                            "Amsterdam ist die Stadt, in der Jan lebt und Piet arbeitet.", #Amsterdam ist die Stadt, [in der Jan lebt und [in der]$_f$ Piet arbeitet.]
+                            "Anne kam vor 1 an und Susi ging nach 3 Uhr.", #Anne kam vor 1 [Uhr]$_b$ an und Susi ging nach 3 Uhr.
+                            "Warum bist du gegangen und hast mich nicht gewarnt?", #Warum bist du gegangen und [du]$_s$ hast mich nicht gewarnt?
+    ]   
     evaluation_sentences.append(sentence)
     
     predictions = []
