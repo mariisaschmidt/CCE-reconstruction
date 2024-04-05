@@ -3,3 +3,5 @@ LOGS/
 .jsonl
 .txt
 archive/
+just_for_testing/
+.DS_STORE
