@@ -35,7 +35,7 @@ if __name__ == '__main__':
                             "Der Fahrer wurde getötet und die Mitfahrer schwer verletzt.", #Der Fahrer wurde getötet und die Mitfahrer [wurden]$_g$ schwer verletzt.
                             "Meine Schwester lebt in Berlin und arbeitet in Frankfurt.", #[Meine Schwester lebt in Berlin und [meine Schwester]$_f$ arbeitet in Frankfurt.]
                             "Amsterdam ist die Stadt, in der Jan lebt und Piet arbeitet.", #Amsterdam ist die Stadt, [in der Jan lebt und [in der]$_f$ Piet arbeitet.]
-                            "Anne kam vor 1 an und Susi ging nach 3 Uhr.", #Anne kam vor 1 [Uhr]$_b$ an und Susi ging nach 3 Uhr.
+                            "Anne kam vor 1 und Susi ging nach 3 Uhr.", #Anne kam vor 1 [Uhr]$_b$ an und Susi ging nach 3 Uhr.
                             "Warum bist du gegangen und hast mich nicht gewarnt?", #Warum bist du gegangen und [du]$_s$ hast mich nicht gewarnt?
     ]   
     evaluation_sentences.append(sentence)
