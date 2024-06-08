@@ -118,6 +118,8 @@ if __name__ == '__main__':
 
     result_file = open(prefix + "_" + args.corpus + "_evaluation_result.txt", "a")
 
+    result_file.write("CHECKPOINT: ", checkpoint, " CORPUS: ", corpus, "\n")
+
     evaluate_model(result_file, metric, fcr, "FCR")
     evaluate_model(result_file, metric, gapping, "GAPPING")
     evaluate_model(result_file, metric, bcr, "BCR")
