@@ -4,6 +4,8 @@ For more information have a look at src/README.md
 
 For convenience we offer a bash script to simplify using our system. 
 
+*NOTE:* this system requires CUDA, but it should be possible to deactivate this dependency, which will result in much longer runtimes. 
+
 ## Run the system
 1. download the corpus files and place them in the src directory
 2. make script executable: `chmod +x run.sh`
@@ -12,4 +14,6 @@ For convenience we offer a bash script to simplify using our system.
 ## Citation
 This code belongs to the following paper and should be cited as the same: 
 
-TODO if we get accepted :) 
+Accepted at 27th International Conference on Text, Speech and Dialogue in Brno, Czech Republic, September 9-13, 2024
+
+M. Schmidt, K. Harbusch and D. Memmesheimer (2024). *Automatic Ellipsis Reconstruction in Coordinated German Sentences based on Text-To-Text Transfer Transformers*. 

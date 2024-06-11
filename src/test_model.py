@@ -46,30 +46,38 @@ def remove_suffix(sentence):
     sentence = sentence.replace("]", "")
     return sentence
 
-def evaluate_model(file, bleu, dataset, name):
+def evaluate_model(file, bleu, exmatch, dataset, name):
     predictions = get_predictions(dataset, sent_col)
     golds = dataset[gold_col]
     goldsWithoutSuffix = [remove_suffix(s) for s in golds]
     avg_dist = 0
     avg_dist_wos = 0
+    normalized_wos = 0
+    em = 0
 
     file.write("======================" + name + "============================== \n")
     for i in range(0, len(predictions)):
-        d = calculate_distance(predictions[i], golds[i])
+        #d = calculate_distance(predictions[i], golds[i])
         d_wos = calculate_distance(predictions[i], goldsWithoutSuffix[i])
+        if(d_wos == 0):
+            em += 1
         ratio = d_wos / len(goldsWithoutSuffix[i])
         #r = "Distance (No Suffix): " + str(d_wos) + "\t Distance (W/ Suffix): " + str(d) + "\t Length of Sentence: " + str(len(goldsWithoutSuffix[i])) + "\t Ratio (dist/len WoS): " + str(ratio) + "\n" 
         #file.write(r)
         #r2 = "Sentence: " + predictions[i] + "\t Gold: " + golds[i] + "\n"
         #file.write(r2)
-        avg_dist += d
+        #avg_dist += d
         avg_dist_wos += d_wos
+        normalized_wos += ratio
     if(len(predictions) != 0):
-        avg_dist = avg_dist / len(predictions)
+        #avg_dist = avg_dist / len(predictions)
+        normalized_wos = normalized_wos / len(predictions)
         avg_dist_wos = avg_dist_wos / len(predictions)
-        file.write("Average Distance (No Suffix): " + str(avg_dist_wos) + "\t Average Distance (W/ Suffix): " + str(avg_dist) + "\n")
-        score = bleu.compute(predictions=predictions, references=golds)
+        file.write("Average Distance (No Suffix): " + str(avg_dist_wos) + "\t Normalized Disttance: " + str(normalized_wos) + "\n") # + "\t Average Distance (W/ Suffix): " + str(avg_dist) + "\n")
+        score = bleu.compute(predictions=predictions, references=goldsWithoutSuffix)
         file.write("Bleu Score: " + str(score) + "\n")
+        exact_matches = exmatch.compute(references=golds, predictions=predictions, ignore_case=True, ignore_punctuation=True)
+        file.write("Exact Matches: " + str(exact_matches["exact_match"]) + "\t Distance 0: " + str(em) + "\n")
         file.write("\n")
 
 if __name__ == '__main__':
@@ -114,17 +122,18 @@ if __name__ == '__main__':
     bcr = dataset.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
     sgf = dataset.filter(lambda example: example["SGF"] == 1 or example["SGF"] == "1")
 
-    metric = evaluate.load("bleu")
+    bleu = evaluate.load("bleu")
+    em_metric = evaluate.load("exact_match")
 
     result_file = open(prefix + "_" + args.corpus + "_evaluation_result.txt", "a")
 
-    result_file.write("CHECKPOINT: ", checkpoint, " CORPUS: ", corpus, "\n")
+    result_file.write("CHECKPOINT: " + checkpoint + " CORPUS: " + corpus + "\n")
 
-    evaluate_model(result_file, metric, fcr, "FCR")
-    evaluate_model(result_file, metric, gapping, "GAPPING")
-    evaluate_model(result_file, metric, bcr, "BCR")
-    evaluate_model(result_file, metric, sgf, "SGF")
-    evaluate_model(result_file, metric, dataset, "ALL SENTENCES")
+    evaluate_model(result_file, bleu, em_metric, fcr, "FCR")
+    evaluate_model(result_file, bleu, em_metric, gapping, "GAPPING")
+    evaluate_model(result_file, bleu, em_metric, bcr, "BCR")
+    evaluate_model(result_file, bleu, em_metric, sgf, "SGF")
+    evaluate_model(result_file, bleu, em_metric, dataset, "ALL SENTENCES")
     
     result_file.close()
     print("DONE!")

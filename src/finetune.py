@@ -1,8 +1,6 @@
-# the all-in-one script to finetune a huggingface model 
-# run like this: python3 finetune.py --dataset g4 --model_name de_de_mar10 --checkpoint t5-small
+# the all-in-one script to finetune a huggingface ellipsis reconstruction model 
 
-from datasets import load_dataset
-from responses import target
+from datasets import load_dataset, concatenate_datasets
 from transformers import AutoTokenizer
 from transformers import DataCollatorForSeq2Seq
 import evaluate
@@ -79,7 +77,7 @@ if __name__ == '__main__':
             test_data = "tüba_test.jsonl"
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             print("Got train data")
-            test_dataset = load_dataset("json", data_files=train_data, split='train')
+            test_dataset = load_dataset("json", data_files=test_data, split='train')
             print("Got test data")
             dataset = DatasetDict({"train": train_dataset,
                                         "test": test_dataset
@@ -94,7 +92,7 @@ if __name__ == '__main__':
             test_data = "tiger_test.jsonl"
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             print("Got train data")
-            test_dataset = load_dataset("json", data_files=train_data, split='train')
+            test_dataset = load_dataset("json", data_files=test_data, split='train')
             print("Got test data")
             dataset = DatasetDict({"train": train_dataset,
                                         "test": test_dataset
@@ -104,6 +102,51 @@ if __name__ == '__main__':
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
             epochs = 10
+        if dataset_name == "merged":
+            train_data1 = "tiger_train.jsonl"
+            test_data1 = "tiger_test.jsonl"
+            train_data2 = "tüba_train.jsonl"
+            test_data2 = "tüba_test.jsonl"
+
+            train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
+            train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
+            train_dataset2 = train_dataset2.rename_column("Treebank-Sentence", "Original sentence")
+            train_dataset2 = train_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
+            cols_to_remove1 = train_dataset1.column_names
+            cols_to_remove2 = train_dataset2.column_names
+            cols_to_remove2.remove("Original sentence")
+            cols_to_remove2.remove("Canonical form")
+            train_dataset2 = train_dataset2.remove_columns(cols_to_remove2)
+            cols_to_remove1.remove("Original sentence")
+            cols_to_remove1.remove("Canonical form")
+            train_dataset1 = train_dataset1.remove_columns(cols_to_remove1)
+            train_dataset = concatenate_datasets([train_dataset1, train_dataset2])
+            print("Got train data")
+
+            test_dataset1 = load_dataset("json", data_files=test_data1, split='train')
+            test_dataset2 = load_dataset("json", data_files=test_data2, split='train')
+            test_dataset2 = test_dataset2.rename_column("Treebank-Sentence", "Original sentence")
+            test_dataset2 = test_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
+            cols_to_remove11 = test_dataset1.column_names
+            cols_to_remove22 = test_dataset2.column_names
+            cols_to_remove22.remove("Original sentence")
+            cols_to_remove22.remove("Canonical form")
+            test_dataset2 = test_dataset2.remove_columns(cols_to_remove22)
+            cols_to_remove11.remove("Original sentence")
+            cols_to_remove11.remove("Canonical form")
+            test_dataset1 = test_dataset1.remove_columns(cols_to_remove11)
+            test_dataset = concatenate_datasets([test_dataset1, test_dataset2])
+            print("Got test data")
+
+            dataset = DatasetDict({"train": train_dataset,
+                                        "test": test_dataset
+                                        })
+            
+            t = "Original sentence"
+            g = "Canonical form"
+            batchsize = 4
+            prefix = "reconstruct the ellipsis in this sentence: "
+            epochs = 5
         if dataset_name == "g4":
             data = "de_de_pairs.jsonl"
             dataset = load_dataset("json", data_files=data, split='train')
