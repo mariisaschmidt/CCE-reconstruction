@@ -39,7 +39,7 @@ def calculate_distance(s, p):
     return d[m][n]
 
 def remove_suffix(sentence):
-    suffix = r'(_\S*)'
+    suffix = r'(\$_\S*)'
     sentence = re.sub(suffix, '', sentence)
     sentence = sentence.replace("$$", "")
     sentence = sentence.replace("[", "")
@@ -61,6 +61,9 @@ def evaluate_model(file, bleu, exmatch, dataset, name):
         d_wos = calculate_distance(predictions[i], goldsWithoutSuffix[i])
         if(d_wos == 0):
             em += 1
+        # print(predictions[i], "\t ", goldsWithoutSuffix[i])
+        # em_score = exmatch.compute(references=[goldsWithoutSuffix[i]], predictions=[predictions[i]], ignore_case=True, ignore_punctuation=True)
+        # print(em_score["exact_match"])
         ratio = d_wos / len(goldsWithoutSuffix[i])
         #r = "Distance (No Suffix): " + str(d_wos) + "\t Distance (W/ Suffix): " + str(d) + "\t Length of Sentence: " + str(len(goldsWithoutSuffix[i])) + "\t Ratio (dist/len WoS): " + str(ratio) + "\n" 
         #file.write(r)
@@ -74,9 +77,9 @@ def evaluate_model(file, bleu, exmatch, dataset, name):
         normalized_wos = normalized_wos / len(predictions)
         avg_dist_wos = avg_dist_wos / len(predictions)
         file.write("Average Distance (No Suffix): " + str(avg_dist_wos) + "\t Normalized Disttance: " + str(normalized_wos) + "\n") # + "\t Average Distance (W/ Suffix): " + str(avg_dist) + "\n")
-        score = bleu.compute(predictions=predictions, references=goldsWithoutSuffix)
+        score = bleu.compute(predictions=predictions, references=golds)
         file.write("Bleu Score: " + str(score) + "\n")
-        exact_matches = exmatch.compute(references=golds, predictions=predictions, ignore_case=True, ignore_punctuation=True)
+        exact_matches = exmatch.compute(references=goldsWithoutSuffix, predictions=predictions, ignore_case=True, ignore_punctuation=True)
         file.write("Exact Matches: " + str(exact_matches["exact_match"]) + "\t Distance 0: " + str(em) + "\n")
         file.write("\n")
 
