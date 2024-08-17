@@ -45,11 +45,13 @@ def remove_suffix(sentence):
     sentence = sentence.replace("$$", "")
     sentence = sentence.replace("[", "")
     sentence = sentence.replace("]", "")
+    suffix2 = r'_[^\s]*'
+    sentence = re.sub(suffix2, '', sentence)
     # remove spaces before punctuation
     pattern = r'\s+([.,;?!":`])'
     sentence = re.sub(pattern, r'\1', sentence)
     # replace "umlaute"
-    sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
+    #sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
     return sentence
 
 def evaluate_model(file, bleu, exmatch, dataset, name):
