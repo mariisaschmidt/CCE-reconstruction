@@ -17,13 +17,11 @@ def clean_sentences(sentence):
     sentence = re.sub(suffix, '', sentence)
 
     # remove spaces before punctuation
-    pattern = r'\s+([.,;?!"])'
+    pattern = r'\s+([.,;?!":`])'
     sentence = re.sub(pattern, r'\1', sentence)
 
     # replace "umlaute"
     sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
-
-    print(sentence)
 
     return sentence
 
@@ -228,4 +226,4 @@ if __name__ == '__main__':
         print("Train Model: ")
         trainer.train()
         print("Saving Model ..")
-        trainer.save_model(output_dir=os.path.expanduser("~/models"))
+        trainer.save_model(output_dir=os.path.expanduser("~/models/"))
