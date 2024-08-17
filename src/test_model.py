@@ -62,7 +62,7 @@ def evaluate_model(file, bleu, exmatch, dataset, name):
             if j == 0:
                 file.write("====================== PRED VS GOLD ============================== \n")
                 file.write("pred: " + predictions[i] + "\n")
-                file.write("gold:" + goldsWithoutSuffix[i] + "\n")
+                file.write("gold: " + goldsWithoutSuffix[i] + "\n")
             else:
                 #d = calculate_distance(predictions[i], golds[i])
                 d_wos = calculate_distance(predictions[i], goldsWithoutSuffix[i])
