@@ -226,4 +226,4 @@ if __name__ == '__main__':
         print("Train Model: ")
         trainer.train()
         print("Saving Model ..")
-        trainer.save_model(output_dir=os.path.expanduser("~/models/"))
+        trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
