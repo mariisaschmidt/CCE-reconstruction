@@ -56,22 +56,30 @@ def evaluate_model(file, bleu, exmatch, dataset, name):
     em = 0
 
     file.write("======================" + name + "============================== \n")
-    for i in range(0, len(predictions)):
-        #d = calculate_distance(predictions[i], golds[i])
-        d_wos = calculate_distance(predictions[i], goldsWithoutSuffix[i])
-        if(d_wos == 0):
-            em += 1
-        # print(predictions[i], "\t ", goldsWithoutSuffix[i])
-        # em_score = exmatch.compute(references=[goldsWithoutSuffix[i]], predictions=[predictions[i]], ignore_case=True, ignore_punctuation=True)
-        # print(em_score["exact_match"])
-        ratio = d_wos / len(goldsWithoutSuffix[i])
-        #r = "Distance (No Suffix): " + str(d_wos) + "\t Distance (W/ Suffix): " + str(d) + "\t Length of Sentence: " + str(len(goldsWithoutSuffix[i])) + "\t Ratio (dist/len WoS): " + str(ratio) + "\n" 
-        #file.write(r)
-        #r2 = "Sentence: " + predictions[i] + "\t Gold: " + golds[i] + "\n"
-        #file.write(r2)
-        #avg_dist += d
-        avg_dist_wos += d_wos
-        normalized_wos += ratio
+    for j in range(0,1): # define multiple evaluation metrics
+        for i in range(0, len(predictions)):
+            if j == 0:
+                file.write("====================== PRED VS GOLD ============================== \n")
+                file.write(predictions[i] + "\n")
+                file.write(goldsWithoutSuffix[i] + "\n")
+                dif = predictions[i] - goldsWithoutSuffix[i]
+                file.write(str(dif) + "\n")
+            else:
+                #d = calculate_distance(predictions[i], golds[i])
+                d_wos = calculate_distance(predictions[i], goldsWithoutSuffix[i])
+                if(d_wos == 0):
+                    em += 1
+                # print(predictions[i], "\t ", goldsWithoutSuffix[i])
+                # em_score = exmatch.compute(references=[goldsWithoutSuffix[i]], predictions=[predictions[i]], ignore_case=True, ignore_punctuation=True)
+                # print(em_score["exact_match"])
+                ratio = d_wos / len(goldsWithoutSuffix[i])
+                #r = "Distance (No Suffix): " + str(d_wos) + "\t Distance (W/ Suffix): " + str(d) + "\t Length of Sentence: " + str(len(goldsWithoutSuffix[i])) + "\t Ratio (dist/len WoS): " + str(ratio) + "\n" 
+                #file.write(r)
+                #r2 = "Sentence: " + predictions[i] + "\t Gold: " + golds[i] + "\n"
+                #file.write(r2)
+                #avg_dist += d
+                avg_dist_wos += d_wos
+                normalized_wos += ratio
     if(len(predictions) != 0):
         #avg_dist = avg_dist / len(predictions)
         normalized_wos = normalized_wos / len(predictions)
