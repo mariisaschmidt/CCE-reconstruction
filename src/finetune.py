@@ -5,13 +5,31 @@ from transformers import AutoTokenizer
 from transformers import DataCollatorForSeq2Seq
 import evaluate
 import numpy as np 
+import re
+import os 
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
 import argparse
 from datasets import DatasetDict
 
+def clean_sentences(sentence):
+    # remove ellipsis suffix
+    suffix = r'_[^\s]*'
+    sentence = re.sub(suffix, '', sentence)
+
+    # remove spaces before punctuation
+    pattern = r'\s+([.,;?!"])'
+    sentence = re.sub(pattern, r'\1', sentence)
+
+    # replace "umlaute"
+    sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
+
+    print(sentence)
+
+    return sentence
+
 def preprocess_function(examples):
     inputs = prefix + examples[t]
-    targets = examples[g]
+    targets = clean_sentences(examples[g])
     model_inputs = tokenizer(inputs, text_target=targets, max_length=512, truncation=True, padding='longest', return_tensors='pt')
     return model_inputs
 
@@ -73,8 +91,8 @@ if __name__ == '__main__':
     
     if dataset_name != "":
         if dataset_name == "tüba":
-            train_data = "tüba_train.jsonl"
-            test_data = "tüba_test.jsonl"
+            train_data = os.path.expanduser("~/data/tüba_train.jsonl")
+            test_data = os.path.expanduser("~/data/tüba_test.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             print("Got train data")
             test_dataset = load_dataset("json", data_files=test_data, split='train')
@@ -88,8 +106,8 @@ if __name__ == '__main__':
             batchsize = 4
             epochs = 5
         if dataset_name == "tiger":
-            train_data = "tiger_train.jsonl"
-            test_data = "tiger_test.jsonl"
+            train_data = os.path.expanduser("~/data/tiger_train.jsonl")
+            test_data = os.path.expanduser("~/data/tiger_test.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             print("Got train data")
             test_dataset = load_dataset("json", data_files=test_data, split='train')
@@ -103,10 +121,10 @@ if __name__ == '__main__':
             prefix = "reconstruct the ellipsis in this sentence: "
             epochs = 10
         if dataset_name == "merged":
-            train_data1 = "tiger_train.jsonl"
-            test_data1 = "tiger_test.jsonl"
-            train_data2 = "tüba_train.jsonl"
-            test_data2 = "tüba_test.jsonl"
+            train_data1 = os.path.expanduser("~/data/tiger_train.jsonl")
+            test_data1 = os.path.expanduser("~/data/tiger_test.jsonl")
+            train_data2 = os.path.expanduser("~/data/tüba_train.jsonl")
+            test_data2 = os.path.expanduser("~/data/tüba_test.jsonl")
 
             train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
             train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
@@ -148,7 +166,7 @@ if __name__ == '__main__':
             prefix = "reconstruct the ellipsis in this sentence: "
             epochs = 5
         if dataset_name == "g4":
-            data = "de_de_pairs.jsonl"
+            data = os.path.expanduser("~/data/de_de_pairs.jsonl")
             dataset = load_dataset("json", data_files=data, split='train')
             prefix = "translate German to German: "
             t = "text"
@@ -210,4 +228,4 @@ if __name__ == '__main__':
         print("Train Model: ")
         trainer.train()
         print("Saving Model ..")
-        trainer.save_model()
+        trainer.save_model(output_dir=os.path.expanduser("~/models"))
