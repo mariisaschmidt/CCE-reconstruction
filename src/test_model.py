@@ -47,7 +47,7 @@ def evaluate_model(file, bleu, exmatch, dataset, name):
                 file.write("====================== EXACT MATCH ============================== \n")
                 em_score = exmatch.compute(references=[goldsWithoutSuffix[i]], predictions=[predictions[i]], ignore_case=True, ignore_punctuation=True)
                 print(em_score["exact_match"])
-                r = "EM-Score: " + em_score["exact_match"] + "\n" 
+                r = "EM-Score: " +str(em_score["exact_match"]) + "\n" 
                 file.write(r)
                 if(len(predictions) != 0):
                     score = bleu.compute(predictions=predictions, references=golds)
