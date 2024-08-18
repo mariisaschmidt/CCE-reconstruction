@@ -16,29 +16,6 @@ def get_predictions(ds, sc):
         predictions.append(decoded)
     return predictions
 
-def calculate_distance(s, p):
-    m = len(s)
-    n = len(p)
-    d = [[0] * (n + 1) for i in range(m + 1)]  
-
-    for i in range(1, m + 1):
-        d[i][0] = i
-
-    for j in range(1, n + 1):
-        d[0][j] = j
-    
-    for j in range(1, n + 1):
-        for i in range(1, m + 1):
-            if s[i - 1] == p[j - 1]:
-                cost = 0
-            else:
-                cost = 1
-            d[i][j] = min(d[i - 1][j] + 1,      # deletion
-                          d[i][j - 1] + 1,      # insertion
-                          d[i - 1][j - 1] + cost) # substitution   
-
-    return d[m][n]
-
 def remove_suffix(sentence):
     suffix = r'(\$_\S*)'
     sentence = re.sub(suffix, '', sentence)
@@ -58,44 +35,26 @@ def evaluate_model(file, bleu, exmatch, dataset, name):
     predictions = get_predictions(dataset, sent_col)
     golds = dataset[gold_col]
     goldsWithoutSuffix = [remove_suffix(s) for s in golds]
-    avg_dist = 0
-    avg_dist_wos = 0
-    normalized_wos = 0
-    em = 0
 
     file.write("======================" + name + "============================== \n")
-    for j in range(0,1): # define multiple evaluation metrics
+    for j in range(0,1): # define multiple evaluation loops
         for i in range(0, len(predictions)):
             if j == 0:
                 file.write("====================== PRED VS GOLD ============================== \n")
                 file.write("pred: " + predictions[i] + "\n")
                 file.write("gold: " + goldsWithoutSuffix[i] + "\n")
             else:
-                #d = calculate_distance(predictions[i], golds[i])
-                d_wos = calculate_distance(predictions[i], goldsWithoutSuffix[i])
-                if(d_wos == 0):
-                    em += 1
-                # print(predictions[i], "\t ", goldsWithoutSuffix[i])
-                # em_score = exmatch.compute(references=[goldsWithoutSuffix[i]], predictions=[predictions[i]], ignore_case=True, ignore_punctuation=True)
-                # print(em_score["exact_match"])
-                ratio = d_wos / len(goldsWithoutSuffix[i])
-                #r = "Distance (No Suffix): " + str(d_wos) + "\t Distance (W/ Suffix): " + str(d) + "\t Length of Sentence: " + str(len(goldsWithoutSuffix[i])) + "\t Ratio (dist/len WoS): " + str(ratio) + "\n" 
-                #file.write(r)
-                #r2 = "Sentence: " + predictions[i] + "\t Gold: " + golds[i] + "\n"
-                #file.write(r2)
-                #avg_dist += d
-                avg_dist_wos += d_wos
-                normalized_wos += ratio
-    if(len(predictions) != 0):
-        #avg_dist = avg_dist / len(predictions)
-        normalized_wos = normalized_wos / len(predictions)
-        avg_dist_wos = avg_dist_wos / len(predictions)
-        file.write("Average Distance (No Suffix): " + str(avg_dist_wos) + "\t Normalized Disttance: " + str(normalized_wos) + "\n") # + "\t Average Distance (W/ Suffix): " + str(avg_dist) + "\n")
-        score = bleu.compute(predictions=predictions, references=golds)
-        file.write("Bleu Score: " + str(score) + "\n")
-        exact_matches = exmatch.compute(references=goldsWithoutSuffix, predictions=predictions, ignore_case=True, ignore_punctuation=True)
-        file.write("Exact Matches: " + str(exact_matches["exact_match"]) + "\t Distance 0: " + str(em) + "\n")
-        file.write("\n")
+                file.write("====================== EXACT MATCH ============================== \n")
+                em_score = exmatch.compute(references=[goldsWithoutSuffix[i]], predictions=[predictions[i]], ignore_case=True, ignore_punctuation=True)
+                print(em_score["exact_match"])
+                r = "EM-Score: " + em_score["exact_match"] + "\n" 
+                file.write(r)
+                if(len(predictions) != 0):
+                    score = bleu.compute(predictions=predictions, references=golds)
+                    file.write("Bleu Score: " + str(score) + "\n")
+                    exact_matches = exmatch.compute(references=goldsWithoutSuffix, predictions=predictions, ignore_case=True, ignore_punctuation=True)
+                    file.write("Exact Matches: " + str(exact_matches["exact_match"]) + "\n")
+                    file.write("\n \n")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

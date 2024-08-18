@@ -21,7 +21,7 @@ def clean_sentences(sentence):
     sentence = re.sub(pattern, r'\1', sentence)
 
     # replace "umlaute"
-    sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
+    # sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
 
     return sentence
 
