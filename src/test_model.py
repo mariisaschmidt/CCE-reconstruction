@@ -37,7 +37,7 @@ def evaluate_model(file, bleu, exmatch, dataset, name):
     goldsWithoutSuffix = [remove_suffix(s) for s in golds]
 
     file.write("======================" + name + "============================== \n")
-    for j in range(0,1): # define multiple evaluation loops
+    for j in range(0,2): # define multiple evaluation loops
         for i in range(0, len(predictions)):
             if j == 0:
                 file.write("====================== PRED VS GOLD ============================== \n")
