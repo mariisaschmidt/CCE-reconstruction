@@ -12,6 +12,10 @@ import argparse
 from datasets import DatasetDict
 
 def clean_sentences(sentence):
+    # remove weird ``
+    sentence = re.sub(r'``', '"', sentence)
+    sentence = re.sub(r"''", '"', sentence)
+
     # remove ellipsis suffix
     suffix = r'_[^\s]*'
     sentence = re.sub(suffix, '', sentence)
