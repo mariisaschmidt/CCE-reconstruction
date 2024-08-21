@@ -27,6 +27,9 @@ def remove_suffix(sentence):
     # remove spaces before punctuation
     pattern = r'\s+([.,;?!":`])'
     sentence = re.sub(pattern, r'\1', sentence)
+    # remove weird ``
+    sentence = re.sub(r'``', '"', sentence)
+    sentence = re.sub(r"''", '"', sentence)
     # replace "umlaute"
     #sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
     return sentence
@@ -43,6 +46,8 @@ def evaluate_model(file, bleu, exmatch, dataset, name):
                 file.write("====================== PRED VS GOLD ============================== \n")
                 file.write("pred: " + predictions[i] + "\n")
                 file.write("gold: " + goldsWithoutSuffix[i] + "\n")
+                ems = exmatch.compute(references=goldsWithoutSuffix[i], predictions=predictions[i], ignore_case=True, ignore_punctuation=True)
+                file.write("Exact Matche: " + str(ems["exact_match"]) + "\n")
         if j == 1:
             file.write("====================== EXACT MATCH ============================== \n")
             if(len(predictions) != 0):
