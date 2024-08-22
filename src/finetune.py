@@ -27,7 +27,6 @@ def clean_sentences(sentence):
 
     # replace "umlaute"
     # sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
-    print(sentence + "\n \n")
     return sentence
 
 def preprocess_function(examples):
