@@ -12,7 +12,6 @@ import argparse
 from datasets import DatasetDict
 
 def clean_sentences(sentence):
-    print(sentence)
     # remove weird ``
     sentence = re.sub(r'``', '"', sentence)
     sentence = re.sub(r"''", '"', sentence)
