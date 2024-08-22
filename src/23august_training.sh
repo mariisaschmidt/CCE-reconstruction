@@ -1,4 +1,4 @@
-echo "Start training of TigerSmall again"
+echo "Start training of TigerSmall"
 
 python3 finetune.py --dataset tiger --model_name cleanTigerSmall23 --pretrained_model /home/marisa/models/de_de_feb05/checkpoint-929000
 
