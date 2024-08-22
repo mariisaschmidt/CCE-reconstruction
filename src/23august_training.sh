@@ -17,5 +17,5 @@ python3 finetune.py --dataset tüba --model_name cleanTübaBase23 --pretrained_m
 echo "Done with training!"
 echo "Running evaluation script:"
 
-chmod +x august_eval.sh
+chmod +x 23august_eval.sh
 ./august_eval.sh 
