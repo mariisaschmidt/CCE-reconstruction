@@ -25,7 +25,7 @@ def remove_suffix(sentence):
     suffix2 = r'_[^\s]*'
     sentence = re.sub(suffix2, '', sentence)
     # remove spaces before punctuation
-    pattern = r'\s+([.,;?!":`])'
+    pattern = r'\s+([.,;?!:])'
     sentence = re.sub(pattern, r'\1', sentence)
     # remove weird ``
     sentence = re.sub(r'``', '"', sentence)
