@@ -1,7 +1,7 @@
 import subprocess
 import shlex
 
-file = open("/home/data/gc4_corpus_head_urls.txt")
+file = open("/home/marisa/data/gc4_corpus_head_urls.txt")
 urls = file.readlines()
 file.close()
 
