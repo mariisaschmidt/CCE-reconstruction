@@ -6,6 +6,7 @@ import json
 def tokenize(text):
     sents = nltk.sent_tokenize(text['raw_content'])
     for s in sents:
+        s = s.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
         s = s + '[NEXT]'
     text['raw_content'] = str(sents)
     return text

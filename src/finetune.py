@@ -12,20 +12,16 @@ import argparse
 from datasets import DatasetDict
 
 def clean_sentences(sentence):
-    # remove weird ``
-    sentence = re.sub(r'``', '"', sentence)
-    sentence = re.sub(r"''", '"', sentence)
-
-    # remove ellipsis suffix
     suffix = r'_[^\s]*'
     sentence = re.sub(suffix, '', sentence)
-
     # remove spaces before punctuation
     pattern = r'\s+([.,;?!:])'
     sentence = re.sub(pattern, r'\1', sentence)
-
+    # remove weird ``
+    sentence = re.sub(r'``', '"', sentence)
+    sentence = re.sub(r"''", '"', sentence)
     # replace "umlaute"
-    # sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
+    sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
     return sentence
 
 def preprocess_function(examples):
