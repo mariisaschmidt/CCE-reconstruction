@@ -19,4 +19,4 @@ echo "Start training of T5 Base"
 
 python3 finetune.py --dataset gcc --model_name Aug25Base --pretrained_model t5-base
 
-echo "Done!"
+echo "Done! :)"
