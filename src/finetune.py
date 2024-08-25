@@ -187,7 +187,7 @@ if __name__ == '__main__':
         print("Correct the outputs of preprocess: ")
         tokenized_dataset = tokenized_dataset.map(correct_inputs_masks_labels, batched=False)
 
-        if dataset_name == "gcc":
+        if dataset_name == "g4":
             print("Create Train-Test-Split: ")
             tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2)
 
