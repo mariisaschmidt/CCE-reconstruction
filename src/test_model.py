@@ -36,6 +36,7 @@ def remove_suffix(sentence):
 
 def evaluate_model(file, bleu, exmatch, dataset, name):
     predictions = get_predictions(dataset, sent_col)
+    predictions = [remove_suffix(p) for p in predictions]
     golds = dataset[gold_col]
     goldsWithoutSuffix = [remove_suffix(s) for s in golds]
 
