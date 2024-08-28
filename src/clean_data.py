@@ -2,8 +2,13 @@ import json
 import re
 
 def clean_sentence(sentence):
-    suffix = r'_[^\s]*'
+    suffix = r'(\$_\S*)'
     sentence = re.sub(suffix, '', sentence)
+    sentence = sentence.replace("$$", "")
+    sentence = sentence.replace("[", "")
+    sentence = sentence.replace("]", "")
+    suffix2 = r'_[^\s]*'
+    sentence = re.sub(suffix2, '', sentence)
     # remove spaces before punctuation
     pattern = r'\s+([.,;?!:])'
     sentence = re.sub(pattern, r'\1', sentence)
