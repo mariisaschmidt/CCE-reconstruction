@@ -26,38 +26,38 @@ def process_jsonl(input_file, output_file, col):
         
         for line in infile:
             data = json.loads(line)
-            if col in data:
-                data[col] = clean_sentence(data[col])
+            data[col] = clean_sentence(data[col])
             outfile.write(json.dumps(data) + '\n')
 
-# print("Cleaning GC4 Data: ")
-# input_file = '/home/marisa/data/de_de_pairs.jsonl'
-# output_file = '/home/marisa/data/CLEANED_de_de_pairs.jsonl'
-# process_jsonl(input_file, output_file, "text")
-# process_jsonl(input_file, output_file, "gold_sentence")
-# print("Cleaning TIGER Data: ")
-# print("Train: ")
-# input_file = '/home/marisa/data/tiger_train.jsonl'
-# output_file = '/home/marisa/data/CLEANED_tiger_train.jsonl'
-# process_jsonl(input_file, output_file, "Original sentence")
-# process_jsonl(input_file, output_file, "Canonical form")
-# print("Test: ")
-# input_file = '/home/marisa/data/tiger_test.jsonl'
-# output_file = '/home/marisa/data/CLEANED_tiger_test.jsonl'
-# process_jsonl(input_file, output_file, "Original sentence")
-# process_jsonl(input_file, output_file, "Canonical form")
+print("Cleaning GC4 Data: ")
+input_file = '/home/marisa/data/de_de_pairs.jsonl'
+output_file = '/home/marisa/data/CLEANED_de_de_pairs.jsonl'
+process_jsonl(input_file, output_file, "text")
+process_jsonl(input_file, output_file, "gold_sentence")
 
-# print("Cleaning TüBa Data: ")
-# print("Train: ")
-# input_file = '/home/marisa/data/tüba_train.jsonl'
-# output_file = '/home/marisa/data/CLEANED_tüba_train.jsonl'
-# process_jsonl(input_file, output_file, "Treebank-Sentence")
-# process_jsonl(input_file, output_file, "Reconstructed-Sentence")
-# print("Test: ")
-# input_file = '/home/marisa/data/tüba_test.jsonl'
-# output_file = '/home/marisa/data/CLEANED_tüba_test.jsonl'
-# process_jsonl(input_file, output_file, "Treebank-Sentence")
-# process_jsonl(input_file, output_file, "Reconstructed-Sentence")
+print("Cleaning TIGER Data: ")
+print("Train: ")
+input_file = '/home/marisa/data/tiger_train.jsonl'
+output_file = '/home/marisa/data/CLEANED_tiger_train.jsonl'
+process_jsonl(input_file, output_file, "Original sentence")
+process_jsonl(input_file, output_file, "Canonical form")
+print("Test: ")
+input_file = '/home/marisa/data/tiger_test.jsonl'
+output_file = '/home/marisa/data/CLEANED_tiger_test.jsonl'
+process_jsonl(input_file, output_file, "Original sentence")
+process_jsonl(input_file, output_file, "Canonical form")
+
+print("Cleaning TüBa Data: ")
+print("Train: ")
+input_file = '/home/marisa/data/tüba_train.jsonl'
+output_file = '/home/marisa/data/CLEANED_tüba_train.jsonl'
+process_jsonl(input_file, output_file, "Treebank-Sentence")
+process_jsonl(input_file, output_file, "Reconstructed-Sentence")
+print("Test: ")
+input_file = '/home/marisa/data/tüba_test.jsonl'
+output_file = '/home/marisa/data/CLEANED_tüba_test.jsonl'
+process_jsonl(input_file, output_file, "Treebank-Sentence")
+process_jsonl(input_file, output_file, "Reconstructed-Sentence")
 
 print("Cleaning Eval Data: ")
 input_file = '/home/marisa/data/evaluation_sentences.jsonl'
