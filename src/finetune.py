@@ -27,6 +27,8 @@ def clean_sentences(sentence):
 def preprocess_function(examples):
     inputs = prefix + clean_sentences(examples[t])
     targets = clean_sentences(examples[g])
+    print(inputs + "\n" + targets)
+    print("\n")
     model_inputs = tokenizer(inputs, text_target=targets, max_length=512, truncation=True, padding='longest', return_tensors='pt')
     return model_inputs
 
