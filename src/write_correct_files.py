@@ -7,7 +7,7 @@ def dump_json(data):
     return json.dumps(data)
 
 def format_json(data):
-    return ast.literal_eval(line)
+    return ast.literal_eval(data)
 
 if __name__ == '__main__':
     dirname = "base_files"
