@@ -36,9 +36,9 @@ def remove_suffix(sentence):
 
 def evaluate_model(file, bleu, exmatch, dataset, name):
     predictions = get_predictions(dataset, sent_col)
-    predictions = [remove_suffix(p) for p in predictions]
+    #predictions = [remove_suffix(p) for p in predictions]
     golds = dataset[gold_col]
-    goldsWithoutSuffix = [remove_suffix(s) for s in golds]
+    #goldsWithoutSuffix = [remove_suffix(s) for s in golds]
 
     file.write("======================" + name + "============================== \n")
     for j in range(0,2): # define multiple evaluation loops
@@ -46,13 +46,15 @@ def evaluate_model(file, bleu, exmatch, dataset, name):
             if j == 0:
                 file.write("====================== PRED VS GOLD ============================== \n")
                 file.write("pred: " + predictions[i] + "\n")
-                file.write("gold: " + goldsWithoutSuffix[i] + "\n")
+                #file.write("gold: " + goldsWithoutSuffix[i] + "\n")
+                file.write("gold: " + golds[i] + "\n")
         if j == 1:
             file.write("====================== EXACT MATCH ============================== \n")
             if(len(predictions) != 0):
                 score = bleu.compute(predictions=predictions, references=golds)
                 file.write("Bleu Score: " + str(score) + "\n")
-                exact_matches = exmatch.compute(references=goldsWithoutSuffix, predictions=predictions, ignore_case=True, ignore_punctuation=True)
+                #exact_matches = exmatch.compute(references=goldsWithoutSuffix, predictions=predictions, ignore_case=True, ignore_punctuation=True)
+                exact_matches = exmatch.compute(references=golds, predictions=predictions, ignore_case=True, ignore_punctuation=True)
                 file.write("Exact Matches: " + str(exact_matches["exact_match"]) + "\n")
                 file.write("\n \n")
 
