@@ -2,6 +2,7 @@ import json
 import re
 
 def clean_sentence(sentence):
+    print(sentence + "\n")
     suffix = r'(\$_\S*)'
     sentence = re.sub(suffix, '', sentence)
     sentence = sentence.replace("$$", "")
@@ -18,6 +19,7 @@ def clean_sentence(sentence):
     # replace "umlaute"
     sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
     print(sentence)
+    print("\n")
     return sentence
 
 def process_jsonl(input_file, output_file, col):
