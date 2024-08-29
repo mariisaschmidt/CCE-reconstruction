@@ -16,7 +16,7 @@ def get_predictions(ds, sc):
         predictions.append(decoded)
     return predictions
 
-def remove_suffix(sentence):
+def clean_sentence(sentence):
     suffix = r'(\$_\S*)'
     sentence = re.sub(suffix, '', sentence)
     sentence = sentence.replace("$$", "")
@@ -32,13 +32,14 @@ def remove_suffix(sentence):
     sentence = re.sub(r"''", '"', sentence)
     # replace "umlaute"
     sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
+    print(sentence)
     return sentence
 
 def evaluate_model(file, bleu, exmatch, dataset, name):
     predictions = get_predictions(dataset, sent_col)
-    #predictions = [remove_suffix(p) for p in predictions]
+    predictions = [clean_sentence(p) for p in predictions]
     golds = dataset[gold_col]
-    #goldsWithoutSuffix = [remove_suffix(s) for s in golds]
+    golds = [clean_sentence(s) for s in golds]
 
     file.write("======================" + name + "============================== \n")
     for j in range(0,2): # define multiple evaluation loops
@@ -46,14 +47,14 @@ def evaluate_model(file, bleu, exmatch, dataset, name):
             if j == 0:
                 file.write("====================== PRED VS GOLD ============================== \n")
                 file.write("pred: " + predictions[i] + "\n")
-                #file.write("gold: " + goldsWithoutSuffix[i] + "\n")
                 file.write("gold: " + golds[i] + "\n")
+                ems = exmatch.compute(references=[golds[i]], predictions=[predictions[i]], ignore_case=True, ignore_punctuation=True)
+                file.write("EM Score: " + str(ems["exact_match"]) + "\n")
         if j == 1:
             file.write("====================== EXACT MATCH ============================== \n")
             if(len(predictions) != 0):
                 score = bleu.compute(predictions=predictions, references=golds)
                 file.write("Bleu Score: " + str(score) + "\n")
-                #exact_matches = exmatch.compute(references=goldsWithoutSuffix, predictions=predictions, ignore_case=True, ignore_punctuation=True)
                 exact_matches = exmatch.compute(references=golds, predictions=predictions, ignore_case=True, ignore_punctuation=True)
                 file.write("Exact Matches: " + str(exact_matches["exact_match"]) + "\n")
                 file.write("\n \n")
