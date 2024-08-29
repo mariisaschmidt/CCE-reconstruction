@@ -18,6 +18,7 @@ def clean_sentence(sentence):
     sentence = re.sub(r"''", '"', sentence)
     # replace "umlaute"
     sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
+    sentence = sentence.replace("\/", "")
     print(sentence)
     print("\n")
     return sentence

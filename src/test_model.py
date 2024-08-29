@@ -7,12 +7,14 @@ from datasets import load_dataset
 
 def get_predictions(ds, sc):
     inputs = ds[sc]
+    inputs = [clean_sentence(p) for p in inputs]
     predictions = []
     for input in inputs:
         evaluation_input = (tokenizer.encode(input, return_tensors="pt"))
         evaluation_output = model.generate(evaluation_input, max_new_tokens=200)
         decoded = tokenizer.decode(evaluation_output[0])
         decoded = decoded[6:len(decoded)-4]
+        decoded = decoded.replace("<unk>", "Oe")
         predictions.append(decoded)
     return predictions
 
@@ -32,12 +34,13 @@ def clean_sentence(sentence):
     sentence = re.sub(r"''", '"', sentence)
     # replace "umlaute"
     sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
+    sentence = sentence.replace("\/", "")
     print(sentence)
     return sentence
 
 def evaluate_model(file, bleu, exmatch, dataset, name):
     predictions = get_predictions(dataset, sent_col)
-    predictions = [clean_sentence(p) for p in predictions]
+    #predictions = [clean_sentence(p) for p in predictions]
     golds = dataset[gold_col]
     golds = [clean_sentence(s) for s in golds]
 
