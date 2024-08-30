@@ -37,9 +37,13 @@ def clean_sentence(sentence):
     sentence = sentence.replace("\/", "")
     return sentence
 
-def evaluate_model(file, bleu, exmatch, dataset, name):
+def add_one_space(sentence):
+    return sentence + " "
+
+def evaluate_model(file, bleu, exmatch, dataset, name, add_space):
     predictions = get_predictions(dataset, sent_col)
-    #predictions = [clean_sentence(p) for p in predictions]
+    if add_space:
+        predictions = [add_one_space]
     golds = dataset[gold_col]
     golds = [clean_sentence(s) for s in golds]
 
@@ -78,14 +82,17 @@ if __name__ == '__main__':
         corpus = os.path.expanduser("~/data/CLEANED_tüba_test.jsonl")
         sent_col = "Treebank-Sentence"
         gold_col = "Reconstructed-Sentence"
+        add_space = False
     elif args.corpus == "tiger":
         corpus = os.path.expanduser("~/data/CLEANED_tiger_test.jsonl")
         sent_col = "Original sentence"
         gold_col = "Canonical form"
+        add_space = True
     elif args.corpus == "eval":
         corpus = os.path.expanduser("~/data/CLEANED_evaluation_sentences.jsonl")
         sent_col = "Sentence"
         gold_col = "Gold"
+        add_space = False
     else: 
         print("provide a corpus!")
     
@@ -110,11 +117,11 @@ if __name__ == '__main__':
 
     result_file.write("CHECKPOINT: " + checkpoint + " CORPUS: " + corpus + "\n")
 
-    evaluate_model(result_file, bleu, em_metric, fcr, "FCR")
-    evaluate_model(result_file, bleu, em_metric, gapping, "GAPPING")
-    evaluate_model(result_file, bleu, em_metric, bcr, "BCR")
-    evaluate_model(result_file, bleu, em_metric, sgf, "SGF")
-    evaluate_model(result_file, bleu, em_metric, dataset, "ALL SENTENCES")
+    evaluate_model(result_file, bleu, em_metric, fcr, "FCR", add_space)
+    evaluate_model(result_file, bleu, em_metric, gapping, "GAPPING", add_space)
+    evaluate_model(result_file, bleu, em_metric, bcr, "BCR", add_space)
+    evaluate_model(result_file, bleu, em_metric, sgf, "SGF", add_space)
+    evaluate_model(result_file, bleu, em_metric, dataset, "ALL SENTENCES", add_space)
     
     result_file.close()
     print("DONE!")
