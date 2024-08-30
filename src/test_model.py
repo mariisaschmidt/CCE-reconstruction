@@ -43,7 +43,7 @@ def add_one_space(sentence):
 def evaluate_model(file, bleu, exmatch, dataset, name, add_space):
     predictions = get_predictions(dataset, sent_col)
     if add_space:
-        predictions = [add_one_space]
+        predictions = [add_one_space(x) for x in predictions]
     golds = dataset[gold_col]
     golds = [clean_sentence(s) for s in golds]
 
