@@ -35,7 +35,6 @@ def clean_sentence(sentence):
     # replace "umlaute"
     sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
     sentence = sentence.replace("\/", "")
-    print(sentence)
     return sentence
 
 def evaluate_model(file, bleu, exmatch, dataset, name):
@@ -52,7 +51,7 @@ def evaluate_model(file, bleu, exmatch, dataset, name):
                 file.write("pred: " + predictions[i] + "\n")
                 file.write("gold: " + golds[i] + "\n")
                 ems = exmatch.compute(references=[golds[i]], predictions=[predictions[i]], ignore_case=True, ignore_punctuation=True)
-                file.write("EM Score: " + str(ems["exact_match"]) + "\n")
+                file.write("EM Score: " + str(ems["exact_match"]) + " Length: " + str(len(predictions[i])) + " vs " + str(len(golds[i])) + "\n")
         if j == 1:
             file.write("====================== EXACT MATCH ============================== \n")
             if(len(predictions) != 0):
