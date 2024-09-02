@@ -19,8 +19,6 @@ def clean_sentence(sentence):
     # replace "umlaute"
     sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
     sentence = sentence.replace("\/", "")
-    print(sentence)
-    print("\n")
     return sentence
 
 def process_jsonl(input_file, output_file, col):
@@ -38,7 +36,6 @@ def add_other_golds(input_file, output_file, sentcol, goldcol, finalgoldcol):
         for line in infile:
             data = json.loads(line)
             if data[goldcol] != " ":
-                print(data[goldcol])
                 json.dump({sentcol: data[sentcol], finalgoldcol: data[goldcol]}, outfile)
                 outfile.write("\n")
 
