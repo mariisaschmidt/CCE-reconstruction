@@ -38,6 +38,7 @@ def add_other_golds(input_file, output_file, sentcol, goldcol, finalgoldcol):
         for line in infile:
             data = json.loads(line)
             if data[goldcol] != " ":
+                print(data[goldcol])
                 json.dump({sentcol: data[sentcol], finalgoldcol: data[goldcol]}, outfile)
                 outfile.write("\n")
 
