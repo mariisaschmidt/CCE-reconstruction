@@ -2,7 +2,6 @@ import json
 import re
 
 def clean_sentence(sentence):
-    print(sentence + "\n")
     suffix = r'(\$_\S*)'
     sentence = re.sub(suffix, '', sentence)
     sentence = sentence.replace("$$", "")
