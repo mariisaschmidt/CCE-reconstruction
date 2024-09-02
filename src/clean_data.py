@@ -47,21 +47,25 @@ print("Tiger Train")
 input_file = '/home/marisa/data/tiger_train.jsonl'
 output_file = '/home/marisa/data/ALL_GOLDS_tiger_train.jsonl'
 add_other_golds(input_file, output_file, "Original sentence", "gold2 (LCO)", "Canonical form")
+add_other_golds(input_file, output_file, "Original sentence", "Canonical form", "Canonical form")
 print("Tiger Test")
 input_file = '/home/marisa/data/tiger_test.jsonl'
 output_file = '/home/marisa/data/ALL_GOLDS_tiger_test.jsonl'
 add_other_golds(input_file, output_file, "Original sentence", "gold2 (LCO)", "Canonical form")
+add_other_golds(input_file, output_file, "Original sentence", "Canonical form", "Canonical form")
 
 print("TüBa Train")
 input_file = '/home/marisa/data/tüba_train.jsonl'
 output_file = '/home/marisa/data/ALL_GOLDS_tüba_train.jsonl'
 add_other_golds(input_file, output_file, "Treebank-Sentence", "Gold_1", "Reconstructed-Sentence")
 add_other_golds(input_file, output_file, "Treebank-Sentence", "Gold_2", "Reconstructed-Sentence")
+add_other_golds(input_file, output_file, "Treebank-Sentence", "Reconstructed-Sentence", "Reconstructed-Sentence")
 print("TüBa Test")
 input_file = '/home/marisa/data/tüba_test.jsonl'
 output_file = '/home/marisa/data/ALL_GOLDS_tüba_test.jsonl'
 add_other_golds(input_file, output_file, "Treebank-Sentence", "Gold_1", "Reconstructed-Sentence")
 add_other_golds(input_file, output_file, "Treebank-Sentence", "Gold_2", "Reconstructed-Sentence")
+add_other_golds(input_file, output_file, "Treebank-Sentence", "Reconstructed-Sentence", "Reconstructed-Sentence")
 
 print("Cleaning GC4 Data: ")
 input_file = '/home/marisa/data/de_de_pairs.jsonl'
