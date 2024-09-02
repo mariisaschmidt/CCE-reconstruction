@@ -37,12 +37,10 @@ def add_other_golds(input_file, output_file, sentcol, goldcol):
          open(output_file, 'a', encoding='utf-8') as outfile:
         for line in infile:
             data = json.loads(line)
-            for entry in data:
-                if entry[goldcol]:
-                    input = entry[sentcol]
-                    print(input + "\n" + entry[sentcol] + "\n")
-                    json.dump({sentcol: input, goldcol: entry[goldcol]}, outfile)
-                    outfile.write("\n")
+            if data[goldcol]:
+                print(data[sentcol] + "\n" + data[goldcol] + "\n")
+                json.dump({sentcol: data[sentcol], goldcol: data[goldcol]}, outfile)
+                outfile.write("\n")
 
 print("Getting other gold standards!")
 print("Tiger Train")
