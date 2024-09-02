@@ -14,6 +14,4 @@ For convenience we offer a bash script to simplify using our system.
 ## Citation
 This code belongs to the following paper and should be cited as the same: 
 
-Accepted at 27th International Conference on Text, Speech and Dialogue in Brno, Czech Republic, September 9-13, 2024
-
-M. Schmidt, K. Harbusch and D. Memmesheimer (2024). *Automatic Ellipsis Reconstruction in Coordinated German Sentences based on Text-To-Text Transfer Transformers*. 
+Schmidt, M., Harbusch, K., Memmesheimer, D. (2024). Automatic Ellipsis Reconstruction in Coordinated German Sentences Based on Text-to-Text Transfer Transformers. In: Nöth, E., Horák, A., Sojka, P. (eds) Text, Speech, and Dialogue. TSD 2024. Lecture Notes in Computer Science(), vol 15048. Springer, Cham. https://doi.org/10.1007/978-3-031-70563-2_14
