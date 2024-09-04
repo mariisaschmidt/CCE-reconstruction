@@ -29,13 +29,13 @@ def process_jsonl(input_file, output_file, col):
             data[col] = clean_sentence(data[col])
             outfile.write(json.dumps(data) + '\n')
 
-def add_other_golds(input_file, output_file, sentcol, goldcol, finalgoldcol):
+def add_other_golds(input_file, output_file, sentcol, goldcol, finalgoldcol): # only tiger + tüba
     with open(input_file, 'r', encoding='utf-8') as infile, \
          open(output_file, 'a', encoding='utf-8') as outfile:
         for line in infile:
             data = json.loads(line)
             if data[goldcol] != " ":
-                json.dump({sentcol: data[sentcol], finalgoldcol: data[goldcol]}, outfile)
+                json.dump({sentcol: data[sentcol], finalgoldcol: data[goldcol], "FCR": data["FCR"], "Gapping": data["Gapping"], "BCR": data["BCR"], "SGF": data["SGF"]}, outfile)
                 outfile.write("\n")
 
 print("Getting other gold standards!")
