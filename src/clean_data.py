@@ -22,7 +22,7 @@ def clean_sentence(sentence):
 
 def process_jsonl(input_file, output_file, col):
     with open(input_file, 'r', encoding='utf-8') as infile, \
-         open(output_file, 'w', encoding='utf-8') as outfile:
+         open(output_file, 'a', encoding='utf-8') as outfile:
         
         for line in infile:
             data = json.loads(line)
@@ -75,8 +75,9 @@ input_file = '/home/marisa/data/ALL_GOLDS_tiger_train.jsonl'
 output_file = '/home/marisa/data/CLEANED_tiger_train.jsonl'
 process_jsonl(input_file, output_file, "Original sentence")
 process_jsonl(input_file, output_file, "Canonical form")
+
 print("Test: ")
-output_file = '/home/marisa/data/ALL_GOLDS_tiger_test.jsonl'
+input_file = '/home/marisa/data/ALL_GOLDS_tiger_test.jsonl'
 output_file = '/home/marisa/data/CLEANED_tiger_test.jsonl'
 process_jsonl(input_file, output_file, "Original sentence")
 process_jsonl(input_file, output_file, "Canonical form")
@@ -88,7 +89,7 @@ output_file = '/home/marisa/data/CLEANED_tüba_train.jsonl'
 process_jsonl(input_file, output_file, "Treebank-Sentence")
 process_jsonl(input_file, output_file, "Reconstructed-Sentence")
 print("Test: ")
-input_file = '/home/marisa/data/ALL_GOLDS_tüba_train.jsonl'
+input_file = '/home/marisa/data/ALL_GOLDS_tüba_test.jsonl'
 output_file = '/home/marisa/data/CLEANED_tüba_test.jsonl'
 process_jsonl(input_file, output_file, "Treebank-Sentence")
 process_jsonl(input_file, output_file, "Reconstructed-Sentence")
