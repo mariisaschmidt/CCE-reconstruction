@@ -7,7 +7,7 @@ from datasets import load_dataset
 
 def get_predictions(ds, sc):
     inputs = ds[sc]
-    inputs = [clean_sentence(p) for p in inputs]
+    # inputs = [clean_sentence(p) for p in inputs]
     predictions = []
     for input in inputs:
         evaluation_input = (tokenizer.encode(input, return_tensors="pt"))
@@ -18,24 +18,22 @@ def get_predictions(ds, sc):
         predictions.append(decoded)
     return predictions
 
-def clean_sentence(sentence):
-    suffix = r'(\$_\S*)'
-    sentence = re.sub(suffix, '', sentence)
-    sentence = sentence.replace("$$", "")
-    sentence = sentence.replace("[", "")
-    sentence = sentence.replace("]", "")
-    suffix2 = r'_[^\s]*'
-    sentence = re.sub(suffix2, '', sentence)
-    # remove spaces before punctuation
-    pattern = r'\s+([.,;?!:])'
-    sentence = re.sub(pattern, r'\1', sentence)
-    # remove weird ``
-    sentence = re.sub(r'``', '"', sentence)
-    sentence = re.sub(r"''", '"', sentence)
-    # replace "umlaute"
-    sentence = sentence.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
-    sentence = sentence.replace("\/", "")
-    return sentence
+# def clean_sentence(sentence):
+#     suffix = r'(\$_\S*)'
+#     sentence = re.sub(suffix, '', sentence)
+#     sentence = sentence.replace("$$", "")
+#     sentence = sentence.replace("[", "")
+#     sentence = sentence.replace("]", "")
+#     suffix2 = r'_[^\s]*'
+#     sentence = re.sub(suffix2, '', sentence)
+#     # remove spaces before punctuation
+#     pattern = r'\s+([.,;?!:])'
+#     sentence = re.sub(pattern, r'\1', sentence)
+#     # remove weird ``
+#     sentence = re.sub(r'``', '"', sentence)
+#     sentence = re.sub(r"''", '"', sentence)
+#     sentence = sentence.replace("\/", "")
+#     return sentence
 
 def add_one_space(sentence):
     return sentence + " "
@@ -45,7 +43,7 @@ def evaluate_model(file, bleu, exmatch, dataset, name, add_space):
     if add_space:
         predictions = [add_one_space(x) for x in predictions]
     golds = dataset[gold_col]
-    golds = [clean_sentence(s) for s in golds]
+    # golds = [clean_sentence(s) for s in golds]
 
     file.write("======================" + name + "============================== \n")
     for j in range(0,2): # define multiple evaluation loops
