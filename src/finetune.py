@@ -114,7 +114,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 10
+            epochs = 5
         if dataset_name == "merged":
             train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
             test_data1 = os.path.expanduser("~/data/CLEANED_tiger_test.jsonl")
