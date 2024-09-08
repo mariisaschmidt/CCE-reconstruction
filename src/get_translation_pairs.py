@@ -5,7 +5,7 @@ import json
 
 def tokenize(text):
     sents = text['raw_content'].encode("utf-8").decode("utf-8")
-    sents = nltk.sent_tokenize()
+    sents = nltk.sent_tokenize(sents)
     for s in sents:
         s = s + '[NEXT]'
     text['raw_content'] = str(sents)
