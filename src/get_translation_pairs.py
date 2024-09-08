@@ -4,9 +4,9 @@ import nltk.data
 import json
 
 def tokenize(text):
-    sents = nltk.sent_tokenize(text['raw_content'])
+    sents = text['raw_content'].encode("utf-8").decode("utf-8")
+    sents = nltk.sent_tokenize()
     for s in sents:
-        s = s.replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
         s = s + '[NEXT]'
     text['raw_content'] = str(sents)
     return text
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     ds_modified = ds.map(tokenize)
 
     sent_id = 0
-    with open("de_de_pairs.jsonl", "a") as file:
+    with open("de_de_pairs.jsonl", "a", encoding="utf-8") as file:
         for tokenized_sentence in ds_modified:
             splitted = tokenized_sentence['raw_content'].split("',")
             for i in range(len(splitted)):
