@@ -92,8 +92,8 @@ output_file = '/home/marisa/data/CLEANED_tüba_test.jsonl'
 process_jsonl(input_file, output_file, "Treebank-Sentence")
 process_jsonl(input_file, output_file, "Reconstructed-Sentence")
 
-print("Cleaning Eval Data: ")
-input_file = '/home/marisa/data/evaluation_sentences.jsonl'
-output_file = '/home/marisa/data/CLEANED_evaluation_sentences.jsonl'
-process_jsonl(input_file, output_file, "Sentence")
-process_jsonl(input_file, output_file, "Gold")
+# print("Cleaning Eval Data: ")
+# input_file = '/home/marisa/data/evaluation_sentences.jsonl'
+# output_file = '/home/marisa/data/CLEANED_evaluation_sentences.jsonl'
+# process_jsonl(input_file, output_file, "Sentence")
+# process_jsonl(input_file, output_file, "Gold")
