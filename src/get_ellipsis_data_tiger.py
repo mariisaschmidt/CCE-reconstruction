@@ -11,7 +11,7 @@ def format_json(data):
     return ast.literal_eval(data)
 
 if __name__ == '__main__':
-    df = pd.read_csv("0809-TIGER-canonical-forms.csv", sep=";")
+    df = pd.read_csv("/home/marisa/data/0809-TIGER-canonical-forms.csv", sep=";")
     df = df.fillna(np.nan).replace([np.nan], [" "])
     df = df.astype(str)
 
