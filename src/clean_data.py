@@ -43,16 +43,18 @@ input_file = '/home/marisa/data/OLD_tiger_train.jsonl'
 output_file = '/home/marisa/data/ALL_GOLDS_OLD_tiger_train.jsonl'
 #input_file = '/home/marisa/data/tiger_train.jsonl'
 #output_file = '/home/marisa/data/ALL_GOLDS_tiger_train.jsonl'
-add_other_golds(input_file, output_file, "Original sentence", "gold2", "Canonical form")
-add_other_golds(input_file, output_file, "Original sentence", "gold3", "Canonical form")
+add_other_golds(input_file, output_file, "Original sentence", "gold2 (LCO)", "Canonical form")
+# add_other_golds(input_file, output_file, "Original sentence", "gold2", "Canonical form")
+# add_other_golds(input_file, output_file, "Original sentence", "gold3", "Canonical form")
 add_other_golds(input_file, output_file, "Original sentence", "Canonical form", "Canonical form")
 print("Tiger Test")
 input_file = '/home/marisa/data/OLD_tiger_test.jsonl'
 output_file = '/home/marisa/data/ALL_GOLDS_OLD_tiger_test.jsonl'
 #input_file = '/home/marisa/data/tiger_test.jsonl'
 #output_file = '/home/marisa/data/ALL_GOLDS_tiger_test.jsonl'
-add_other_golds(input_file, output_file, "Original sentence", "gold2", "Canonical form")
-add_other_golds(input_file, output_file, "Original sentence", "gold3", "Canonical form")
+add_other_golds(input_file, output_file, "Original sentence", "gold2 (LCO)", "Canonical form")
+# add_other_golds(input_file, output_file, "Original sentence", "gold2", "Canonical form")
+# add_other_golds(input_file, output_file, "Original sentence", "gold3", "Canonical form")
 add_other_golds(input_file, output_file, "Original sentence", "Canonical form", "Canonical form")
 
 print("TüBa Train")
