@@ -31,7 +31,7 @@ if __name__ == '__main__':
         train_file = open("OLD_tiger_train.jsonl", "a")
         test_file = open("OLD_tiger_test.jsonl", "a")
         for line in lines:
-            if(i <= 5847):
+            if(i <= 2950): #5847
                 train_file.write(dump_json(format_json(line)) + '\n')
                 i += 1
             else:
