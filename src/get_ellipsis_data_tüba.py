@@ -11,7 +11,7 @@ def format_json(data):
     return ast.literal_eval(data)
 
 if __name__ == '__main__':
-    df = pd.read_csv("/home/marisa/data/080924_CCE_BLEU.csv", sep=";")
+    df = pd.read_csv("/home/marisa/data/20230426_CCE_BLEU.csv", sep=";") # 080924_CCE_BLEU.csv
     df = df.fillna(np.nan).replace([np.nan], [" "])
     df = df.astype(str)
 
@@ -28,8 +28,8 @@ if __name__ == '__main__':
         
         #split_indx = (len(lines)//100) * 80
 
-        train_file = open("tüba_train.jsonl", "a")
-        test_file = open("tüba_test.jsonl", "a")
+        train_file = open("OLD_tüba_train.jsonl", "a")
+        test_file = open("OLD_tüba_test.jsonl", "a")
         for line in lines:
             if(i <= 1442):
                 train_file.write(dump_json(format_json(line)) + '\n')
