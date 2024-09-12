@@ -10,13 +10,13 @@
 # python3 get_translation_pairs.py
 # rm -r correct_files
 
-echo "Start training of T5 Small"
+# echo "Start training of T5 Small"
 
-python3 finetune.py --dataset g4 --model_name Aug25Small --pretrained_model t5-small
+# python3 finetune.py --dataset g4 --model_name Aug25Small --pretrained_model t5-small
 
-echo "Done!"
-# echo "Start training of T5 Base"
+# echo "Done!"
+echo "Start training of T5 Base"
 
-# python3 finetune.py --dataset g4 --model_name Aug25Base --pretrained_model t5-base
+python3 finetune.py --dataset g4 --model_name Aug25Base --pretrained_model t5-base
 
 echo "Done! :)"
