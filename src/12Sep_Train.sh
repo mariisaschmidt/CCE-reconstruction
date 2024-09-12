@@ -1,0 +1,21 @@
+echo "Start training of TigerSmall"
+
+python3 finetune.py --dataset tiger --model_name  12sep_OneOld_TigerSmall  --pretrained_model /home/marisa/models/Aug25
+
+echo "Start training of TübaSmall"
+
+python3 finetune.py --dataset tüba --model_name  12sep_OneOld_TübaSmall  --pretrained_model /home/marisa/models/Aug25
+
+# echo "Start training of TigerBase"
+
+# python3 finetune.py --dataset tiger --model_name  12sep_OneOld_TigerBase  --pretrained_model /home/marisa/models/Aug25Base
+
+# echo "Start training of TübaBase"
+
+# python3 finetune.py --dataset tüba --model_name  12sep_OneOld_TübaBase  --pretrained_model /home/marisa/models/Aug25Base
+
+echo "Done with training!"
+echo "Running evaluation script:"
+
+chmod +x 12sep_eval.sh
+./12sep_eval.sh 
