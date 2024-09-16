@@ -80,7 +80,7 @@ if __name__ == '__main__':
         checkpoint = args.pretrained_model
     else:
         if dataset_name == "g4":
-            checkpoint = "t5-small"
+            checkpoint = "t5-base"
         else: 
             print("You need to provide a german llm for finetuning with ellipsis data!")
     
