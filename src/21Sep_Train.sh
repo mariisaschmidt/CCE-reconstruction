@@ -10,13 +10,13 @@
 
 # python3 finetune.py --dataset merged --model_name  12sep_AllNew_MergedSmall  --pretrained_model /home/marisa/models/Aug25Small
 
-echo "Start training of TigerBase"
+# echo "Start training of TigerBase"
 
-python3 finetune.py --dataset tiger --model_name  21sep_OneOld_TigerBase  --pretrained_model /home/marisa/models/Aug25Base
+# python3 finetune.py --dataset tiger --model_name  21sep_OneOld_TigerBase  --pretrained_model /home/marisa/models/Aug25Base
 
-echo "Start training of TübaBase"
+# echo "Start training of TübaBase"
 
-python3 finetune.py --dataset tüba --model_name  21sep_OneOld_TübaBase  --pretrained_model /home/marisa/models/Aug25Base
+# python3 finetune.py --dataset tüba --model_name  21sep_OneOld_TübaBase  --pretrained_model /home/marisa/models/Aug25Base
 
 echo "Start training of MergedBase"
 
