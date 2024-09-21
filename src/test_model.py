@@ -77,17 +77,17 @@ if __name__ == '__main__':
         checkpoint = " "
     
     if args.corpus == "tuba":
-        corpus = os.path.expanduser("~/data/CLEANED_tüba_test.jsonl")
+        corpus = os.path.expanduser("~/data/CLEANED_OLD_tüba_test.jsonl")
         sent_col = "Treebank-Sentence"
         gold_col = "Reconstructed-Sentence"
         add_space = False
     elif args.corpus == "tiger":
-        corpus = os.path.expanduser("~/data/CLEANED_tiger_test.jsonl")
+        corpus = os.path.expanduser("~/data/CLEANED_OLD_tiger_test.jsonl")
         sent_col = "Original sentence"
         gold_col = "Canonical form"
         add_space = True
     elif args.corpus == "eval":
-        corpus = os.path.expanduser("~/data/CLEANED_evaluation_sentences.jsonl")
+        corpus = os.path.expanduser("~/data/CLEANED_OLD_evaluation_sentences.jsonl")
         sent_col = "Sentence"
         gold_col = "Gold"
         add_space = False
