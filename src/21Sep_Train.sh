@@ -6,9 +6,9 @@
 
 # python3 finetune.py --dataset tüba --model_name  12sep_AllNew_TübaSmall  --pretrained_model /home/marisa/models/Aug25Small
 
-# echo "Start training of MergedSmall"
+echo "Start training of MergedSmall"
 
-# python3 finetune.py --dataset merged --model_name  12sep_AllNew_MergedSmall  --pretrained_model /home/marisa/models/Aug25Small
+python3 finetune.py --dataset merged --model_name  21sep_OneOld_MergedSmall  --pretrained_model /home/marisa/models/Aug25Small
 
 # echo "Start training of TigerBase"
 
@@ -18,9 +18,9 @@
 
 # python3 finetune.py --dataset tüba --model_name  21sep_OneOld_TübaBase  --pretrained_model /home/marisa/models/Aug25Base
 
-echo "Start training of MergedBase"
+# echo "Start training of MergedBase"
 
-python3 finetune.py --dataset merged --model_name  21sep_OneOld_MergedBase  --pretrained_model /home/marisa/models/Aug25Base
+# python3 finetune.py --dataset merged --model_name  21sep_OneOld_MergedBase  --pretrained_model /home/marisa/models/Aug25Base
 
 echo "Done with training!"
 echo "Running evaluation script:"
