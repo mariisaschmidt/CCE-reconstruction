@@ -18,17 +18,17 @@ echo "Starting evaluation!"
 
 # python3 test_model.py --checkpoint /home/marisa/models/12sep_AllNew_MergedSmall  --corpus tiger --prefix 12sep_AllNew_MeSm
 
-python3 test_model.py --checkpoint /home/marisa/models/21sep_OneOld_TübaBase  --corpus eval --prefix 21sep_OneOld_TuBas
+# python3 test_model.py --checkpoint /home/marisa/models/21sep_OneOld_TübaBase  --corpus eval --prefix 21sep_OneOld_TuBas
 
-python3 test_model.py --checkpoint /home/marisa/models/21sep_OneOld_TübaBase  --corpus tuba --prefix 21sep_OneOld_TuBas
+# python3 test_model.py --checkpoint /home/marisa/models/21sep_OneOld_TübaBase  --corpus tuba --prefix 21sep_OneOld_TuBas
 
-python3 test_model.py --checkpoint /home/marisa/models/21sep_OneOld_TübaBase  --corpus tiger --prefix 21sep_OneOld_TuBas
+# python3 test_model.py --checkpoint /home/marisa/models/21sep_OneOld_TübaBase  --corpus tiger --prefix 21sep_OneOld_TuBas
 
-python3 test_model.py --checkpoint /home/marisa/models/21sep_OneOld_TigerBase  --corpus tuba --prefix 21sep_OneOld_TiBas
+# python3 test_model.py --checkpoint /home/marisa/models/21sep_OneOld_TigerBase  --corpus tuba --prefix 21sep_OneOld_TiBas
 
-python3 test_model.py --checkpoint /home/marisa/models/21sep_OneOld_TigerBase  --corpus tiger --prefix 21sep_OneOld_TiBas
+# python3 test_model.py --checkpoint /home/marisa/models/21sep_OneOld_TigerBase  --corpus tiger --prefix 21sep_OneOld_TiBas
 
-python3 test_model.py --checkpoint /home/marisa/models/21sep_OneOld_TigerBase  --corpus eval --prefix 21sep_OneOld_TiBas
+# python3 test_model.py --checkpoint /home/marisa/models/21sep_OneOld_TigerBase  --corpus eval --prefix 21sep_OneOld_TiBas
 
 python3 test_model.py --checkpoint /home/marisa/models/21sep_OneOld_MergedBase  --corpus eval --prefix 21sep_OneOld_MeBas
 
