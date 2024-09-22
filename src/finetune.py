@@ -86,8 +86,8 @@ if __name__ == '__main__':
     
     if dataset_name != "":
         if dataset_name == "tüba":
-            train_data = os.path.expanduser("~/data/CLEANED_ALL_OLD_tüba_train.jsonl")
-            test_data = os.path.expanduser("~/data/CLEANED_ALL_OLD_tüba_test.jsonl")
+            train_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_train.jsonl")
+            test_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_test.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             print("Got train data")
             test_dataset = load_dataset("json", data_files=test_data, split='train')
@@ -101,8 +101,8 @@ if __name__ == '__main__':
             batchsize = 4
             epochs = 5
         if dataset_name == "tiger":
-            train_data = os.path.expanduser("~/data/CLEANED_ALL_OLD_tiger_train.jsonl")
-            test_data = os.path.expanduser("~/data/CLEANED_ALL_OLD_tiger_test.jsonl")
+            train_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_train.jsonl")
+            test_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_test.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             print("Got train data")
             test_dataset = load_dataset("json", data_files=test_data, split='train')
@@ -116,10 +116,10 @@ if __name__ == '__main__':
             prefix = "reconstruct the ellipsis in this sentence: "
             epochs = 10
         if dataset_name == "merged":
-            train_data1 = os.path.expanduser("~/data/CLEANED_ALL_OLD_tiger_train.jsonl")
-            test_data1 = os.path.expanduser("~/data/CLEANED_ALL_OLD_tiger_test.jsonl")
-            train_data2 = os.path.expanduser("~/data/CLEANED_ALL_OLD_tüba_train.jsonl")
-            test_data2 = os.path.expanduser("~/data/CLEANED_ALL_OLD_tüba_test.jsonl")
+            train_data1 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_train.jsonl")
+            test_data1 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_test.jsonl")
+            train_data2 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_train.jsonl")
+            test_data2 = os.path.expanduser("~/data/CLEANED_ONE_NEWD_tüba_test.jsonl")
 
             train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
             train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
