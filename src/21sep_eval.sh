@@ -12,7 +12,7 @@ echo "Starting evaluation!"
 
 # python3 test_model.py --checkpoint /home/marisa/models/12sep_AllNew_TübaSmall  --corpus eval --prefix 12sep_AllNew_TuSm
 
-python3 test_model.py --checkpoint /home/marisa/models/22sep_OneNew_MergedSmall  --corpus eval --prefix 21sep_OneNew_MeSm
+python3 test_model.py --checkpoint /home/marisa/models/21sep_OneNew_MergedSmall  --corpus eval --prefix 22sep_OneNew_MeSm
 
 python3 test_model.py --checkpoint /home/marisa/models/21sep_OneNew_MergedSmall  --corpus tuba --prefix 22sep_OneNew_MeSm
 
