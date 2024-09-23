@@ -30,10 +30,10 @@ echo "Starting evaluation!"
 
 # python3 test_model.py --checkpoint /home/marisa/models/22sep_AllNew_TigerBase  --corpus eval --prefix 22sep_AllNew_TiBas
 
-# python3 test_model.py --checkpoint /home/marisa/models/22sep_AllNew_MergedBase  --corpus eval --prefix 22sep_AllNew_MeBas
+python3 test_model.py --checkpoint /home/marisa/models/22sep_AllNew_MergedBase  --corpus eval --prefix 22sep_AllNew_MeBas
 
-# python3 test_model.py --checkpoint /home/marisa/models/22sep_AllNew_MergedBase  --corpus tuba --prefix 22sep_AllNew_MeBas
+python3 test_model.py --checkpoint /home/marisa/models/22sep_AllNew_MergedBase  --corpus tuba --prefix 22sep_AllNew_MeBas
 
-python3 test_model.py --checkpoint /home/marisa/models/22sep_AllNew_MergedBase  --corpus tiger --prefix 22sep_AllNew_MeBas
+# python3 test_model.py --checkpoint /home/marisa/models/22sep_AllNew_MergedBase  --corpus tiger --prefix 22sep_AllNew_MeBas
 
 echo "Done with evaluation!"
