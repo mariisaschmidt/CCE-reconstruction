@@ -25,7 +25,7 @@ def correct_inputs_masks_labels(examples):
 
 def postprocess_text(preds, labels):
     preds = [pred.strip() for pred in preds]
-    labels = [[label.strip()] for label in labels]
+    labels = [label.strip() for label in labels]
 
     return preds, labels
 
@@ -57,7 +57,7 @@ def objective(trial):
     model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
     log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
 
-    learning_rate = trial.suggest_loguniform('learning_rate', 1e-5, 1e-4)
+    learning_rate = trial.suggest_float('learning_rate', 1e-5, 1e-4, log=True)
     batch_size = trial.suggest_categorical('per_device_train_batch_size', [4, 8, 16])
     num_train_epochs = trial.suggest_int('num_train_epochs', 1, 15)
 
