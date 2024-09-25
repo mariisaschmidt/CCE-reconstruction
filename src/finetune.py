@@ -1,26 +1,15 @@
 # the all-in-one script to finetune a huggingface ellipsis reconstruction model 
-
 from datasets import load_dataset, concatenate_datasets
 from transformers import AutoTokenizer
 from transformers import DataCollatorForSeq2Seq
 import evaluate
 import numpy as np 
-import re
 import os 
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
 import argparse
 from datasets import DatasetDict
-
-# def clean_sentences(sentence):
-#     suffix = r'_[^\s]*'
-#     sentence = re.sub(suffix, '', sentence)
-#     # remove spaces before punctuation
-#     pattern = r'\s+([.,;?!:])'
-#     sentence = re.sub(pattern, r'\1', sentence)
-#     # remove weird ``
-#     sentence = re.sub(r'``', '"', sentence)
-#     sentence = re.sub(r"''", '"', sentence)
-#     return sentence
+import optuna
+import optuna.visualization as vis
 
 def preprocess_function(examples):
     inputs = prefix + examples[t]
@@ -60,6 +49,63 @@ def compute_metrics(eval_preds):
     result = {k: round(v, 4) for k, v in result.items()}
     return result
 
+def objective(trial):
+    data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
+    model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
+    log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
+
+    learning_rate = trial.suggest_loguniform('learning_rate', 1e-5, 1e-4)
+    batch_size = trial.suggest_categorical('per_device_train_batch_size', [4, 8, 16])
+    num_train_epochs = trial.suggest_int('num_train_epochs', 1, 15)
+
+    training_args = Seq2SeqTrainingArguments(
+    output_dir=model_name,
+    evaluation_strategy="epoch",
+    logging_dir=log_dir,
+    learning_rate=learning_rate,
+    per_device_train_batch_size=batch_size,
+    per_device_eval_batch_size=batch_size,
+    weight_decay=0.01,
+    save_total_limit=3,
+    num_train_epochs=num_train_epochs,
+    predict_with_generate=True,
+    fp16=True, # set true when cuda available
+    push_to_hub=False,
+    generation_max_length=256,
+    )
+
+    trainer = Seq2SeqTrainer(
+        model=model,
+        args=training_args,
+        train_dataset=tokenized_dataset['train'],
+        eval_dataset=tokenized_dataset['test'],
+        tokenizer=tokenizer,
+        data_collator=data_collator,
+        compute_metrics=compute_metrics,
+    )
+
+    print("Train Model: ")
+    trainer.train()
+    eval_results = trainer.evaluate()
+    #print("Saving Model ..")
+    #trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
+    return eval_results['eval_loss'] # auch mit BLEU versuchen
+
+def run_optuna():
+    study = optuna.create_study(direction="minimize")
+    study.optimize(lambda trial: objective(trial, tokenized_dataset, model_name), n_trials=10)
+
+    print("Best hyperparameters:", study.best_params)
+
+    fig1 = vis.plot_optimization_history(study)
+    fig2 = vis.plot_param_importances(study)
+    fig3 = vis.plot_parallel_coordinate(study)
+
+    # Graphen speichern
+    fig1.write_image("optimization_history.png")
+    fig2.write_image("param_importances.png")
+    fig3.write_image("parallel_coordinates.png")
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=str)
@@ -86,8 +132,8 @@ if __name__ == '__main__':
     
     if dataset_name != "":
         if dataset_name == "tüba":
-            train_data = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
-            test_data = os.path.expanduser("~/data/CLEANED_tüba_test.jsonl")
+            train_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_train.jsonl")
+            test_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_test.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             print("Got train data")
             test_dataset = load_dataset("json", data_files=test_data, split='train')
@@ -98,11 +144,10 @@ if __name__ == '__main__':
             t = "Treebank-Sentence"
             g = "Reconstructed-Sentence"
             prefix = "reconstruct the ellipsis in this sentence: "
-            batchsize = 4
-            epochs = 5
+
         if dataset_name == "tiger":
-            train_data = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
-            test_data = os.path.expanduser("~/data/CLEANED_tiger_test.jsonl")
+            train_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_train.jsonl")
+            test_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_test.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             print("Got train data")
             test_dataset = load_dataset("json", data_files=test_data, split='train')
@@ -112,14 +157,13 @@ if __name__ == '__main__':
                                         })
             t = "Original sentence"
             g = "Canonical form"
-            batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 10
+
         if dataset_name == "merged":
-            train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
-            test_data1 = os.path.expanduser("~/data/CLEANED_tiger_test.jsonl")
-            train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
-            test_data2 = os.path.expanduser("~/data/CLEANED_tüba_test.jsonl")
+            train_data1 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_train.jsonl")
+            test_data1 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_test.jsonl")
+            train_data2 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_train.jsonl")
+            test_data2 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_test.jsonl")
 
             train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
             train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
@@ -157,17 +201,14 @@ if __name__ == '__main__':
             
             t = "Original sentence"
             g = "Canonical form"
-            batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 5
+
         if dataset_name == "g4":
             data = os.path.expanduser("~/data/CLEANED_de_de_pairs.jsonl")
             dataset = load_dataset("json", data_files=data, split='train')
             prefix = "translate German to German: "
             t = "text"
             g = "gold_sentence"
-            batchsize = 16
-            epochs = 2
         
         print("Loaded Dataset!")
 
@@ -189,41 +230,7 @@ if __name__ == '__main__':
             print("Create Train-Test-Split: ")
             tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2)
 
-        data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
-
         metric = evaluate.load("bleu")
 
-        model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
-
-        log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
-
-        training_args = Seq2SeqTrainingArguments(
-        output_dir=model_name,
-        evaluation_strategy="epoch",
-        logging_dir=log_dir,
-        learning_rate=2e-5,
-        per_device_train_batch_size=batchsize,
-        per_device_eval_batch_size=batchsize,
-        weight_decay=0.01,
-        save_total_limit=3,
-        num_train_epochs=epochs,
-        predict_with_generate=True,
-        fp16=True, # set true when cuda available
-        push_to_hub=False,
-        generation_max_length=256,
-        )
-
-        trainer = Seq2SeqTrainer(
-            model=model,
-            args=training_args,
-            train_dataset=tokenized_dataset['train'],
-            eval_dataset=tokenized_dataset['test'],
-            tokenizer=tokenizer,
-            data_collator=data_collator,
-            compute_metrics=compute_metrics,
-        )
-
-        print("Train Model: ")
-        trainer.train()
-        print("Saving Model ..")
-        trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
+        # optimize hyperparams
+        run_optuna()
