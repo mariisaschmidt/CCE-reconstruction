@@ -94,7 +94,7 @@ def objective(trial):
     return eval_results['eval_exact_match'] # auch mit BLEU / EM versuchen
 
 def run_optuna():
-    study = optuna.create_study(direction="minimize")
+    study = optuna.create_study(direction="maximize")
     study.optimize(lambda trial: objective(trial), n_trials=10)
 
     print("Best hyperparameters:", study.best_params)
