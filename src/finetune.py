@@ -44,10 +44,13 @@ def compute_metrics(eval_preds):
     result = metric.compute(predictions=decoded_preds, references=decoded_labels)
     result = {"bleu": result["bleu"]}
 
+    result_em = metric_em.compute(predictions=decoded_preds, references=decoded_labels)
+    result_em = {"exact match": result["exact_match"]}
+
     prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
     result["gen_len"] = np.mean(prediction_lens)
     result = {k: round(v, 4) for k, v in result.items()}
-    return result
+    return result_em
 
 def objective(trial):
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
@@ -66,7 +69,6 @@ def objective(trial):
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
     weight_decay=0.01,
-    save_total_limit=3,
     num_train_epochs=num_train_epochs,
     predict_with_generate=True,
     fp16=True, # set true when cuda available
@@ -89,7 +91,7 @@ def objective(trial):
     eval_results = trainer.evaluate()
     #print("Saving Model ..")
     #trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
-    return eval_results['eval_loss'] # auch mit BLEU versuchen
+    return eval_results['eval_exact_match'] # auch mit BLEU / EM versuchen
 
 def run_optuna():
     study = optuna.create_study(direction="minimize")
@@ -231,6 +233,7 @@ if __name__ == '__main__':
             tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2)
 
         metric = evaluate.load("bleu")
+        metric_em = evaluate.load("exact_match")
 
         # optimize hyperparams
         run_optuna()
