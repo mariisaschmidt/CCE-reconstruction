@@ -93,7 +93,7 @@ def objective(trial):
 
 def run_optuna():
     study = optuna.create_study(direction="minimize")
-    study.optimize(lambda trial: objective(trial, tokenized_dataset, model_name), n_trials=10)
+    study.optimize(lambda trial: objective(trial), n_trials=10)
 
     print("Best hyperparameters:", study.best_params)
 
