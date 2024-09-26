@@ -72,6 +72,7 @@ def objective(trial):
     num_train_epochs=num_train_epochs,
     predict_with_generate=True,
     fp16=True, # set true when cuda available
+    save_strategy="no",
     push_to_hub=False,
     generation_max_length=256,
     )
