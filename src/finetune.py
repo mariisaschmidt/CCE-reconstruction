@@ -59,7 +59,7 @@ def objective(trial):
 
     learning_rate = trial.suggest_float('learning_rate', 1e-5, 1e-4, log=True)
     batch_size = trial.suggest_categorical('per_device_train_batch_size', [4, 8, 16])
-    num_train_epochs = trial.suggest_int('num_train_epochs', 1, 15)
+    num_train_epochs = trial.suggest_int('num_train_epochs', 10, 20)
 
     training_args = Seq2SeqTrainingArguments(
     output_dir=model_name,
