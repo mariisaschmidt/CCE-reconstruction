@@ -6,4 +6,8 @@ echo "Start evaluation of optimized model"
 
 python3 test_model.py --checkpoint /home/marisa/models/27sep_Optimized_OneNew_MergedBase  --corpus eval --prefix 27sep_Opti_OneNew_MeBas
 
+python3 test_model.py --checkpoint /home/marisa/models/27sep_Optimized_OneNew_MergedBase  --corpus tiger --prefix 27sep_Opti_OneNew_MeBas
+
+python3 test_model.py --checkpoint /home/marisa/models/27sep_Optimized_OneNew_MergedBase  --corpus tuba --prefix 27sep_Opti_OneNew_MeBas
+
 echo "Done :)"
