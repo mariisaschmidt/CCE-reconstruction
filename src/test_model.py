@@ -87,7 +87,7 @@ if __name__ == '__main__':
         gold_col = "Canonical form"
         add_space = True
     elif args.corpus == "eval":
-        corpus = os.path.expanduser("~/data/CLEANED_ONE_NEW_evaluation_sentences.jsonl")
+        corpus = os.path.expanduser("~/data/CLEANED_evaluation_sentences.jsonl")
         sent_col = "Sentence"
         gold_col = "Gold"
         add_space = False
