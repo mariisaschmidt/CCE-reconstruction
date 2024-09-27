@@ -149,7 +149,7 @@ if __name__ == '__main__':
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
             epochs = 10
-            learning_rate = 7.505076e05
+            learning_rate = 7.505076e-5
         if dataset_name == "g4":
             data = os.path.expanduser("~/data/CLEANED_de_de_pairs.jsonl")
             dataset = load_dataset("json", data_files=data, split='train')
