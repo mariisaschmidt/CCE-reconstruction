@@ -65,6 +65,7 @@ if __name__ == '__main__':
     parser.add_argument("--dataset", type=str)
     parser.add_argument("--model_name", type=str)
     parser.add_argument("--pretrained_model", type=str)
+    parser.add_argument("--remove_no_cce", type=int)
     args = parser.parse_args()
 
     if args.dataset:
@@ -76,6 +77,8 @@ if __name__ == '__main__':
         model_name = args.model_name
     else:
         model_name = "de_de_llm"
+    if args.remove_no_cce:
+        removeNoCce = args.remove_no_cce
     if args.pretrained_model:
         checkpoint = args.pretrained_model
     else:
@@ -89,6 +92,9 @@ if __name__ == '__main__':
             train_data = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
             test_data = os.path.expanduser("~/data/CLEANED_tüba_test.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
+            if removeNoCce == 1:
+                cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
+                train_dataset = train_dataset.filter(lambda row: not all(row[col] == 0 for col in cols_to_check))
             print("Got train data")
             test_dataset = load_dataset("json", data_files=test_data, split='train')
             print("Got test data")
@@ -104,6 +110,9 @@ if __name__ == '__main__':
             train_data = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
             test_data = os.path.expanduser("~/data/CLEANED_tiger_test.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
+            if removeNoCce == 1:
+                cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
+                train_dataset = train_dataset.filter(lambda row: not all(row[col] == 0 for col in cols_to_check))
             print("Got train data")
             test_dataset = load_dataset("json", data_files=test_data, split='train')
             print("Got test data")
@@ -134,6 +143,9 @@ if __name__ == '__main__':
             cols_to_remove1.remove("Canonical form")
             train_dataset1 = train_dataset1.remove_columns(cols_to_remove1)
             train_dataset = concatenate_datasets([train_dataset1, train_dataset2])
+            if removeNoCce == 1:
+                cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
+                train_dataset = train_dataset.filter(lambda row: not all(row[col] == 0 for col in cols_to_check))
             print("Got train data")
 
             test_dataset1 = load_dataset("json", data_files=test_data1, split='train')
