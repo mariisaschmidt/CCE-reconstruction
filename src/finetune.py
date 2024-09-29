@@ -92,7 +92,7 @@ def objective(trial):
     eval_results = trainer.evaluate()
     #print("Saving Model ..")
     #trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
-    return eval_results['eval_exact_match'] # auch mit BLEU / EM versuchen
+    return eval_results['eval_bleu'] # auch mit BLEU / EM versuchen
 
 def run_optuna():
     study = optuna.create_study(direction="maximize")
