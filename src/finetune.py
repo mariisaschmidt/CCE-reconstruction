@@ -50,7 +50,7 @@ def compute_metrics(eval_preds):
     prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
     result["gen_len"] = np.mean(prediction_lens)
     result = {k: round(v, 4) for k, v in result.items()}
-    return result_em
+    return result
 
 def objective(trial):
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
