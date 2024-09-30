@@ -134,6 +134,10 @@ if __name__ == '__main__':
             train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
             train_dataset2 = train_dataset2.rename_column("Treebank-Sentence", "Original sentence")
             train_dataset2 = train_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
+            if removeNoCce == 1:
+                cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
+                train_dataset1 = train_dataset1.filter(lambda row: not all(row[col] == 0 for col in cols_to_check))
+                train_dataset2 = train_dataset2.filter(lambda row: not all(row[col] == 0 for col in cols_to_check))
             cols_to_remove1 = train_dataset1.column_names
             cols_to_remove2 = train_dataset2.column_names
             cols_to_remove2.remove("Original sentence")
@@ -143,9 +147,6 @@ if __name__ == '__main__':
             cols_to_remove1.remove("Canonical form")
             train_dataset1 = train_dataset1.remove_columns(cols_to_remove1)
             train_dataset = concatenate_datasets([train_dataset1, train_dataset2])
-            if removeNoCce == 1:
-                cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
-                train_dataset = train_dataset.filter(lambda row: not all(row[col] == 0 for col in cols_to_check))
             print("Got train data")
 
             test_dataset1 = load_dataset("json", data_files=test_data1, split='train')
