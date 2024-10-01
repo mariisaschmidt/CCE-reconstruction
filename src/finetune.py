@@ -113,7 +113,7 @@ if __name__ == '__main__':
             if removeNoCce == 1:
                 cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
                 print(train_dataset.num_rows)
-                train_dataset = train_dataset.filter(lambda row: not all(row[col] == 0 for col in cols_to_check))
+                train_dataset = train_dataset.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
                 print(train_dataset.num_rows)
             print("Got train data")
             test_dataset = load_dataset("json", data_files=test_data, split='train')
