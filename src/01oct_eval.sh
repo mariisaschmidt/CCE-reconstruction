@@ -1,4 +1,4 @@
-echo "Starting evaluation again!"
+echo "Starting evaluation!"
 
 python3 test_model.py --checkpoint /home/marisa/models/01oct_NoNoCCE_OneOld_TigerSmall  --corpus eval --prefix 01oct_NoNoCCE_OneOld_TiSm
 
