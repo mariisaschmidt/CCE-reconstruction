@@ -94,7 +94,9 @@ if __name__ == '__main__':
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             if removeNoCce == 1:
                 cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
+                print(train_dataset.num_rows)
                 train_dataset = train_dataset.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
+                print(train_dataset.num_rows)
             print("Got train data")
             test_dataset = load_dataset("json", data_files=test_data, split='train')
             print("Got test data")
@@ -138,8 +140,12 @@ if __name__ == '__main__':
             train_dataset2 = train_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
             if removeNoCce == 1:
                 cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
+                print(train_dataset1.num_rows)
                 train_dataset1 = train_dataset1.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
+                print(train_dataset1.num_rows)
+                print(train_dataset2.num_rows)
                 train_dataset2 = train_dataset2.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
+                print(train_dataset2.num_rows)
             cols_to_remove1 = train_dataset1.column_names
             cols_to_remove2 = train_dataset2.column_names
             cols_to_remove2.remove("Original sentence")
