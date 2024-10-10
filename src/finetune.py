@@ -71,6 +71,14 @@ def compute_metrics(eval_preds):
 def model_init():
     return AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
 
+def param_space(trial):
+    return {
+        "per_device_train_batch_size": trial.suggest_categorical            ("per_device_train_batch_size", [4, 8, 16]),
+        "learning_rate": trial.suggest_float("learning_rate", 1e-5, 5e-5, log=True),
+        "weight_decay": trial.suggest_float("weight_decay", 0.01, 0.3),
+        "num_train_epochs": trial.suggest_int("num_train_epochs", 1, 15) 
+    }
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=str)
@@ -225,7 +233,7 @@ if __name__ == '__main__':
     )
 
     print("Optimize Hyperparams")
-    trainer.hyperparameter_search(direction="maximize", backend="optuna")
+    trainer.hyperparameter_search(direction="maximize", backend="optuna", hp_space=param_space, n_trials=20)
 
     # print("Train Model: ")
     # trainer.train()
