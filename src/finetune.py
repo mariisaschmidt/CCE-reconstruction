@@ -27,7 +27,7 @@ def correct_inputs_masks_labels(examples):
 
 def postprocess_text(preds, labels):
     preds = [pred.strip() for pred in preds]
-    labels = [label.strip() for label in labels]
+    labels = [[label.strip()] for label in labels]
 
     return preds, labels
 
