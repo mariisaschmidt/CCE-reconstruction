@@ -1,5 +1,5 @@
 # the all-in-one script to finetune a huggingface ellipsis reconstruction model 
-from datasets import load_dataset, concatenate_datasets, load_metric
+from datasets import load_dataset, concatenate_datasets
 from transformers import AutoTokenizer
 from transformers import DataCollatorForSeq2Seq
 import evaluate
@@ -27,7 +27,7 @@ def correct_inputs_masks_labels(examples):
 
 def postprocess_text(preds, labels):
     preds = [pred.strip() for pred in preds]
-    labels = [[label.strip()] for label in labels]
+    labels = [label.strip() for label in labels]
 
     return preds, labels
 
@@ -196,7 +196,7 @@ if __name__ == '__main__':
 
     #metric = evaluate.load("bleu")
     #metric_em = evaluate.load("exact_match")
-    metric = load_metric("bleu", "exact_match")
+    metric = evaluate.load("bleu", "exact_match")
 
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
     model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
