@@ -44,10 +44,11 @@ def compute_metrics(eval_preds):
     decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
 
     result = metric.compute(predictions=decoded_preds, references=decoded_labels)
+    result = {"bleu": result["bleu"]}
 
     prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
     result["gen_len"] = np.mean(prediction_lens)
-    #result = {k: round(v, 4) for k, v in result.items()}
+    result = {k: round(v, 4) for k, v in result.items()}
     return result
 
 # def run_optuna():
@@ -194,9 +195,8 @@ if __name__ == '__main__':
             print("Create Train-Test-Split: ")
             tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2)
 
-    #metric = evaluate.load("bleu")
-    #metric_em = evaluate.load("exact_match")
-    metric = evaluate.load("bleu", "exact_match")
+    metric = evaluate.load("bleu")
+    metric_em = evaluate.load("exact_match") 
 
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
     model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
