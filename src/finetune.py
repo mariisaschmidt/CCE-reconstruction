@@ -1,5 +1,5 @@
 # the all-in-one script to finetune a huggingface ellipsis reconstruction model 
-from datasets import load_dataset, concatenate_datasets
+from datasets import load_dataset, concatenate_datasets, load_metric
 from transformers import AutoTokenizer
 from transformers import DataCollatorForSeq2Seq
 import evaluate
@@ -10,6 +10,8 @@ import argparse
 from datasets import DatasetDict
 import optuna
 import optuna.visualization as vis
+from optuna.pruners import SuccessiveHalvingPruner
+from optuna.samplers import TPESampler
 
 def preprocess_function(examples):
     inputs = prefix + examples[t]
@@ -42,72 +44,31 @@ def compute_metrics(eval_preds):
     decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
 
     result = metric.compute(predictions=decoded_preds, references=decoded_labels)
-    result = {"bleu": result["bleu"]}
-
-    result_em = metric_em.compute(predictions=decoded_preds, references=decoded_labels)
-    result_em = {"exact_match": result_em["exact_match"]}
 
     prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
     result["gen_len"] = np.mean(prediction_lens)
     result = {k: round(v, 4) for k, v in result.items()}
     return result
 
-def objective(trial):
-    data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
-    model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
-    log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
+# def run_optuna():
+#     pruner = SuccessiveHalvingPruner()
+#     sampler = TPESampler()
+#     study = optuna.create_study(direction="maximize", sampler=sampler, pruner=pruner)
+#     study.optimize(lambda trial: objective(trial), n_trials=50)
 
-    learning_rate = trial.suggest_float('learning_rate', 1e-5, 1e-4, log=True)
-    batch_size = trial.suggest_categorical('per_device_train_batch_size', [4, 8, 16])
-    num_train_epochs = trial.suggest_int('num_train_epochs', 10, 20)
+#     print("Best hyperparameters:", study.best_params)
 
-    training_args = Seq2SeqTrainingArguments(
-    output_dir=model_name,
-    evaluation_strategy="epoch",
-    logging_dir=log_dir,
-    learning_rate=learning_rate,
-    per_device_train_batch_size=batch_size,
-    per_device_eval_batch_size=batch_size,
-    weight_decay=0.01,
-    num_train_epochs=num_train_epochs,
-    predict_with_generate=True,
-    fp16=True, # set true when cuda available
-    save_strategy="no",
-    push_to_hub=False,
-    generation_max_length=256,
-    )
+#     fig1 = vis.plot_optimization_history(study)
+#     fig2 = vis.plot_param_importances(study)
+#     fig3 = vis.plot_parallel_coordinate(study)
 
-    trainer = Seq2SeqTrainer(
-        model=model,
-        args=training_args,
-        train_dataset=tokenized_dataset['train'],
-        eval_dataset=tokenized_dataset['test'],
-        tokenizer=tokenizer,
-        data_collator=data_collator,
-        compute_metrics=compute_metrics,
-    )
+#     # Graphen speichern
+#     fig1.write_image("optimization_history.png")
+#     fig2.write_image("param_importances.png")
+#     fig3.write_image("parallel_coordinates.png")
 
-    print("Train Model: ")
-    trainer.train()
-    eval_results = trainer.evaluate()
-    #print("Saving Model ..")
-    #trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
-    return eval_results['eval_bleu'] # auch mit BLEU / EM versuchen
-
-def run_optuna():
-    study = optuna.create_study(direction="maximize")
-    study.optimize(lambda trial: objective(trial), n_trials=10)
-
-    print("Best hyperparameters:", study.best_params)
-
-    fig1 = vis.plot_optimization_history(study)
-    fig2 = vis.plot_param_importances(study)
-    fig3 = vis.plot_parallel_coordinate(study)
-
-    # Graphen speichern
-    fig1.write_image("optimization_history.png")
-    fig2.write_image("param_importances.png")
-    fig3.write_image("parallel_coordinates.png")
+def model_init():
+    return AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -233,8 +194,42 @@ if __name__ == '__main__':
             print("Create Train-Test-Split: ")
             tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2)
 
-        metric = evaluate.load("bleu")
-        metric_em = evaluate.load("exact_match")
+    #metric = evaluate.load("bleu")
+    #metric_em = evaluate.load("exact_match")
+    metric = load_metric("bleu", "exact_match")
 
-        # optimize hyperparams
-        run_optuna()
+    data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
+    model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
+    log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
+
+    training_args = Seq2SeqTrainingArguments(
+    output_dir=model_name,
+    evaluation_strategy="epoch",
+    logging_dir=log_dir,
+    predict_with_generate=True,
+    fp16=True, # set true when cuda available
+    save_strategy="no",
+    push_to_hub=False,
+    generation_max_length=256
+    )
+
+    trainer = Seq2SeqTrainer(
+        model_init=model_init,
+        model=model,
+        args=training_args,
+        train_dataset=tokenized_dataset['train'],
+        eval_dataset=tokenized_dataset['test'],
+        tokenizer=tokenizer,
+        data_collator=data_collator,
+        compute_metrics=compute_metrics,
+    )
+
+    print("Optimize Hyperparams")
+    trainer.hyperparameter_search(direction="maximize", backend="optuna")
+
+    # print("Train Model: ")
+    # trainer.train()
+    # eval_results = trainer.evaluate()
+
+    #print("Saving Model ..")
+    #trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
