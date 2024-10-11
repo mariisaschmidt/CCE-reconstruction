@@ -223,17 +223,16 @@ if __name__ == '__main__':
 
     trainer = Seq2SeqTrainer(
         model_init=model_init,
-        model=model,
         args=training_args,
         train_dataset=tokenized_dataset['train'],
         eval_dataset=tokenized_dataset['test'],
         tokenizer=tokenizer,
         data_collator=data_collator,
-        compute_metrics=compute_metrics,
+        compute_metrics=compute_metrics
     )
 
     print("Optimize Hyperparams")
-    trainer.hyperparameter_search(direction="maximize", backend="optuna", hp_space=param_space, n_trials=20)
+    trainer.hyperparameter_search(direction="maximize", backend="optuna", hp_space=param_space, n_trials=50)
 
     # print("Train Model: ")
     # trainer.train()
