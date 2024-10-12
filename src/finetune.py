@@ -46,8 +46,8 @@ def compute_metrics(eval_preds):
     result = metric.compute(predictions=decoded_preds, references=decoded_labels)
     result = {"bleu": result["bleu"]}
 
-    prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
-    result["gen_len"] = np.mean(prediction_lens)
+    #prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
+    #result["gen_len"] = np.mean(prediction_lens)
     result = {k: round(v, 4) for k, v in result.items()}
     return result
 
@@ -232,11 +232,16 @@ if __name__ == '__main__':
     )
 
     print("Optimize Hyperparams")
-    trainer.hyperparameter_search(direction="maximize", backend="optuna", hp_space=param_space, n_trials=50)
+    best = trainer.hyperparameter_search(direction="maximize", backend="optuna", hp_space=param_space, n_trials=100)
 
-    # print("Train Model: ")
-    # trainer.train()
-    # eval_results = trainer.evaluate()
+    print("Train best Model: ")
+    print(best)
+    trainer.apply_hyperparameters(best.hyperparameters, final_model=True)
+    trainer.train()
 
-    #print("Saving Model ..")
-    #trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
+    print("Evaluating final model:")
+    metrics = trainer.evaluate()
+    print(metrics)
+
+    print("Saving Model ..")
+    trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
