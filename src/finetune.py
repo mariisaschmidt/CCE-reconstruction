@@ -232,7 +232,7 @@ if __name__ == '__main__':
     )
 
     print("Optimize Hyperparams")
-    best = trainer.hyperparameter_search(direction="maximize", backend="optuna", hp_space=param_space, n_trials=5)
+    best = trainer.hyperparameter_search(direction="maximize", backend="optuna", hp_space=param_space, n_trials=150)
 
     print("Train best Model: ")
     print("best params: ")
@@ -247,10 +247,10 @@ if __name__ == '__main__':
     save_strategy="no",
     push_to_hub=False,
     generation_max_length=256,
-    per_device_train_batch_size=best.params["per_device_train_batch_size"],
-    learning_rate=best.params["learning_rate"],
-    weight_decay=best.params["weight_decay"],
-    num_train_epochs=best.params["num_train_epochs"]
+    per_device_train_batch_size=best.hyperparameters["per_device_train_batch_size"],
+    learning_rate=best.hyperparameters["learning_rate"],
+    weight_decay=best.hyperparameters["weight_decay"],
+    num_train_epochs=best.hyperparameters["num_train_epochs"]
     )
 
     best_trainer = Seq2SeqTrainer(
