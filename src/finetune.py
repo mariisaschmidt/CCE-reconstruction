@@ -232,16 +232,45 @@ if __name__ == '__main__':
     )
 
     print("Optimize Hyperparams")
-    best = trainer.hyperparameter_search(direction="maximize", backend="optuna", hp_space=param_space, n_trials=100)
+    best = trainer.hyperparameter_search(direction="maximize", backend="optuna", hp_space=param_space, n_trials=5)
 
     print("Train best Model: ")
+    print("best params: ")
     print(best)
-    trainer.apply_hyperparameters(best.hyperparameters, final_model=True)
-    trainer.train()
+
+    best_training_args = Seq2SeqTrainingArguments(
+    output_dir=model_name,
+    evaluation_strategy="epoch",
+    logging_dir=log_dir,
+    predict_with_generate=True,
+    fp16=True, # set true when cuda available
+    save_strategy="no",
+    push_to_hub=False,
+    generation_max_length=256,
+    per_device_train_batch_size=best.params["per_device_train_batch_size"],
+    learning_rate=best.params["learning_rate"],
+    weight_decay=best.params["weight_decay"],
+    num_train_epochs=best.params["num_train_epochs"]
+    )
+
+    best_trainer = Seq2SeqTrainer(
+        model_init=model_init,
+        args=best_training_args,
+        train_dataset=tokenized_dataset['train'],
+        eval_dataset=tokenized_dataset['test'],
+        tokenizer=tokenizer,
+        data_collator=data_collator,
+        compute_metrics=compute_metrics
+    )
+
+    best_trainer.train()
 
     print("Evaluating final model:")
-    metrics = trainer.evaluate()
+    metrics = best_trainer.evaluate()
     print(metrics)
 
     print("Saving Model ..")
-    trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
+    best_trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
+
+    # BEST AFTER 100: trial 34, BLEU: .9328
+    # batch size = 16, learning rate = 4.54743e-05, weight decay = 0.26996, num epochs = 14
