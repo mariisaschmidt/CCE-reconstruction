@@ -74,7 +74,7 @@ def model_init():
 def param_space(trial):
     return {
         "per_device_train_batch_size": trial.suggest_categorical            ("per_device_train_batch_size", [4, 8, 16]),
-        "learning_rate": trial.suggest_float("learning_rate", 1e-5, 5e-5, log=True),
+        "learning_rate": trial.suggest_float("learning_rate", 1e-5, 1e-4, log=True),
         "weight_decay": trial.suggest_float("weight_decay", 0.01, 0.3),
         "num_train_epochs": trial.suggest_int("num_train_epochs", 1, 15) 
     }
@@ -232,7 +232,7 @@ if __name__ == '__main__':
     )
 
     print("Optimize Hyperparams")
-    best = trainer.hyperparameter_search(direction="maximize", backend="optuna", hp_space=param_space, n_trials=150)
+    best = trainer.hyperparameter_search(direction="maximize", backend="optuna", hp_space=param_space, n_trials=200)
 
     print("Train best Model: ")
     print("best params: ")
@@ -271,6 +271,3 @@ if __name__ == '__main__':
 
     print("Saving Model ..")
     best_trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
-
-    # BEST AFTER 100: trial 34, BLEU: .9328
-    # batch size = 16, learning rate = 4.54743e-05, weight decay = 0.26996, num epochs = 14
