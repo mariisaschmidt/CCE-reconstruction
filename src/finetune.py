@@ -235,7 +235,7 @@ if __name__ == '__main__':
     my_kwargs = {
     "sampler": optuna.samplers.TPESampler(),
     }
-    best = trainer.hyperparameter_search(param_space, None, 100, "maximize", "optuna", None, my_kwargs)
+    best = trainer.hyperparameter_search(param_space, None, 100, "maximize", "optuna", None, **my_kwargs)
 
     print("Train best Model: ")
     print("best params: ")
