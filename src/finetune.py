@@ -232,7 +232,10 @@ if __name__ == '__main__':
     )
 
     print("Optimize Hyperparams")
-    best = trainer.hyperparameter_search(direction="maximize", backend="optuna", hp_space=param_space, n_trials=200)
+    my_kwargs = {
+    "sampler": optuna.samplers.TPESampler(),
+    }
+    best = trainer.hyperparameter_search(direction="maximize", backend="optuna", hp_space=param_space, n_trials=200, kwargs=my_kwargs)
 
     print("Train best Model: ")
     print("best params: ")
