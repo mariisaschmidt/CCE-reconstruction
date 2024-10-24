@@ -237,7 +237,11 @@ if __name__ == '__main__':
     print("Optimize Hyperparams")
     my_kwargs = {
     "sampler": optuna.samplers.TPESampler(),
+    "study_name": "24Okt_study",
+    "storage": "sqlite:///24Okt_study.db",
+    "load_if_exists": True
     }
+    
     best = trainer.hyperparameter_search(param_space, None, 100, "maximize", "optuna", None, **my_kwargs)
 
     print("Train best Model: ")
