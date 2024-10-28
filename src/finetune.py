@@ -43,11 +43,11 @@ def compute_metrics(eval_preds):
 
     decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
 
-    # result = metric.compute(predictions=decoded_preds, references=decoded_labels)
-    # result = {"bleu": result["bleu"]}
+    result = metric.compute(predictions=decoded_preds, references=decoded_labels)
+    result = {"bleu": result["bleu"]}
 
-    result = metric_em.compute(predictions=decoded_preds, references=decoded_labels, ignore_case=True, ignore_punctuation=True)
-    result = {"exact_match": result["exact_match"]}
+    # result = metric_em.compute(predictions=decoded_preds, references=decoded_labels, ignore_case=True, ignore_punctuation=True)
+    # result = {"exact_match": result["exact_match"]}
 
     #prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
     #result["gen_len"] = np.mean(prediction_lens)
@@ -213,42 +213,40 @@ if __name__ == '__main__':
     model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
     log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
 
-    # training_args = Seq2SeqTrainingArguments(
-    # output_dir=model_name,
-    # evaluation_strategy="epoch",
-    # logging_dir=log_dir,
-    # predict_with_generate=True,
-    # fp16=True, # set true when cuda available
-    # save_strategy="no",
-    # push_to_hub=False,
-    # generation_max_length=256
-    # )
+    training_args = Seq2SeqTrainingArguments(
+    output_dir=model_name,
+    evaluation_strategy="epoch",
+    logging_dir=log_dir,
+    predict_with_generate=True,
+    fp16=True, # set true when cuda available
+    save_strategy="no",
+    push_to_hub=False,
+    generation_max_length=256
+    )
 
-    # trainer = Seq2SeqTrainer(
-    #     model_init=model_init,
-    #     args=training_args,
-    #     train_dataset=tokenized_dataset['train'],
-    #     eval_dataset=tokenized_dataset['test'],
-    #     tokenizer=tokenizer,
-    #     data_collator=data_collator,
-    #     compute_metrics=compute_metrics
-    # )
+    trainer = Seq2SeqTrainer(
+        model_init=model_init,
+        args=training_args,
+        train_dataset=tokenized_dataset['train'],
+        eval_dataset=tokenized_dataset['test'],
+        tokenizer=tokenizer,
+        data_collator=data_collator,
+        compute_metrics=compute_metrics
+    )
 
-    # print("Optimize Hyperparams")
-    # my_kwargs = {
-    # "sampler": optuna.samplers.TPESampler(),
-    # "study_name": "24Okt_study",
-    # "storage": "sqlite:///24Okt_study.db",
-    # "load_if_exists": True
-    # }
+    print("Optimize Hyperparams")
+    my_kwargs = {
+    "sampler": optuna.samplers.TPESampler(),
+    "study_name": "28Okt_study",
+    "storage": "sqlite:///28Okt_BLEU_study.db",
+    "load_if_exists": True
+    }
     
-    # best = trainer.hyperparameter_search(param_space, None, 100, "maximize", "optuna", None, **my_kwargs)
+    best = trainer.hyperparameter_search(param_space, None, 100, "maximize", "optuna", None, **my_kwargs)
 
     print("Train best Model: ")
     print("best params: ")
-    #print(best)
-
-    # er_device_train_batch_size': 8, 'learning_rate': 9.983879528681034e-05, 'weight_decay': 0.09129545941423249, 'num_train_epochs': 10
+    print(best)
 
     best_training_args = Seq2SeqTrainingArguments(
     output_dir=model_name,
@@ -259,10 +257,10 @@ if __name__ == '__main__':
     save_strategy="no",
     push_to_hub=False,
     generation_max_length=256,
-    per_device_train_batch_size=8, #best.hyperparameters["per_device_train_batch_size"],
-    learning_rate=9.983879528681034e-05, #best.hyperparameters["learning_rate"],
-    weight_decay=0.09129545941423249, #best.hyperparameters["weight_decay"],
-    num_train_epochs=10 #best.hyperparameters["num_train_epochs"]
+    per_device_train_batch_size=best.hyperparameters["per_device_train_batch_size"],
+    learning_rate=best.hyperparameters["learning_rate"],
+    weight_decay=best.hyperparameters["weight_decay"],
+    num_train_epochs=best.hyperparameters["num_train_epochs"]
     )
 
     best_trainer = Seq2SeqTrainer(
