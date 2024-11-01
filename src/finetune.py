@@ -5,22 +5,11 @@ from transformers import AutoTokenizer
 from transformers import DataCollatorForSeq2Seq
 import evaluate
 import numpy as np 
-import re
 import os 
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
 import argparse
 from datasets import DatasetDict
-
-# def clean_sentences(sentence):
-#     suffix = r'_[^\s]*'
-#     sentence = re.sub(suffix, '', sentence)
-#     # remove spaces before punctuation
-#     pattern = r'\s+([.,;?!:])'
-#     sentence = re.sub(pattern, r'\1', sentence)
-#     # remove weird ``
-#     sentence = re.sub(r'``', '"', sentence)
-#     sentence = re.sub(r"''", '"', sentence)
-#     return sentence
+import random
 
 def preprocess_function(examples):
     inputs = prefix + examples[t]
@@ -59,6 +48,20 @@ def compute_metrics(eval_preds):
     result["gen_len"] = np.mean(prediction_lens)
     result = {k: round(v, 4) for k, v in result.items()}
     return result
+
+def mask_texts(example, masking_rate=0.15, span_length=1):
+    text = example['text']
+    tokens = tokenizer.tokenize(text)
+    num_tokens_to_mask = max(1, int(len(tokens) * masking_rate))
+    masked_tokens = tokens.copy()
+    mask_indices = sorted(random.sample(range(len(tokens)), num_tokens_to_mask))
+    
+    for idx in mask_indices:
+        masked_tokens[idx:idx + span_length] = [f"<extra_id_0>"]
+    
+    masked_text = tokenizer.convert_tokens_to_string(masked_tokens)
+    example['masked_text'] = masked_text
+    return example
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -210,6 +213,8 @@ if __name__ == '__main__':
             print("Create Train-Test-Split: ")
             tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2)
 
+        masked_dataset = tokenized_dataset.map(lambda x: mask_texts(x, masking_rate=0.15, span_length=1))
+
         data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
 
         metric = evaluate.load("bleu")
@@ -237,8 +242,8 @@ if __name__ == '__main__':
         trainer = Seq2SeqTrainer(
             model=model,
             args=training_args,
-            train_dataset=tokenized_dataset['train'],
-            eval_dataset=tokenized_dataset['test'],
+            train_dataset=masked_dataset['train'],
+            eval_dataset=masked_dataset['test'],
             tokenizer=tokenizer,
             data_collator=data_collator,
             compute_metrics=compute_metrics,
