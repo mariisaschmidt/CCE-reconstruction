@@ -1,26 +1,26 @@
 echo "Start training of TigerSmall"
 
-python3 finetune.py --dataset tiger --model_name  01nov_TEST__OneOld_TigerSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0
+python3 finetune.py --dataset tiger --model_name  01nov_TEST__OneOld_TigerSmall  --pretrained_model /home/marisa/models/Aug25Small  
 
 echo "Start training of TübaSmall"
 
-python3 finetune.py --dataset tüba --model_name  Test_OneOld_TübaSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0
+python3 finetune.py --dataset tüba --model_name  Test_OneOld_TübaSmall  --pretrained_model /home/marisa/models/Aug25Small  
 
 echo "Start training of MergedSmall"
 
-python3 finetune.py --dataset merged --model_name  Test_OneOld_MergedSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0
+python3 finetune.py --dataset merged --model_name  Test_OneOld_MergedSmall  --pretrained_model /home/marisa/models/Aug25Small  
 
 # echo "Start training of TigerBase"
 
-# python3 finetune.py --dataset tiger --model_name  01nov_TEST__OneOld_TigerBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0
+# python3 finetune.py --dataset tiger --model_name  01nov_TEST__OneOld_TigerBase  --pretrained_model /home/marisa/models/Aug25Base  
 
 # echo "Start training of TübaBase"
 
-# python3 finetune.py --dataset tüba --model_name  01nov_TEST__OneOld_TübaBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0
+# python3 finetune.py --dataset tüba --model_name  01nov_TEST__OneOld_TübaBase  --pretrained_model /home/marisa/models/Aug25Base  
 
 # echo "Start training of MergedBase"
 
-# python3 finetune.py --dataset merged --model_name  01nov_TEST__OneOld_MergedBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0
+# python3 finetune.py --dataset merged --model_name  01nov_TEST__OneOld_MergedBase  --pretrained_model /home/marisa/models/Aug25Base  
 
 echo "Done with training!"
 
