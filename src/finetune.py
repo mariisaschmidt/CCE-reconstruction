@@ -11,8 +11,20 @@ import argparse
 from datasets import DatasetDict
 import random
 
+def mask(example_text, masking_rate=0.15, span_length=1):
+    tokens = tokenizer.tokenize(example_text)
+    num_tokens_to_mask = max(1, int(len(tokens) * masking_rate))
+    masked_tokens = tokens.copy()
+    mask_indices = sorted(random.sample(range(len(tokens)), num_tokens_to_mask))
+    
+    for idx in mask_indices:
+        masked_tokens[idx:idx + span_length] = [f"<extra_id_0>"]
+    
+    masked_text = tokenizer.convert_tokens_to_string(masked_tokens)
+    return masked_text
+
 def preprocess_function(examples):
-    inputs = prefix + examples[t]
+    inputs = prefix + mask(examples[t])
     targets = examples[g]
     model_inputs = tokenizer(inputs, text_target=targets, max_length=512, truncation=True, padding='longest', return_tensors='pt')
     return model_inputs
@@ -48,20 +60,6 @@ def compute_metrics(eval_preds):
     result["gen_len"] = np.mean(prediction_lens)
     result = {k: round(v, 4) for k, v in result.items()}
     return result
-
-def mask_texts(example, masking_rate=0.15, span_length=1):
-    text = example['text']
-    tokens = tokenizer.tokenize(text)
-    num_tokens_to_mask = max(1, int(len(tokens) * masking_rate))
-    masked_tokens = tokens.copy()
-    mask_indices = sorted(random.sample(range(len(tokens)), num_tokens_to_mask))
-    
-    for idx in mask_indices:
-        masked_tokens[idx:idx + span_length] = [f"<extra_id_0>"]
-    
-    masked_text = tokenizer.convert_tokens_to_string(masked_tokens)
-    example['masked_text'] = masked_text
-    return example
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -215,8 +213,6 @@ if __name__ == '__main__':
             print("Create Train-Test-Split: ")
             tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2)
 
-        masked_dataset = tokenized_dataset.map(lambda x: mask_texts(x, masking_rate=0.15, span_length=1))
-
         data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
 
         metric = evaluate.load("bleu")
@@ -244,8 +240,8 @@ if __name__ == '__main__':
         trainer = Seq2SeqTrainer(
             model=model,
             args=training_args,
-            train_dataset=masked_dataset['train'],
-            eval_dataset=masked_dataset['test'],
+            train_dataset=tokenized_dataset['train'],
+            eval_dataset=tokenized_dataset['test'],
             tokenizer=tokenizer,
             data_collator=data_collator,
             compute_metrics=compute_metrics,
