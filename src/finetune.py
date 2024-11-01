@@ -16,16 +16,16 @@ def is_full_word(token):
     return re.match(r"^\w+$", token) is not None
 
 def mask(example_text, masking_rate=0.15, span_length=1):
-    tokens = tokenizer.tokenize(example_text)
-    full_word_indices = [i for i, token in enumerate(tokens) if is_full_word(token)]
-    num_tokens_to_mask = max(1, int(len(full_word_indices) * masking_rate))
-    mask_indices = sorted(random.sample(full_word_indices, num_tokens_to_mask))
-    masked_tokens = tokens.copy()
+    words = example_text.split() 
+    num_words_to_mask = max(1, int(len(words) * masking_rate))
+    mask_indices = sorted(random.sample(range(len(words)), num_words_to_mask))
+    masked_words = words.copy()
     
     for idx in mask_indices:
-        masked_tokens[idx:idx + span_length] = [f"<extra_id_0>"]
+        masked_words[idx:idx + span_length] = [f"<extra_id_0>"]
+
+    masked_text = " ".join(masked_words)
     
-    masked_text = tokenizer.convert_tokens_to_string(masked_tokens)
     print(example_text)
     print(masked_text)
     print("\n")
