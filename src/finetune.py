@@ -21,7 +21,9 @@ def mask(example_text, masking_rate=0.15, span_length=1):
         masked_tokens[idx:idx + span_length] = [f"<extra_id_0>"]
     
     masked_text = tokenizer.convert_tokens_to_string(masked_tokens)
+    print(example_text)
     print(masked_text)
+    print("\n")
     return masked_text
 
 def preprocess_function(examples):
