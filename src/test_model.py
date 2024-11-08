@@ -110,7 +110,7 @@ if __name__ == '__main__':
         cols_to_remove11.remove("Original sentence")
         cols_to_remove11.remove("Canonical form")
         test_dataset1 = test_dataset1.remove_columns(cols_to_remove11)
-        corpus = concatenate_datasets([test_dataset1, test_dataset2])
+        dataset = concatenate_datasets([test_dataset1, test_dataset2])
 
         sent_col = "Original sentence"
         gold_col = "Canonical form"
