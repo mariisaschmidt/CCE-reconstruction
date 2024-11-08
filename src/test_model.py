@@ -126,7 +126,9 @@ if __name__ == '__main__':
     
     tokenizer = AutoTokenizer.from_pretrained(checkpoint)
     model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
-    dataset = load_dataset("json", data_files=corpus, split='train')
+
+    if args.corpus != "merged":
+        dataset = load_dataset("json", data_files=corpus, split='train')
 
     fcr = dataset.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
     gapping = dataset.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
