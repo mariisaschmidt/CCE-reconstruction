@@ -3,7 +3,7 @@ import os
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import argparse
 import evaluate
-from datasets import load_dataset
+from datasets import load_dataset, concatenate_datasets, DatasetDict
 
 def get_predictions(ds, sc):
     inputs = ds[sc]
@@ -36,7 +36,10 @@ def get_predictions(ds, sc):
 #     return sentence
 
 def add_one_space(sentence):
-    return sentence + " "
+    if sentence.endswith(" "):
+        return sentence
+    else:
+        return sentence + " "
 
 def evaluate_model(file, bleu, exmatch, dataset, name, add_space):
     predictions = get_predictions(dataset, sent_col)
@@ -91,6 +94,28 @@ if __name__ == '__main__':
         sent_col = "Sentence"
         gold_col = "Gold"
         add_space = False
+    elif args.corpus == "merged":
+        test_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_test.jsonl")
+        test_data2 = os.path.expanduser("~/data/CLEANED_OLD_tüba_test.jsonl")
+
+        test_dataset1 = load_dataset("json", data_files=test_data1, split='train')
+        test_dataset2 = load_dataset("json", data_files=test_data2, split='train')
+        test_dataset2 = test_dataset2.rename_column("Treebank-Sentence", "Original sentence")
+        test_dataset2 = test_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
+        cols_to_remove11 = test_dataset1.column_names
+        cols_to_remove22 = test_dataset2.column_names
+        cols_to_remove22.remove("Original sentence")
+        cols_to_remove22.remove("Canonical form")
+        test_dataset2 = test_dataset2.remove_columns(cols_to_remove22)
+        cols_to_remove11.remove("Original sentence")
+        cols_to_remove11.remove("Canonical form")
+        test_dataset1 = test_dataset1.remove_columns(cols_to_remove11)
+        corpus = concatenate_datasets([test_dataset1, test_dataset2])
+
+        sent_col = "Original sentence"
+        gold_col = "Canonical form"
+        add_space = True 
+
     else: 
         print("provide a corpus!")
     
