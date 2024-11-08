@@ -102,14 +102,14 @@ if __name__ == '__main__':
         test_dataset2 = load_dataset("json", data_files=test_data2, split='train')
         test_dataset2 = test_dataset2.rename_column("Treebank-Sentence", "Original sentence")
         test_dataset2 = test_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
-        cols_to_remove11 = test_dataset1.column_names
-        cols_to_remove22 = test_dataset2.column_names
-        cols_to_remove22.remove("Original sentence")
-        cols_to_remove22.remove("Canonical form")
-        test_dataset2 = test_dataset2.remove_columns(cols_to_remove22)
-        cols_to_remove11.remove("Original sentence")
-        cols_to_remove11.remove("Canonical form")
-        test_dataset1 = test_dataset1.remove_columns(cols_to_remove11)
+        # cols_to_remove11 = test_dataset1.column_names
+        # cols_to_remove22 = test_dataset2.column_names
+        # cols_to_remove22.remove("Original sentence")
+        # cols_to_remove22.remove("Canonical form")
+        # test_dataset2 = test_dataset2.remove_columns(cols_to_remove22)
+        # cols_to_remove11.remove("Original sentence")
+        # cols_to_remove11.remove("Canonical form")
+        # test_dataset1 = test_dataset1.remove_columns(cols_to_remove11)
         dataset = concatenate_datasets([test_dataset1, test_dataset2])
 
         sent_col = "Original sentence"
