@@ -130,6 +130,8 @@ if __name__ == '__main__':
     if args.corpus != "merged":
         dataset = load_dataset("json", data_files=corpus, split='train')
 
+    print(dataset.column_names)
+
     fcr = dataset.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
     gapping = dataset.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
     bcr = dataset.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
