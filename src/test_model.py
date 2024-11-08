@@ -111,6 +111,7 @@ if __name__ == '__main__':
         # cols_to_remove11.remove("Canonical form")
         # test_dataset1 = test_dataset1.remove_columns(cols_to_remove11)
         dataset = concatenate_datasets([test_dataset1, test_dataset2])
+        corpus = "One Old Merged Test"
 
         sent_col = "Original sentence"
         gold_col = "Canonical form"
