@@ -45,8 +45,6 @@ def evaluate_model(file, bleu, exmatch, dataset, name, add_space):
         for i in range(0, len(predictions)):
             if golds[i].endswith(" "):
                 predictions[i] = add_one_space(predictions[i])
-                print(golds[i])
-                print(predictions[i])
 
     file.write("======================" + name + "============================== \n")
     for j in range(0,2): # define multiple evaluation loops
@@ -131,12 +129,10 @@ if __name__ == '__main__':
     if args.corpus != "merged":
         dataset = load_dataset("json", data_files=corpus, split='train')
 
-    print("Filtering datasets...")
     fcr = dataset.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
     gapping = dataset.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
     bcr = dataset.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
     sgf = dataset.filter(lambda example: example["SGF"] == 1 or example["SGF"] == "1")
-    print("Done with filtering.")
 
     bleu = evaluate.load("bleu")
     em_metric = evaluate.load("exact_match")
