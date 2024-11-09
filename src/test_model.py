@@ -35,8 +35,10 @@ def get_predictions(ds, sc):
 #     sentence = sentence.replace("\/", "")
 #     return sentence
 
-def add_one_space(sentence):
+def add_one_space(sentence, gold, i):
+    print(i)
     print(sentence)
+    print(gold)
     if sentence.endswith(" "):
         print("no space: ", sentence)
         return sentence
@@ -46,9 +48,9 @@ def add_one_space(sentence):
 
 def evaluate_model(file, bleu, exmatch, dataset, name, add_space):
     predictions = get_predictions(dataset, sent_col)
-    if add_space:
-        predictions = [add_one_space(x) for x in predictions]
     golds = dataset[gold_col]
+    if add_space:
+        predictions = [add_one_space(predictions[i], golds[i], i) for i in range(len(predictions))] 
     # golds = [clean_sentence(s) for s in golds]
 
     file.write("======================" + name + "============================== \n")
