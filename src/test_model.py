@@ -5,8 +5,6 @@ import argparse
 import evaluate
 from datasets import load_dataset, concatenate_datasets
 
-ID = 1
-
 def get_predictions(ds, sc):
     inputs = ds[sc]
     # inputs = [clean_sentence(p) for p in inputs]
@@ -38,8 +36,7 @@ def get_predictions(ds, sc):
 #     return sentence
 
 def add_one_space(sentence):
-    print(ID)
-    ID += 1
+    print(sentence)
     if sentence.endswith(" "):
         print("no space: ", sentence)
         return sentence
