@@ -3,7 +3,9 @@ import os
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import argparse
 import evaluate
-from datasets import load_dataset, concatenate_datasets, DatasetDict
+from datasets import load_dataset, concatenate_datasets
+
+ID = 1
 
 def get_predictions(ds, sc):
     inputs = ds[sc]
@@ -36,7 +38,8 @@ def get_predictions(ds, sc):
 #     return sentence
 
 def add_one_space(sentence):
-    print(sentence)
+    print(ID)
+    ID += 1
     if sentence.endswith(" "):
         print("no space: ", sentence)
         return sentence
@@ -134,12 +137,12 @@ if __name__ == '__main__':
     if args.corpus != "merged":
         dataset = load_dataset("json", data_files=corpus, split='train')
 
-    print(dataset.column_names)
-
+    print("Filtering datasets...")
     fcr = dataset.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
     gapping = dataset.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
     bcr = dataset.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
     sgf = dataset.filter(lambda example: example["SGF"] == 1 or example["SGF"] == "1")
+    print("Done with filtering.")
 
     bleu = evaluate.load("bleu")
     em_metric = evaluate.load("exact_match")
