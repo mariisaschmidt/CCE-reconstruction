@@ -36,6 +36,7 @@ def get_predictions(ds, sc):
 #     return sentence
 
 def add_one_space(sentence):
+    print(sentence)
     if sentence.endswith(" "):
         print("no space: ", sentence)
         return sentence
