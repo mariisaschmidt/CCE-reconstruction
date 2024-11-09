@@ -37,8 +37,10 @@ def get_predictions(ds, sc):
 
 def add_one_space(sentence):
     if sentence.endswith(" "):
+        print("no space: ", sentence)
         return sentence
     else:
+        print("add space: ", sentence)
         return sentence + " "
 
 def evaluate_model(file, bleu, exmatch, dataset, name, add_space):
