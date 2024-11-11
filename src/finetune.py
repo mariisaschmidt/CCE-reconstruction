@@ -10,26 +10,9 @@ from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2Se
 import argparse
 from datasets import DatasetDict
 import random
-import re
-
-def mask(example_text, masking_rate=0.15, span_length=1):
-    words = example_text.split() 
-    num_words_to_mask = max(1, int(len(words) * masking_rate))
-    mask_indices = sorted(random.sample(range(len(words)), num_words_to_mask))
-    masked_words = words.copy()
-    
-    for idx in mask_indices:
-        masked_words[idx:idx + span_length] = [f"<extra_id_0>"]
-
-    masked_text = " ".join(masked_words)
-    
-    print(example_text)
-    print(masked_text)
-    print("\n")
-    return masked_text
 
 def preprocess_function(examples):
-    inputs = prefix + mask(examples[t])
+    inputs = prefix + examples[t]
     targets = examples[g]
     model_inputs = tokenizer(inputs, text_target=targets, max_length=512, truncation=True, padding='longest', return_tensors='pt')
     return model_inputs
