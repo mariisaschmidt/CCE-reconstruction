@@ -15,16 +15,20 @@ if __name__ == '__main__':
     gapping1 = test_dataset1.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
     bcr1 = test_dataset1.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
     sgf1 = test_dataset1.filter(lambda example: example["SGF"] == 1 or example["SGF"] == "1")
+    noCCE1 = test_dataset1.filter(lambda example: (example["SGF"] != 1 or example["SGF"] != "1") and (example["BCR"] != 1 or example["BCR"] != "1") and (example["FCR"]!= 1 or example["FCR"] != "1") and (example["Gapping"] != 1 or example["Gapping"] != "1"))
 
     fcr2 = test_dataset2.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
     gapping2 = test_dataset2.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
     bcr2 = test_dataset2.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
     sgf2 = test_dataset2.filter(lambda example: example["SGF"] == 1 or example["SGF"] == "1")
+    noCCE2 = test_dataset2.filter(lambda example: (example["SGF"] != 1 or example["SGF"] != "1") and (example["BCR"] != 1 or example["BCR"] != "1") and (example["FCR"]!= 1 or example["FCR"] != "1") and (example["Gapping"] != 1 or example["Gapping"] != "1"))
 
     fcr = dataset.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
     gapping = dataset.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
     bcr = dataset.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
     sgf = dataset.filter(lambda example: example["SGF"] == 1 or example["SGF"] == "1")
+
+    noCCE = dataset.filter(lambda example: (example["SGF"] != 1 or example["SGF"] != "1") and (example["BCR"] != 1 or example["BCR"] != "1") and (example["FCR"]!= 1 or example["FCR"] != "1") and (example["Gapping"] != 1 or example["Gapping"] != "1"))
 
     print("Hier ein paar Info's über die Testdaten: ")
     print("TIGER - Gesamt")
@@ -37,6 +41,8 @@ if __name__ == '__main__':
     print(bcr1)
     print("TIGER - SGF")  
     print(sgf1)
+    print("TIGER - NoCCE")  
+    print(noCCE1)
     print("======================================== \n")
     print("TüBa - Gesamt")
     print(test_dataset2)
@@ -48,6 +54,8 @@ if __name__ == '__main__':
     print(bcr2)
     print("TüBa - SGF")  
     print(sgf2)
+    print("TüBa - NoCCE")  
+    print(noCCE2)
     print("======================================== \n")
     print("MERGED - Gesamt")
     print(dataset)
@@ -59,6 +67,8 @@ if __name__ == '__main__':
     print(bcr)
     print("MERGED - SGF")  
     print(sgf)
+    print("MERGED - NoCCE")  
+    print(noCCE)
 
     print("Creating a 50:50 Dataset now:")
     final_fcr = fcr1.select(range(111))
@@ -78,3 +88,5 @@ if __name__ == '__main__':
     print(final_bcr)
     print("50:50 - SGF")  
     print(final_sgf)
+    print("50:50 - NoCCE")  
+    #print(final_noCCE)
