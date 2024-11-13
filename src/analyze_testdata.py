@@ -15,20 +15,20 @@ if __name__ == '__main__':
     gapping1 = test_dataset1.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
     bcr1 = test_dataset1.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
     sgf1 = test_dataset1.filter(lambda example: example["SGF"] == 1 or example["SGF"] == "1")
-    noCCE1 = test_dataset1.filter(lambda example: (example["SGF"] != 1 or example["SGF"] != "1") and (example["BCR"] != 1 or example["BCR"] != "1") and (example["FCR"]!= 1 or example["FCR"] != "1") and (example["Gapping"] != 1 or example["Gapping"] != "1"))
+    noCCE1 = test_dataset1.filter(lambda example: (example["SGF"] == 0 or example["SGF"] == "0") and (example["BCR"] == 0 or example["BCR"] == "0") and (example["FCR"]== 0 or example["FCR"] == "0") and (example["Gapping"] == 0 or example["Gapping"] == "0"))
 
     fcr2 = test_dataset2.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
     gapping2 = test_dataset2.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
     bcr2 = test_dataset2.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
     sgf2 = test_dataset2.filter(lambda example: example["SGF"] == 1 or example["SGF"] == "1")
-    noCCE2 = test_dataset2.filter(lambda example: (example["SGF"] != 1 or example["SGF"] != "1") and (example["BCR"] != 1 or example["BCR"] != "1") and (example["FCR"]!= 1 or example["FCR"] != "1") and (example["Gapping"] != 1 or example["Gapping"] != "1"))
+    noCCE2 = test_dataset2.filter(lambda example: (example["SGF"] == 0 or example["SGF"] == "0") and (example["BCR"] == 0 or example["BCR"] == "0") and (example["FCR"]== 0 or example["FCR"] == "0") and (example["Gapping"] == 0 or example["Gapping"] == "0"))
 
     fcr = dataset.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
     gapping = dataset.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
     bcr = dataset.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
     sgf = dataset.filter(lambda example: example["SGF"] == 1 or example["SGF"] == "1")
 
-    noCCE = dataset.filter(lambda example: (example["SGF"] != 1 or example["SGF"] != "1") and (example["BCR"] != 1 or example["BCR"] != "1") and (example["FCR"]!= 1 or example["FCR"] != "1") and (example["Gapping"] != 1 or example["Gapping"] != "1"))
+    noCCE = dataset.filter(lambda example: (example["SGF"] == 0 or example["SGF"] == "0") and (example["BCR"] == 0 or example["BCR"] == "0") and (example["FCR"]== 0 or example["FCR"] == "0") and (example["Gapping"] == 0 or example["Gapping"] == "0"))
 
     print("Hier ein paar Info's über die Testdaten: ")
     print("TIGER - Gesamt")
