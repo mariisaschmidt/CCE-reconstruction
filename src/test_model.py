@@ -100,17 +100,44 @@ if __name__ == '__main__':
         test_dataset2 = load_dataset("json", data_files=test_data2, split='train')
         test_dataset2 = test_dataset2.rename_column("Treebank-Sentence", "Original sentence")
         test_dataset2 = test_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
-        # cols_to_remove11 = test_dataset1.column_names
-        # cols_to_remove22 = test_dataset2.column_names
-        # cols_to_remove22.remove("Original sentence")
-        # cols_to_remove22.remove("Canonical form")
-        # test_dataset2 = test_dataset2.remove_columns(cols_to_remove22)
-        # cols_to_remove11.remove("Original sentence")
-        # cols_to_remove11.remove("Canonical form")
-        # test_dataset1 = test_dataset1.remove_columns(cols_to_remove11)
         dataset = concatenate_datasets([test_dataset1, test_dataset2])
         corpus = "One Old Merged Test"
 
+        sent_col = "Original sentence"
+        gold_col = "Canonical form"
+        add_space = True 
+    
+    elif args.corpus == "merged50":
+        test_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_test.jsonl")
+        test_data2 = os.path.expanduser("~/data/CLEANED_OLD_tüba_test.jsonl")
+
+        test_dataset1 = load_dataset("json", data_files=test_data1, split='train')
+        test_dataset2 = load_dataset("json", data_files=test_data2, split='train')
+        test_dataset2 = test_dataset2.rename_column("Treebank-Sentence", "Original sentence")
+        test_dataset2 = test_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
+        
+        fcr1 = test_dataset1.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
+        gapping1 = test_dataset1.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
+        bcr1 = test_dataset1.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
+        sgf1 = test_dataset1.filter(lambda example: example["SGF"] == 1 or example["SGF"] == "1")
+        noCCE1 = test_dataset1.filter(lambda example: (example["SGF"] == 0 or example["SGF"] == "0") and (example["BCR"] == 0 or example["BCR"] == "0") and (example["FCR"]== 0 or example["FCR"] == "0") and (example["Gapping"] == 0 or example["Gapping"] == "0"))
+
+        fcr2 = test_dataset2.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
+        gapping2 = test_dataset2.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
+        bcr2 = test_dataset2.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
+        sgf2 = test_dataset2.filter(lambda example: example["SGF"] == 1 or example["SGF"] == "1")
+        noCCE2 = test_dataset2.filter(lambda example: (example["SGF"] == 0 or example["SGF"] == "0") and (example["BCR"] == 0 or example["BCR"] == "0") and (example["FCR"]== 0 or example["FCR"] == "0") and (example["Gapping"] == 0 or example["Gapping"] == "0"))
+
+        final_fcr = fcr1.select(range(111))
+        final_gapping = gapping1.select(range(63))
+        final_bcr = bcr1.select(range(12))
+        final_sgf = sgf1.select(range(29))
+        final_noCCE = noCCE2.select(range(66))
+        final_dataset = concatenate_datasets([final_fcr, final_gapping, final_bcr, final_sgf, final_noCCE])
+
+        dataset = concatenate_datasets([final_dataset, fcr2, gapping2, bcr2, sgf2, noCCE1])
+
+        corpus = "One Old Merged Test 50:50"
         sent_col = "Original sentence"
         gold_col = "Canonical form"
         add_space = True 
