@@ -79,6 +79,8 @@ if __name__ == '__main__':
         model_name = "de_de_llm"
     if args.remove_no_cce:
         removeNoCce = args.remove_no_cce
+    else: 
+        removeNoCce = 0
     if args.pretrained_model:
         checkpoint = args.pretrained_model
     else:
