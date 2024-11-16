@@ -129,10 +129,10 @@ if __name__ == '__main__':
             prefix = "reconstruct the ellipsis in this sentence: "
             epochs = 10
         if dataset_name == "merged":
-            train_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
-            test_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_test.jsonl")
-            train_data2 = os.path.expanduser("~/data/CLEANED_OLD_tüba_train.jsonl")
-            test_data2 = os.path.expanduser("~/data/CLEANED_OLD_tüba_test.jsonl")
+            train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
+            test_data1 = os.path.expanduser("~/data/CLEANED_tiger_test.jsonl")
+            train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
+            test_data2 = os.path.expanduser("~/data/CLEANED_tüba_test.jsonl")
 
             train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
             train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
@@ -175,6 +175,8 @@ if __name__ == '__main__':
             dataset = DatasetDict({"train": train_dataset,
                                         "test": test_dataset
                                         })
+            dataset = dataset.shuffle(seed=3)
+            dataset.save_to_disk("MixedMergedTrainDataset")
             
             t = "Original sentence"
             g = "Canonical form"
