@@ -32,12 +32,12 @@ def balance_datasets(dataset_small, dataset_large, feature_columns):
         balanced_data.append(sampled_large_subset)
     
     # Anzahl der Sätze ohne CCE im kleineren Datensatz
-    small_subset = dataset_large.filter(filter_no_cce)
+    small_subset = dataset_small.filter(filter_no_cce)
     count = len(small_subset)
     print("NO CCE", count)
     
     # Zufällige Auswahl der gleichen Anzahl aus dem größeren Datensatz
-    large_subset = dataset_small.filter(lambda x: (x[feature] == 0 ) or (x[feature] == "0"))
+    large_subset = dataset_large.filter(lambda x: (x[feature] == 0 ) or (x[feature] == "0"))
     sampled_large_subset = large_subset.shuffle(seed=42).select(range(min(count, len(large_subset))))
     
     # Kombinieren der Subsets
