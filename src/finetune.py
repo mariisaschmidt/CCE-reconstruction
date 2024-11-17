@@ -18,6 +18,7 @@ def balance_datasets(dataset_small, dataset_large, feature_columns):
         # Anzahl der Sätze mit Feature = 1 im kleineren Datensatz
         small_subset = dataset_small.filter(lambda x: (x[feature] == 1 )or (x[feature] == "1" ))
         count = len(small_subset)
+        print(feature, count)
         
         # Zufällige Auswahl der gleichen Anzahl aus dem größeren Datensatz
         large_subset = dataset_large.filter(lambda x: (x[feature] == 1 )or (x[feature] == "1" ))
