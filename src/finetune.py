@@ -11,13 +11,16 @@ from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2Se
 import argparse
 from datasets import DatasetDict, Dataset
 
+def filter_no_cce(example):
+    return all((example[feature] == 0) or example[feature] == "0" for feature in feature_columns)
+
 def balance_datasets(dataset_small, dataset_large, feature_columns):
     balanced_data = []
     
     for feature in feature_columns:
         if feature == 'NOCCE':
             # Anzahl der Sätze ohne CCE im kleineren Datensatz
-            small_subset = dataset_small.filter(lambda x: (x[feature] == 0 ) or (x[feature] == "0"))
+            small_subset = dataset_small.filter(filter_no_cce)
             count = len(small_subset)
             print(feature, count)
             
