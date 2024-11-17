@@ -9,18 +9,29 @@ import re
 import os 
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
 import argparse
-from datasets import DatasetDict
+from datasets import DatasetDict, Dataset
 
-# def clean_sentences(sentence):
-#     suffix = r'_[^\s]*'
-#     sentence = re.sub(suffix, '', sentence)
-#     # remove spaces before punctuation
-#     pattern = r'\s+([.,;?!:])'
-#     sentence = re.sub(pattern, r'\1', sentence)
-#     # remove weird ``
-#     sentence = re.sub(r'``', '"', sentence)
-#     sentence = re.sub(r"''", '"', sentence)
-#     return sentence
+def balance_datasets(dataset_small, dataset_large, feature_columns):
+    balanced_data = []
+    
+    for feature in feature_columns:
+        # Anzahl der Sätze mit Feature = 1 im kleineren Datensatz
+        small_subset = dataset_small.filter(lambda x: (x[feature] == 1 )or (x[feature] == "1" ))
+        count = len(small_subset)
+        
+        # Zufällige Auswahl der gleichen Anzahl aus dem größeren Datensatz
+        large_subset = dataset_large.filter(lambda x: (x[feature] == 1 )or (x[feature] == "1" ))
+        sampled_large_subset = large_subset.shuffle(seed=42).select(range(min(count, len(large_subset))))
+        
+        # Kombinieren der Subsets
+        balanced_data.append(small_subset)
+        balanced_data.append(sampled_large_subset)
+    
+    # Alle balancierten Subsets zusammenfügen
+    combined_dict = {
+        key: sum((subset[key] for subset in balanced_data), []) for key in dataset_small.features
+    }
+    return Dataset.from_dict(combined_dict)
 
 def preprocess_function(examples):
     inputs = prefix + examples[t]
@@ -177,8 +188,94 @@ if __name__ == '__main__':
             dataset = DatasetDict({"train": train_dataset,
                                         "test": test_dataset
                                         })
+            
+            t = "Original sentence"
+            g = "Canonical form"
+            batchsize = 4
+            prefix = "reconstruct the ellipsis in this sentence: "
+            epochs = 5
+        if dataset_name == "mergedMixed":
+            train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
+            test_data1 = os.path.expanduser("~/data/CLEANED_tiger_test.jsonl")
+            train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
+            test_data2 = os.path.expanduser("~/data/CLEANED_tüba_test.jsonl")
+
+            train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
+            train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
+            train_dataset2 = train_dataset2.rename_column("Treebank-Sentence", "Original sentence")
+            train_dataset2 = train_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
+            if removeNoCce == 1:
+                cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
+                print(train_dataset1.num_rows)
+                train_dataset1 = train_dataset1.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
+                print(train_dataset1.num_rows)
+                print(train_dataset2.num_rows)
+                train_dataset2 = train_dataset2.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
+                print(train_dataset2.num_rows)
+            cols_to_remove1 = train_dataset1.column_names
+            cols_to_remove2 = train_dataset2.column_names
+            cols_to_remove2.remove("Original sentence")
+            cols_to_remove2.remove("Canonical form")
+            train_dataset2 = train_dataset2.remove_columns(cols_to_remove2)
+            cols_to_remove1.remove("Original sentence")
+            cols_to_remove1.remove("Canonical form")
+            train_dataset1 = train_dataset1.remove_columns(cols_to_remove1)
+            train_dataset = concatenate_datasets([train_dataset1, train_dataset2])
+            print("Got train data")
+
+            test_dataset1 = load_dataset("json", data_files=test_data1, split='train')
+            test_dataset2 = load_dataset("json", data_files=test_data2, split='train')
+            test_dataset2 = test_dataset2.rename_column("Treebank-Sentence", "Original sentence")
+            test_dataset2 = test_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
+            cols_to_remove11 = test_dataset1.column_names
+            cols_to_remove22 = test_dataset2.column_names
+            cols_to_remove22.remove("Original sentence")
+            cols_to_remove22.remove("Canonical form")
+            test_dataset2 = test_dataset2.remove_columns(cols_to_remove22)
+            cols_to_remove11.remove("Original sentence")
+            cols_to_remove11.remove("Canonical form")
+            test_dataset1 = test_dataset1.remove_columns(cols_to_remove11)
+            test_dataset = concatenate_datasets([test_dataset1, test_dataset2])
+            print("Got test data")
+
+            dataset = DatasetDict({"train": train_dataset,
+                                        "test": test_dataset
+                                        })
             dataset = dataset.shuffle(seed=3)
-            dataset.save_to_disk("MixedMergedTrainDataset")
+            #dataset.save_to_disk("MixedMergedTrainDataset")
+            
+            t = "Original sentence"
+            g = "Canonical form"
+            batchsize = 4
+            prefix = "reconstruct the ellipsis in this sentence: "
+            epochs = 5
+
+        if dataset_name == "mergedFair":
+            train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
+            train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
+
+            train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
+            train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
+            train_dataset2 = train_dataset2.rename_column("Treebank-Sentence", "Original sentence")
+            train_dataset2 = train_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
+            if removeNoCce == 1:
+                cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
+                print(train_dataset1.num_rows)
+                train_dataset1 = train_dataset1.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
+                print(train_dataset1.num_rows)
+                print(train_dataset2.num_rows)
+                train_dataset2 = train_dataset2.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
+                print(train_dataset2.num_rows)
+            
+            # Balancierter Datensatz
+            feature_columns = ['BCR', 'FCR', 'Gapping', 'SGF']
+            train_dataset = balance_datasets(train_dataset2, train_dataset1, feature_columns)
+            print(train_dataset)
+            print("Got train data")
+
+            dataset = train_dataset.train_test_split(test_size=0.2, seed=3)
+            dataset = dataset.shuffle(seed=3)
+            #dataset.save_to_disk("BalancedMergedTrainDataset")
             
             t = "Original sentence"
             g = "Canonical form"
