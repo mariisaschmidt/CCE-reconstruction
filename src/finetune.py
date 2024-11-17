@@ -15,18 +15,32 @@ def balance_datasets(dataset_small, dataset_large, feature_columns):
     balanced_data = []
     
     for feature in feature_columns:
-        # Anzahl der Sätze mit Feature = 1 im kleineren Datensatz
-        small_subset = dataset_small.filter(lambda x: (x[feature] == 1 )or (x[feature] == "1" ))
-        count = len(small_subset)
-        print(feature, count)
-        
-        # Zufällige Auswahl der gleichen Anzahl aus dem größeren Datensatz
-        large_subset = dataset_large.filter(lambda x: (x[feature] == 1 )or (x[feature] == "1" ))
-        sampled_large_subset = large_subset.shuffle(seed=42).select(range(min(count, len(large_subset))))
-        
-        # Kombinieren der Subsets
-        balanced_data.append(small_subset)
-        balanced_data.append(sampled_large_subset)
+        if feature == 'NOCCE':
+            # Anzahl der Sätze ohne CCE im kleineren Datensatz
+            small_subset = dataset_small.filter(lambda x: (x[feature] == 0 ) or (x[feature] == "0"))
+            count = len(small_subset)
+            print(feature, count)
+            
+            # Zufällige Auswahl der gleichen Anzahl aus dem größeren Datensatz
+            large_subset = dataset_large.filter(lambda x: (x[feature] == 0 ) or (x[feature] == "0"))
+            sampled_large_subset = large_subset.shuffle(seed=42).select(range(min(count, len(large_subset))))
+            
+            # Kombinieren der Subsets
+            balanced_data.append(small_subset)
+            balanced_data.append(sampled_large_subset)
+        else:
+            # Anzahl der Sätze mit Feature = 1 im kleineren Datensatz
+            small_subset = dataset_small.filter(lambda x: (x[feature] == 1 ) or (x[feature] == "1"))
+            count = len(small_subset)
+            print(feature, count)
+            
+            # Zufällige Auswahl der gleichen Anzahl aus dem größeren Datensatz
+            large_subset = dataset_large.filter(lambda x: (x[feature] == 1 ) or (x[feature] == "1"))
+            sampled_large_subset = large_subset.shuffle(seed=42).select(range(min(count, len(large_subset))))
+            
+            # Kombinieren der Subsets
+            balanced_data.append(small_subset)
+            balanced_data.append(sampled_large_subset)
     
     # Alle balancierten Subsets zusammenfügen
     combined_dict = {
@@ -269,7 +283,7 @@ if __name__ == '__main__':
                 print(train_dataset2.num_rows)
             
             # Balancierter Datensatz
-            feature_columns = ['BCR', 'FCR', 'Gapping', 'SGF']
+            feature_columns = ['BCR', 'FCR', 'Gapping', 'SGF', 'NOCCE']
             train_dataset = balance_datasets(train_dataset2, train_dataset1, feature_columns)
             print(train_dataset)
             print("Got train data")
