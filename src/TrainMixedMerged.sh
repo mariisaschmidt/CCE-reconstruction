@@ -1,10 +1,10 @@
 echo "Start training of MergedSmall"
 
-python3 finetune.py --dataset merged --model_name  16nov_Mixed_AllNew_MergedSmall  --pretrained_model /home/marisa/models/Aug25Small
+python3 finetune.py --dataset mergedMixed --model_name  16nov_Mixed_AllNew_MergedSmall  --pretrained_model /home/marisa/models/Aug25Small
 
 echo "Start training of MergedBase"
 
-python3 finetune.py --dataset merged --model_name  16nov_Mixed_AllNew_MergedBase  --pretrained_model /home/marisa/models/Aug25Base
+python3 finetune.py --dataset mergedMixed --model_name  16nov_Mixed_AllNew_MergedBase  --pretrained_model /home/marisa/models/Aug25Base
 
 echo "Done with training!"
 

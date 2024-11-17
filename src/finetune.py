@@ -94,6 +94,7 @@ if __name__ == '__main__':
     parser.add_argument("--model_name", type=str)
     parser.add_argument("--pretrained_model", type=str)
     parser.add_argument("--remove_no_cce", type=int)
+    parser.add_argument("--data_variant", type=str)
     args = parser.parse_args()
 
     if args.dataset:
@@ -109,6 +110,10 @@ if __name__ == '__main__':
         removeNoCce = args.remove_no_cce
     else: 
         removeNoCce = 0
+    if args.data_variant:
+        data_variant = args.data_variant
+    else: 
+        data_variant = " "
     if args.pretrained_model:
         checkpoint = args.pretrained_model
     else:
@@ -119,8 +124,14 @@ if __name__ == '__main__':
     
     if dataset_name != "":
         if dataset_name == "tüba":
-            train_data = os.path.expanduser("~/data/CLEANED_OLD_tüba_train.jsonl")
-            test_data = os.path.expanduser("~/data/CLEANED_OLD_tüba_test.jsonl")
+            if data_variant == "OneOld":
+                train_data = os.path.expanduser("~/data/CLEANED_OLD_tüba_train.jsonl")
+            elif data_variant == "AllOld":
+                train_data = os.path.expanduser("~/data/CLEANED_ALL_OLD_tüba_train.jsonl")
+            elif data_variant == "OneNew":
+                train_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_train.jsonl")
+            elif data_variant == "AllNew":
+                train_data = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             if removeNoCce == 1:
                 cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
@@ -128,19 +139,20 @@ if __name__ == '__main__':
                 train_dataset = train_dataset.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
                 print(train_dataset.num_rows)
             print("Got train data")
-            test_dataset = load_dataset("json", data_files=test_data, split='train')
-            print("Got test data")
-            dataset = DatasetDict({"train": train_dataset,
-                                        "test": test_dataset
-                                        })
             t = "Treebank-Sentence"
             g = "Reconstructed-Sentence"
             prefix = "reconstruct the ellipsis in this sentence: "
             batchsize = 4
             epochs = 5
         if dataset_name == "tiger":
-            train_data = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
-            test_data = os.path.expanduser("~/data/CLEANED_OLD_tiger_test.jsonl")
+            if data_variant == "OneOld":
+                train_data = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
+            elif data_variant == "AllOld":
+                train_data = os.path.expanduser("~/data/CLEANED_ALL_OLD_tiger_train.jsonl")
+            elif data_variant == "OneNew":
+                train_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_train.jsonl")
+            elif data_variant == "AllNew":
+                train_data = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             if removeNoCce == 1:
                 cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
@@ -148,21 +160,24 @@ if __name__ == '__main__':
                 train_dataset = train_dataset.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
                 print(train_dataset.num_rows)
             print("Got train data")
-            test_dataset = load_dataset("json", data_files=test_data, split='train')
-            print("Got test data")
-            dataset = DatasetDict({"train": train_dataset,
-                                        "test": test_dataset
-                                        })
             t = "Original sentence"
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 10
+            epochs = 5
         if dataset_name == "merged":
-            train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
-            test_data1 = os.path.expanduser("~/data/CLEANED_tiger_test.jsonl")
-            train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
-            test_data2 = os.path.expanduser("~/data/CLEANED_tüba_test.jsonl")
+            if data_variant == "OneOld":
+                train_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_OLD_tüba_train.jsonl")
+            elif data_variant == "AllOld":
+                train_data1 = os.path.expanduser("~/data/CLEANED_ALL_OLD_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_ALL_OLD_tüba_train.jsonl")
+            elif data_variant == "OneNew":
+                train_data1 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_train.jsonl")
+            elif data_variant == "AllNew":
+                train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
 
             train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
             train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
@@ -187,35 +202,24 @@ if __name__ == '__main__':
             train_dataset = concatenate_datasets([train_dataset1, train_dataset2])
             print("Got train data")
 
-            test_dataset1 = load_dataset("json", data_files=test_data1, split='train')
-            test_dataset2 = load_dataset("json", data_files=test_data2, split='train')
-            test_dataset2 = test_dataset2.rename_column("Treebank-Sentence", "Original sentence")
-            test_dataset2 = test_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
-            cols_to_remove11 = test_dataset1.column_names
-            cols_to_remove22 = test_dataset2.column_names
-            cols_to_remove22.remove("Original sentence")
-            cols_to_remove22.remove("Canonical form")
-            test_dataset2 = test_dataset2.remove_columns(cols_to_remove22)
-            cols_to_remove11.remove("Original sentence")
-            cols_to_remove11.remove("Canonical form")
-            test_dataset1 = test_dataset1.remove_columns(cols_to_remove11)
-            test_dataset = concatenate_datasets([test_dataset1, test_dataset2])
-            print("Got test data")
-
-            dataset = DatasetDict({"train": train_dataset,
-                                        "test": test_dataset
-                                        })
-            
             t = "Original sentence"
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
             epochs = 5
         if dataset_name == "mergedMixed":
-            train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
-            test_data1 = os.path.expanduser("~/data/CLEANED_tiger_test.jsonl")
-            train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
-            test_data2 = os.path.expanduser("~/data/CLEANED_tüba_test.jsonl")
+            if data_variant == "OneOld":
+                train_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_OLD_tüba_train.jsonl")
+            elif data_variant == "AllOld":
+                train_data1 = os.path.expanduser("~/data/CLEANED_ALL_OLD_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_ALL_OLD_tüba_train.jsonl")
+            elif data_variant == "OneNew":
+                train_data1 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_train.jsonl")
+            elif data_variant == "AllNew":
+                train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
 
             train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
             train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
@@ -240,25 +244,7 @@ if __name__ == '__main__':
             train_dataset = concatenate_datasets([train_dataset1, train_dataset2])
             print("Got train data")
 
-            test_dataset1 = load_dataset("json", data_files=test_data1, split='train')
-            test_dataset2 = load_dataset("json", data_files=test_data2, split='train')
-            test_dataset2 = test_dataset2.rename_column("Treebank-Sentence", "Original sentence")
-            test_dataset2 = test_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
-            cols_to_remove11 = test_dataset1.column_names
-            cols_to_remove22 = test_dataset2.column_names
-            cols_to_remove22.remove("Original sentence")
-            cols_to_remove22.remove("Canonical form")
-            test_dataset2 = test_dataset2.remove_columns(cols_to_remove22)
-            cols_to_remove11.remove("Original sentence")
-            cols_to_remove11.remove("Canonical form")
-            test_dataset1 = test_dataset1.remove_columns(cols_to_remove11)
-            test_dataset = concatenate_datasets([test_dataset1, test_dataset2])
-            print("Got test data")
-
-            dataset = DatasetDict({"train": train_dataset,
-                                        "test": test_dataset
-                                        })
-            dataset = dataset.shuffle(seed=3)
+            train_dataset = train_dataset.shuffle(seed=3)
             #dataset.save_to_disk("MixedMergedTrainDataset")
             
             t = "Original sentence"
@@ -268,8 +254,18 @@ if __name__ == '__main__':
             epochs = 5
 
         if dataset_name == "mergedFair":
-            train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
-            train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
+            if data_variant == "OneOld":
+                train_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_OLD_tüba_train.jsonl")
+            elif data_variant == "AllOld":
+                train_data1 = os.path.expanduser("~/data/CLEANED_ALL_OLD_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_ALL_OLD_tüba_train.jsonl")
+            elif data_variant == "OneNew":
+                train_data1 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_train.jsonl")
+            elif data_variant == "AllNew":
+                train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
 
             train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
             train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
@@ -290,8 +286,7 @@ if __name__ == '__main__':
             print(train_dataset)
             print("Got train data")
 
-            dataset = train_dataset.train_test_split(test_size=0.2, seed=3)
-            dataset = dataset.shuffle(seed=3)
+            train_dataset = train_dataset.shuffle(seed=3)
             #dataset.save_to_disk("BalancedMergedTrainDataset")
             
             t = "Original sentence"
@@ -301,7 +296,7 @@ if __name__ == '__main__':
             epochs = 5
         if dataset_name == "g4":
             data = os.path.expanduser("~/data/CLEANED_de_de_pairs.jsonl")
-            dataset = load_dataset("json", data_files=data, split='train')
+            train_dataset = load_dataset("json", data_files=data, split='train')
             prefix = "translate German to German: "
             t = "text"
             g = "gold_sentence"
@@ -315,6 +310,7 @@ if __name__ == '__main__':
         source_lang = "de"
         target_lang = "de"
 
+        dataset = train_dataset 
         dataset = dataset.filter(lambda example: len(example[t]) >= 20)
         dataset = dataset.filter(lambda example: len(example[g]) >= 20)
 
@@ -324,9 +320,8 @@ if __name__ == '__main__':
         print("Correct the outputs of preprocess: ")
         tokenized_dataset = tokenized_dataset.map(correct_inputs_masks_labels, batched=False)
 
-        if dataset_name == "g4":
-            print("Create Train-Test-Split: ")
-            tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2)
+        print("Create Train-Test-Split: ")
+        tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2, seed=3)
 
         data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
 
