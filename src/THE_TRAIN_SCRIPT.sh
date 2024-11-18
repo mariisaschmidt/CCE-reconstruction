@@ -110,8 +110,8 @@
 # echo "Start training of: All New 5050"
 # python3 finetune.py --dataset mergedFair --model_name  1811_AllNew_FairMergedSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllNew
 
-# echo "Start training of MergedBase"
-# python3 finetune.py --dataset mergedFair --model_name  1811_AllNew_FairMergedBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant AllNew
+echo "Start training of MergedBase"
+python3 finetune.py --dataset mergedFair --model_name  1811_AllNew_FairMergedBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant AllNew
 
 echo "====================== EVAL ================================="
 echo "============================================================="
