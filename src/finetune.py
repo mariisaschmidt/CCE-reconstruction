@@ -143,7 +143,7 @@ if __name__ == '__main__':
             g = "Reconstructed-Sentence"
             prefix = "reconstruct the ellipsis in this sentence: "
             batchsize = 4
-            epochs = 5
+            epochs = 10 #5
         if dataset_name == "tiger":
             if data_variant == "OneOld":
                 train_data = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
@@ -164,7 +164,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 5
+            epochs = 10 #5
         if dataset_name == "merged":
             if data_variant == "OneOld":
                 train_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
@@ -206,7 +206,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 5
+            epochs =10 #5
         if dataset_name == "mergedMixed":
             if data_variant == "OneOld":
                 train_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
@@ -251,7 +251,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 5
+            epochs = 10 #5
 
         if dataset_name == "mergedFair":
             if data_variant == "OneOld":
@@ -293,7 +293,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 5
+            epochs = 10 #5
         if dataset_name == "g4":
             data = os.path.expanduser("~/data/CLEANED_de_de_pairs.jsonl")
             train_dataset = load_dataset("json", data_files=data, split='train')
@@ -339,7 +339,7 @@ if __name__ == '__main__':
         per_device_train_batch_size=batchsize,
         per_device_eval_batch_size=batchsize,
         weight_decay=0.01,
-        #save_total_limit=3,
+        save_strategy="no",
         num_train_epochs=epochs,
         predict_with_generate=True,
         fp16=True, # set true when cuda available
