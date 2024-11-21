@@ -132,6 +132,8 @@ if __name__ == '__main__':
                 train_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_train.jsonl")
             elif data_variant == "AllNew":
                 train_data = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
+            elif data_variant == "TSD":
+                train_data = os.path.expanduser("~/data/tüba_train.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             if removeNoCce == 1:
                 cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
@@ -143,7 +145,7 @@ if __name__ == '__main__':
             g = "Reconstructed-Sentence"
             prefix = "reconstruct the ellipsis in this sentence: "
             batchsize = 4
-            epochs = 10 #5
+            epochs = 5 #10 #5
         if dataset_name == "tiger":
             if data_variant == "OneOld":
                 train_data = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
@@ -153,6 +155,8 @@ if __name__ == '__main__':
                 train_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_train.jsonl")
             elif data_variant == "AllNew":
                 train_data = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
+            elif data_variant == "TSD":
+                train_data = os.path.expanduser("~/data/tiger_train.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             if removeNoCce == 1:
                 cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
@@ -164,7 +168,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 10 #5
+            epochs = 5 #10 #5
         if dataset_name == "merged":
             if data_variant == "OneOld":
                 train_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
@@ -178,6 +182,9 @@ if __name__ == '__main__':
             elif data_variant == "AllNew":
                 train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
                 train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
+            elif data_variant == "TSD":
+                train_data1 = os.path.expanduser("~/data/tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/tüba_train.jsonl")
 
             train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
             train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
@@ -206,7 +213,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs =10 #5
+            epochs =5#10 #5
         if dataset_name == "mergedMixed":
             if data_variant == "OneOld":
                 train_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
@@ -251,7 +258,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 10 #5
+            epochs = 5 #10 #5
 
         if dataset_name == "mergedFair":
             if data_variant == "OneOld":
@@ -293,7 +300,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 10 #5
+            epochs = 5 #10 #5
         if dataset_name == "g4":
             data = os.path.expanduser("~/data/CLEANED_de_de_pairs.jsonl")
             train_dataset = load_dataset("json", data_files=data, split='train')
