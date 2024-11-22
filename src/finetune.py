@@ -15,7 +15,7 @@ import random
 
 sentence_counts = defaultdict(int)
 
-def add_prefix_to_duplicates(example, idx):
+def add_prefix_to_duplicates(example):
     global sentence_counts
 
     sentence = example["Original sentence"]
