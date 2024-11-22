@@ -10,6 +10,33 @@ import os
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
 import argparse
 from datasets import DatasetDict, Dataset
+from collections import defaultdict
+import random
+
+sentence_counts = defaultdict(int)
+
+def add_prefix_to_duplicates(example, idx):
+    global sentence_counts
+
+    sentence = example["Original sentence"]
+    gold_standard = example["Canonical form"]
+
+    prefixe = ["Er sagt:", "Sie erzählt:", "Folgendes wird berichtet:"]
+    sentence_counts[sentence] += 1
+    prefix = random.choice(prefixe)
+
+    modified_sentence = prefix + " " + sentence
+    modified_gold_standard = prefix + " " + gold_standard
+
+    print(modified_sentence)
+    print(modified_gold_standard)
+    print("\n")
+
+    modified_example = {key: value for key, value in example.items()}
+    modified_example["Original sentence"] = modified_sentence
+    modified_example["Canonical form"] = modified_gold_standard
+    
+    return modified_example
 
 def filter_no_cce(example):
     return all((example[feature] == 0) or example[feature] == "0" for feature in feature_columns)
@@ -296,6 +323,47 @@ if __name__ == '__main__':
             train_dataset = train_dataset.shuffle(seed=3)
             #dataset.save_to_disk("BalancedMergedTrainDataset")
             
+            t = "Original sentence"
+            g = "Canonical form"
+            batchsize = 4
+            prefix = "reconstruct the ellipsis in this sentence: "
+            epochs = 5 #10 #5
+        if dataset_name == "mergedFairLarge":
+            if data_variant == "OneOld":
+                train_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_OLD_tüba_train.jsonl")
+            elif data_variant == "AllOld":
+                train_data1 = os.path.expanduser("~/data/CLEANED_ALL_OLD_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_ALL_OLD_tüba_train.jsonl")
+            elif data_variant == "OneNew":
+                train_data1 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_train.jsonl")
+            elif data_variant == "AllNew":
+                train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
+                train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
+
+            train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
+            train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
+            train_dataset2 = train_dataset2.rename_column("Treebank-Sentence", "Original sentence")
+            train_dataset2 = train_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
+            if removeNoCce == 1:
+                cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
+                print(train_dataset1.num_rows)
+                train_dataset1 = train_dataset1.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
+                print(train_dataset1.num_rows)
+                print(train_dataset2.num_rows)
+                train_dataset2 = train_dataset2.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
+                print(train_dataset2.num_rows)
+            
+            # Balancierter Datensatz
+            feature_columns = ['BCR', 'FCR', 'Gapping', 'SGF']
+            train_dataset = balance_datasets(train_dataset1, train_dataset2, feature_columns) # groß und klein tauschen für erweiterung
+            train_dataset.map(add_prefix_to_duplicates)
+            print(train_dataset)
+            print("Got train data")
+
+            train_dataset = train_dataset.shuffle(seed=3)
+
             t = "Original sentence"
             g = "Canonical form"
             batchsize = 4
