@@ -1,23 +1,23 @@
-echo "Start training of: TSD"
-echo "Start training of TigerSmall"
-python3 finetune.py --dataset tiger --model_name  2011_TSD_OneOld_TigerSmall  --pretrained_model /home/marisa/models/de_de_feb05/checkpoint-929000 --remove_no_cce 0 --data_variant TSD
+# echo "Start training of: TSD"
+# echo "Start training of TigerSmall"
+# python3 finetune.py --dataset tiger --model_name  2011_TSD_OneOld_TigerSmall  --pretrained_model /home/marisa/models/de_de_feb05/checkpoint-929000 --remove_no_cce 0 --data_variant TSD
 
-echo "Start training of TübaSmall"
-python3 finetune.py --dataset tüba --model_name  2011_TSD_OneOld_TübaSmall  --pretrained_model /home/marisa/models/de_de_feb05/checkpoint-929000 --remove_no_cce 0 --data_variant TSD
+# echo "Start training of TübaSmall"
+# python3 finetune.py --dataset tüba --model_name  2011_TSD_OneOld_TübaSmall  --pretrained_model /home/marisa/models/de_de_feb05/checkpoint-929000 --remove_no_cce 0 --data_variant TSD
 
-echo "Start training of MergedSmall"
-python3 finetune.py --dataset merged --model_name  2011_TSD_OneOld_MergedSmall  --pretrained_model /home/marisa/models/de_de_feb05/checkpoint-929000 --remove_no_cce 0 --data_variant TSD
+# echo "Start training of MergedSmall"
+# python3 finetune.py --dataset merged --model_name  2011_TSD_OneOld_MergedSmall  --pretrained_model /home/marisa/models/de_de_feb05/checkpoint-929000 --remove_no_cce 0 --data_variant TSD
 
-echo "Start training of TigerBase"
-python3 finetune.py --dataset tiger --model_name  2011_TSD_OneOld_TigerBase  --pretrained_model /home/marisa/models/de_de_mar14 --remove_no_cce 0 --data_variant TSD
+# echo "Start training of TigerBase"
+# python3 finetune.py --dataset tiger --model_name  2011_TSD_OneOld_TigerBase  --pretrained_model /home/marisa/models/de_de_mar14 --remove_no_cce 0 --data_variant TSD
 
-echo "Start training of TübaBase"
-python3 finetune.py --dataset tüba --model_name  2011_TSD_OneOld_TübaBase  --pretrained_model /home/marisa/models/de_de_mar14 --remove_no_cce 0 --data_variant TSD
+# echo "Start training of TübaBase"
+# python3 finetune.py --dataset tüba --model_name  2011_TSD_OneOld_TübaBase  --pretrained_model /home/marisa/models/de_de_mar14 --remove_no_cce 0 --data_variant TSD
 
-echo "Start training of MergedBase"
-python3 finetune.py --dataset merged --model_name  2011_TSD_OneOld_MergedBase  --pretrained_model /home/marisa/models/de_de_mar14 --remove_no_cce 0 --data_variant TSD
+# echo "Start training of MergedBase"
+# python3 finetune.py --dataset merged --model_name  2011_TSD_OneOld_MergedBase  --pretrained_model /home/marisa/models/de_de_mar14 --remove_no_cce 0 --data_variant TSD
 
-echo "============================================================="
+# echo "============================================================="
 
 # echo "Start training of: Exact Match / One Old"
 # echo "Start training of TigerSmall"
@@ -137,41 +137,41 @@ echo "============================================================="
 echo "====================== EVAL ================================="
 echo "============================================================="
 echo "Start evaluation of: TSD"
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TigerSmall  --corpus tiger --prefix 2011_TSD_OneOld_TiSm
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TigerSmall  --corpus tiger --prefix 2211_TSD_OneOld_TiSm
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TübaSmall  --corpus tiger --prefix 2011_TSD_OneOld_TuSm
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TübaSmall  --corpus tiger --prefix 2211_TSD_OneOld_TuSm
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_MergedSmall  --corpus tiger --prefix 2011_TSD_OneOld_MeSm
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_MergedSmall  --corpus tiger --prefix 2211_TSD_OneOld_MeSm
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TigerBase  --corpus tiger --prefix 2011_TSD_OneOld_TiBas
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TigerBase  --corpus tiger --prefix 2211_TSD_OneOld_TiBas
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TübaBase  --corpus tiger --prefix 2011_TSD_OneOld_TuBas
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TübaBase  --corpus tiger --prefix 2211_TSD_OneOld_TuBas
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_MergedBase  --corpus tiger --prefix 2011_TSD_OneOld_MeBas
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_MergedBase  --corpus tiger --prefix 2211_TSD_OneOld_MeBas
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TigerSmall  --corpus tuba --prefix 2011_TSD_OneOld_TiSm
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TigerSmall  --corpus tuba --prefix 2211_TSD_OneOld_TiSm
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TübaSmall  --corpus tuba --prefix 2011_TSD_OneOld_TuSm
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TübaSmall  --corpus tuba --prefix 2211_TSD_OneOld_TuSm
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_MergedSmall  --corpus tuba --prefix 2011_TSD_OneOld_MeSm
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_MergedSmall  --corpus tuba --prefix 2211_TSD_OneOld_MeSm
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TigerBase  --corpus tuba --prefix 2011_TSD_OneOld_TiBas
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TigerBase  --corpus tuba --prefix 2211_TSD_OneOld_TiBas
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TübaBase  --corpus tuba --prefix 2011_TSD_OneOld_TuBas
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TübaBase  --corpus tuba --prefix 2211_TSD_OneOld_TuBas
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_MergedBase  --corpus tuba --prefix 2011_TSD_OneOld_MeBas
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_MergedBase  --corpus tuba --prefix 2211_TSD_OneOld_MeBas
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TigerSmall  --corpus eval --prefix 2011_TSD_OneOld_TiSm
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TigerSmall  --corpus eval --prefix 2211_TSD_OneOld_TiSm
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TübaSmall  --corpus eval --prefix 2011_TSD_OneOld_TuSm
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TübaSmall  --corpus eval --prefix 2211_TSD_OneOld_TuSm
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_MergedSmall  --corpus eval --prefix 2011_TSD_OneOld_MeSm
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_MergedSmall  --corpus eval --prefix 2211_TSD_OneOld_MeSm
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TigerBase  --corpus eval --prefix 2011_TSD_OneOld_TiBas
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TigerBase  --corpus eval --prefix 2211_TSD_OneOld_TiBas
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TübaBase  --corpus eval --prefix 2011_TSD_OneOld_TuBas
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_TübaBase  --corpus eval --prefix 2211_TSD_OneOld_TuBas
 
-python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_MergedBase  --corpus eval --prefix 2011_TSD_OneOld_MeBas
+python3 test_model.py --checkpoint /home/marisa/models/2011_TSD_OneOld_MergedBase  --corpus eval --prefix 2211_TSD_OneOld_MeBas
 
 echo "============================================================="
 
