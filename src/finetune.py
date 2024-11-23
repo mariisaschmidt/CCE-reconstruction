@@ -172,7 +172,7 @@ if __name__ == '__main__':
             g = "Reconstructed-Sentence"
             prefix = "reconstruct the ellipsis in this sentence: "
             batchsize = 4
-            epochs = 5 #10 #5
+            epochs = 10 #5
         if dataset_name == "tiger":
             if data_variant == "OneOld":
                 train_data = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
@@ -195,7 +195,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 5 #10 #5
+            epochs = 10 #5
         if dataset_name == "merged":
             if data_variant == "OneOld":
                 train_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
@@ -240,7 +240,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs =5#10 #5
+            epochs = 10 #5
         if dataset_name == "mergedMixed":
             if data_variant == "OneOld":
                 train_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
@@ -285,7 +285,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 5 #10 #5
+            epochs = 10 #5
 
         if dataset_name == "mergedFair":
             if data_variant == "OneOld":
@@ -327,7 +327,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 5 #10 #5
+            epochs = 10 #5
         if dataset_name == "mergedFairLarge":
             if data_variant == "OneOld":
                 train_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
@@ -368,7 +368,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 5 #10 #5
+            epochs = 10 #5
         if dataset_name == "g4":
             data = os.path.expanduser("~/data/CLEANED_de_de_pairs.jsonl")
             train_dataset = load_dataset("json", data_files=data, split='train')
