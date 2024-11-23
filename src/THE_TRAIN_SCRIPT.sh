@@ -136,10 +136,10 @@
 
 echo "============================================================="
 echo "Start training of: All New 5050 Large"
-python3 finetune.py --dataset mergedFairLarge --model_name  2211_10Ep_AllNew_LaFairMergedSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllNew
+# python3 finetune.py --dataset mergedFairLarge --model_name  2211_10Ep_AllNew_LaFairMergedSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllNew
 
 echo "Start training of MergedBase"
-python3 finetune.py --dataset mergedFairLarge --model_name  2211_AllNew_LaFairMergedBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant AllNew
+python3 finetune.py --dataset mergedFairLarge --model_name  2211_5Eps_AllNew_LaFairMergedBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant AllNew
 
 echo "====================== EVAL ================================="
 # echo "============================================================="
@@ -313,8 +313,10 @@ echo "====================== EVAL ================================="
 
 echo "============================================================="
 echo "Start evaluation of: All New 5050 Large"
-python3 test_model.py --checkpoint /home/marisa/models/2211_10Ep_AllNew_LaFairMergedSmall  --corpus merged --prefix 2211_10Ep_AllNew_LaFaiMeSm
+# python3 test_model.py --checkpoint /home/marisa/models/2211_10Ep_AllNew_LaFairMergedSmall  --corpus merged --prefix 2211_10Ep_AllNew_LaFaiMeSm
 
-python3 test_model.py --checkpoint /home/marisa/models/2211_10Ep_AllNew_LaFairMergedBase  --corpus merged --prefix 2211_10Ep_AllNew_LaFaiMeBas
+python3 test_model.py --checkpoint /home/marisa/models/2211_AllNew_LaFairMergedBase  --corpus merged --prefix 2211_10Ep_AllNew_LaFaiMeBas
+
+python3 test_model.py --checkpoint /home/marisa/models/2211_5Eps_AllNew_LaFairMergedBase  --corpus merged --prefix 2211_5Ep_AllNew_LaFaiMeBas
 
 echo "DONE DONE DONE!"
