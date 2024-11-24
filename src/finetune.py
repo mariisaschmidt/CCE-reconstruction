@@ -368,7 +368,7 @@ if __name__ == '__main__':
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 5
+            epochs = 10
         if dataset_name == "g4":
             data = os.path.expanduser("~/data/CLEANED_de_de_pairs.jsonl")
             train_dataset = load_dataset("json", data_files=data, split='train')
