@@ -51,7 +51,7 @@ if __name__ == '__main__':
         checkpoint = "t5-small"
 
 dataset = datasets.load_from_disk(os.path.expanduser("~/data/MaskedTrainTestDataset"))
-batchsize = 2
+batchsize = 1
 epochs = 10
 
 tokenizer = T5Tokenizer.from_pretrained(checkpoint)
