@@ -76,7 +76,6 @@ training_args = TrainingArguments(
     save_strategy="epoch",
     logging_dir=log_dir,
     push_to_hub=False,
-    generation_max_length=256,
     fp16=True,
 )
 
