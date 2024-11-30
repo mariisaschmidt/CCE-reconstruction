@@ -1,4 +1,4 @@
-from datasets import Dataset
+import datasets
 import os
 from transformers import T5Tokenizer, T5ForConditionalGeneration, Trainer, TrainingArguments
 import torch 
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         print("No checkpoint provided, defaulting to t5-small.")
         checkpoint = "t5-small"
 
-dataset = Dataset.load_from_disk(os.path.expanduser("~/data/MaskedTrainTestDataset"))
+dataset = datasets.load_from_disk(os.path.expanduser("~/data/MaskedTrainTestDataset"))
 batchsize = 4
 epochs = 10
 
