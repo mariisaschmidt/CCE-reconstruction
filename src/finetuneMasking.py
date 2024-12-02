@@ -52,7 +52,6 @@ if __name__ == '__main__':
 
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.cuda.set_per_process_memory_fraction(0.9)
-    torch.cuda.memory.set_allocator_state(torch.cuda.memory.get_allocator_state())
 
     dataset = datasets.load_from_disk(os.path.expanduser("~/data/MaskedTrainTestDataset"))
     batchsize = 1
