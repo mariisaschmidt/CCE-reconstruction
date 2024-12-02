@@ -61,7 +61,7 @@ if __name__ == '__main__':
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
 
     torch.backends.cuda.matmul.allow_tf32 = True
-    torch.cuda.set_per_process_memory_fraction(0.9, device)
+    torch.cuda.set_per_process_memory_fraction(0.9)
     torch.cuda.set_allocator_config("max_split_size_mb", 512)
 
     model = T5ForConditionalGeneration.from_pretrained(checkpoint).to(device)
