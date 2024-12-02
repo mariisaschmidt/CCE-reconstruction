@@ -18,8 +18,8 @@ def compute_metrics(eval_preds):
 
     # decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
 
-    result = metric.compute(predictions=decoded_preds, references=decoded_labels)
-    result = {"bleu": result["bleu"]}
+    # result = metric.compute(predictions=decoded_preds, references=decoded_labels)
+    # result = {"bleu": result["bleu"]}
 
     prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
     result["gen_len"] = np.mean(prediction_lens)
@@ -51,19 +51,19 @@ if __name__ == '__main__':
         checkpoint = "t5-small"
 
     dataset = datasets.load_from_disk(os.path.expanduser("~/data/MaskedTrainTestDataset"))
-    batchsize = 2
-    epochs = 10
+    batchsize = 1
+    epochs = 1
 
     tokenizer = T5Tokenizer.from_pretrained(checkpoint)
     tokenized_dataset = dataset.map(tokenize_function, batched=True)
     print(tokenized_dataset)
 
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+    #device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
 
     # torch.backends.cuda.matmul.allow_tf32 = True
     # torch.cuda.set_per_process_memory_fraction(0.9)
 
-    model = T5ForConditionalGeneration.from_pretrained(checkpoint).to(device)
+    model = T5ForConditionalGeneration.from_pretrained(checkpoint) #.to(device)
     metric = evaluate.load("bleu")
     log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
 
@@ -80,8 +80,7 @@ if __name__ == '__main__':
         logging_dir=log_dir,
         push_to_hub=False,
         optim="adafactor",
-        use_cpu=True,
-        fp16=False, #True,
+        fp16=True,
         gradient_accumulation_steps=2,
         gradient_checkpointing=True,
     )
