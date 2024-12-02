@@ -62,7 +62,6 @@ if __name__ == '__main__':
 
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.cuda.set_per_process_memory_fraction(0.9)
-    torch.cuda.set_allocator_config("max_split_size_mb", 512)
 
     model = T5ForConditionalGeneration.from_pretrained(checkpoint).to(device)
     metric = evaluate.load("bleu")
