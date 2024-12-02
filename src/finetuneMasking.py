@@ -50,50 +50,54 @@ if __name__ == '__main__':
         print("No checkpoint provided, defaulting to t5-small.")
         checkpoint = "t5-small"
 
-dataset = datasets.load_from_disk(os.path.expanduser("~/data/MaskedTrainTestDataset"))
-batchsize = 1
-epochs = 10
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.cuda.set_per_process_memory_fraction(0.9)
+    torch.cuda.memory.set_allocator_state(torch.cuda.memory.get_allocator_state())
 
-tokenizer = T5Tokenizer.from_pretrained(checkpoint)
-tokenized_dataset = dataset.map(tokenize_function, batched=True)
-print(tokenized_dataset)
+    dataset = datasets.load_from_disk(os.path.expanduser("~/data/MaskedTrainTestDataset"))
+    batchsize = 1
+    epochs = 10
 
-device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+    tokenizer = T5Tokenizer.from_pretrained(checkpoint)
+    tokenized_dataset = dataset.map(tokenize_function, batched=True)
+    print(tokenized_dataset)
 
-model = T5ForConditionalGeneration.from_pretrained(checkpoint).to(device)
-metric = evaluate.load("bleu")
-log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
 
-training_args = TrainingArguments(
-    output_dir=model_name,
-    evaluation_strategy="epoch",
-    learning_rate=2e-5,
-    per_device_train_batch_size=batchsize,
-    per_device_eval_batch_size=batchsize,
-    num_train_epochs=epochs,
-    weight_decay=0.01,
-    save_total_limit=0,
-    save_strategy="epoch",
-    logging_dir=log_dir,
-    push_to_hub=False,
-    fp16=True,
-)
+    model = T5ForConditionalGeneration.from_pretrained(checkpoint).to(device)
+    metric = evaluate.load("bleu")
+    log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
 
-# Trainer einrichten
-trainer = Trainer(
-    model=model,
-    args=training_args,
-    train_dataset=tokenized_dataset["train"],
-    eval_dataset=tokenized_dataset["test"],  # Kann auch ein separater Validierungsdatensatz sein
-    tokenizer=tokenizer,
-    compute_metrics=compute_metrics,
-)
+    training_args = TrainingArguments(
+        output_dir=model_name,
+        evaluation_strategy="epoch",
+        learning_rate=2e-5,
+        per_device_train_batch_size=batchsize,
+        per_device_eval_batch_size=batchsize,
+        num_train_epochs=epochs,
+        weight_decay=0.01,
+        save_total_limit=0,
+        save_strategy="epoch",
+        logging_dir=log_dir,
+        push_to_hub=False,
+        fp16=True,
+    )
 
-# Training starten
-print("Train Model: ")
-trainer.train()
-print("Saving Model ..")
-trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
+    # Trainer einrichten
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=tokenized_dataset["train"],
+        eval_dataset=tokenized_dataset["test"],  # Kann auch ein separater Validierungsdatensatz sein
+        tokenizer=tokenizer,
+        compute_metrics=compute_metrics,
+    )
+
+    # Training starten
+    print("Train Model: ")
+    trainer.train()
+    print("Saving Model ..")
+    trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
 
 # def predict(model, tokenizer, input_text):
 #     inputs = tokenizer(input_text, return_tensors="pt", max_length=128, truncation=True).to(device)
