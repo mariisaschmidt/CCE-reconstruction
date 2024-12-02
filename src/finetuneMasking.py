@@ -18,8 +18,8 @@ def compute_metrics(eval_preds):
 
     # decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
 
-    # result = metric.compute(predictions=decoded_preds, references=decoded_labels)
-    # result = {"bleu": result["bleu"]}
+    result = metric.compute(predictions=decoded_preds, references=decoded_labels)
+    result = {"bleu": result["bleu"]}
 
     prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
     result["gen_len"] = np.mean(prediction_lens)
@@ -58,10 +58,10 @@ if __name__ == '__main__':
     tokenized_dataset = dataset.map(tokenize_function, batched=True)
     print(tokenized_dataset)
 
-    #device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
 
-    # torch.backends.cuda.matmul.allow_tf32 = True
-    # torch.cuda.set_per_process_memory_fraction(0.9)
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.cuda.set_per_process_memory_fraction(0.999)
 
     model = T5ForConditionalGeneration.from_pretrained(checkpoint) #.to(device)
     metric = evaluate.load("bleu")
