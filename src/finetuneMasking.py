@@ -80,6 +80,7 @@ if __name__ == '__main__':
         logging_dir=log_dir,
         push_to_hub=False,
         optim="adafactor",
+        use_cpu=True,
         fp16=True,
         gradient_accumulation_steps=2,
         gradient_checkpointing=True,
