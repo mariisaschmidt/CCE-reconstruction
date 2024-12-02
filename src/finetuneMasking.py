@@ -79,9 +79,10 @@ if __name__ == '__main__':
         save_strategy="epoch",
         logging_dir=log_dir,
         push_to_hub=False,
+        optim="adafactor",
         fp16=True,
         gradient_accumulation_steps=4,
-        gradient_checkpointing=True
+        gradient_checkpointing=True,
     )
 
     # Trainer einrichten
