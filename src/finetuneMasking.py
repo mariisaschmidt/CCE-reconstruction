@@ -58,9 +58,7 @@ tokenizer = T5Tokenizer.from_pretrained(checkpoint)
 tokenized_dataset = dataset.map(tokenize_function, batched=True)
 print(tokenized_dataset)
 
-device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
-
-model = T5ForConditionalGeneration.from_pretrained(checkpoint).to(device)
+model = T5ForConditionalGeneration.from_pretrained(checkpoint)
 metric = evaluate.load("bleu")
 log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
 
