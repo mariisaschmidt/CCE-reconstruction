@@ -50,9 +50,6 @@ if __name__ == '__main__':
         print("No checkpoint provided, defaulting to t5-small.")
         checkpoint = "t5-small"
 
-    torch.backends.cuda.matmul.allow_tf32 = True
-    torch.cuda.set_per_process_memory_fraction(0.9)
-
     dataset = datasets.load_from_disk(os.path.expanduser("~/data/MaskedTrainTestDataset"))
     batchsize = 1
     epochs = 10
@@ -62,6 +59,10 @@ if __name__ == '__main__':
     print(tokenized_dataset)
 
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.cuda.set_per_process_memory_fraction(0.9, device)
+    torch.cuda.set_allocator_config("max_split_size_mb", 512)
 
     model = T5ForConditionalGeneration.from_pretrained(checkpoint).to(device)
     metric = evaluate.load("bleu")
