@@ -58,7 +58,9 @@ tokenizer = T5Tokenizer.from_pretrained(checkpoint)
 tokenized_dataset = dataset.map(tokenize_function, batched=True)
 print(tokenized_dataset)
 
-model = T5ForConditionalGeneration.from_pretrained(checkpoint)
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+
+model = T5ForConditionalGeneration.from_pretrained(checkpoint).to(device)
 metric = evaluate.load("bleu")
 log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
 
@@ -70,7 +72,7 @@ training_args = TrainingArguments(
     per_device_eval_batch_size=batchsize,
     num_train_epochs=epochs,
     weight_decay=0.01,
-    save_total_limit=2,
+    save_total_limit=0,
     save_strategy="epoch",
     logging_dir=log_dir,
     push_to_hub=False,
