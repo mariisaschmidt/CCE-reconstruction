@@ -5,8 +5,7 @@ import argparse
 import evaluate
 import datasets
 
-def get_predictions(ds, sc):
-    inputs = ds[sc]
+def get_predictions(inputs):
     # inputs = [clean_sentence(p) for p in inputs]
     predictions = []
     for input in inputs:
@@ -22,7 +21,8 @@ def add_one_space(sentence):
     return sentence + " "
 
 def evaluate_model(file, bleu, exmatch, dataset, name, add_space):
-    predictions = get_predictions(dataset, sent_col)
+    inputs = dataset[sent_col]
+    predictions = get_predictions(inputs)
     golds = dataset[gold_col]
     if add_space:
         for i in range(0, len(predictions)):
@@ -36,6 +36,7 @@ def evaluate_model(file, bleu, exmatch, dataset, name, add_space):
                 file.write("====================== PRED VS GOLD ============================== \n")
                 file.write("pred: " + predictions[i] + "\n")
                 file.write("gold: " + golds[i] + "\n")
+                file.write("inpt: " + inputs[i] + "\n")
                 ems = exmatch.compute(references=[golds[i]], predictions=[predictions[i]], ignore_case=True, ignore_punctuation=True)
                 file.write("EM Score: " + str(ems["exact_match"]) + " Length: " + str(len(predictions[i])) + " vs " + str(len(golds[i])) + "\n")
         if j == 1:
@@ -79,7 +80,7 @@ if __name__ == '__main__':
     bleu = evaluate.load("bleu")
     em_metric = evaluate.load("exact_match")
 
-    result_file = open(prefix + "_" + "_evaluation_result.txt", "a")
+    result_file = open(prefix + "_evaluation_result.txt", "a")
 
     result_file.write("CHECKPOINT: " + checkpoint + " CORPUS: " + "Masked Eval Data" + "\n")
 
