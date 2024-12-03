@@ -6,6 +6,7 @@ import evaluate
 import argparse
 import numpy as np
 import gc 
+from accelerate import load_checkpoint_and_dispatch
 
 def compute_metrics(eval_preds):
     preds, labels = eval_preds
@@ -84,6 +85,14 @@ if __name__ == '__main__':
 #    torch.cuda.set_per_process_memory_fraction(0.9)
 
     model = T5ForConditionalGeneration.from_pretrained(checkpoint) #.to(device)
+    model = load_checkpoint_and_dispatch(
+        model,
+        "t5-large",
+        device_map="auto",  # Automatische Verteilung der Modellteile
+        offload_folder="offload",  # Speicherort für Offloading
+    )
+    print(model.hf_device_map)
+    
     metric = evaluate.load("bleu")
     log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
 
@@ -103,7 +112,7 @@ if __name__ == '__main__':
         fp16=True,
 #        gradient_accumulation_steps=2,
 #        gradient_checkpointing=True,
-        log_level="debug"
+        log_level="debug",
     )
 
     # Trainer einrichten
