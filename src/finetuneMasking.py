@@ -15,14 +15,29 @@ def compute_metrics(eval_preds):
     preds = preds.cpu().numpy() if isinstance(preds, torch.Tensor) else preds
     labels = labels.cpu().numpy() if isinstance(labels, torch.Tensor) else labels
 
-    preds = np.where(preds != -100, preds, tokenizer.pad_token_id)
-    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+    # preds = np.where(preds != -100, preds, tokenizer.pad_token_id)
+    # decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
 
-    labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
-    decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+    # labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+    # decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
-    result = metric.compute(predictions=decoded_preds, references=decoded_labels)
-    result = {"bleu": result["bleu"]}
+    # result = metric.compute(predictions=decoded_preds, references=decoded_labels)
+    # result = {"bleu": result["bleu"]}
+
+    bleu_scores = []
+    for pred, label in zip(preds, labels):
+        pred = np.where(pred != -100, pred, tokenizer.pad_token_id)
+        label = np.where(label != -100, label, tokenizer.pad_token_id)
+
+        decoded_pred = tokenizer.decode(pred, skip_special_tokens=True)
+        decoded_label = tokenizer.decode(label, skip_special_tokens=True)
+
+        # Berechnung der Metrik für einzelne Prädiktion
+        bleu_score = metric.compute(predictions=[decoded_pred], references=[[decoded_label]])["bleu"]
+        bleu_scores.append(bleu_score)
+
+    # Durchschnitt über alle BLEU-Scores
+    result = {"bleu": round(np.mean(bleu_scores), 4)}
 
     # Speicher freigeben
     del preds, labels, decoded_preds, decoded_labels
