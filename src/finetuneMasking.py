@@ -12,39 +12,30 @@ def compute_metrics(eval_preds):
     if isinstance(preds, tuple):
         preds = preds[0]
 
-    preds = preds.cpu().numpy() if isinstance(preds, torch.Tensor) else preds
-    labels = labels.cpu().numpy() if isinstance(labels, torch.Tensor) else labels
+    # Verwendung von torch.no_grad(), um keine Gradienten zu speichern und GPU-Speicher zu sparen
+    with torch.no_grad():
+        # Verschiebe die Tensoren auf die CPU, bevor die BLEU-Berechnung durchgeführt wird
+        preds = preds.cpu().numpy() if isinstance(preds, torch.Tensor) else preds
+        labels = labels.cpu().numpy() if isinstance(labels, torch.Tensor) else labels
 
-    # preds = np.where(preds != -100, preds, tokenizer.pad_token_id)
-    # decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+        # Decode in einem Schritt, aber direkt auf der CPU
+        decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+        decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
-    # labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
-    # decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+        # Bereinigung: Ersetze -100 durch pad_token_id, um den Speicherverbrauch zu reduzieren
+        decoded_preds = [np.where(pred != -100, pred, tokenizer.pad_token_id) for pred in decoded_preds]
+        decoded_labels = [np.where(label != -100, label, tokenizer.pad_token_id) for label in decoded_labels]
 
-    # result = metric.compute(predictions=decoded_preds, references=decoded_labels)
-    # result = {"bleu": result["bleu"]}
+        # Berechne BLEU-Score ohne unnötige Zwischenspeicherung
+        bleu_score = metric.compute(predictions=decoded_preds, references=[[label] for label in decoded_labels])["bleu"]
 
-    bleu_scores = []
-    for pred, label in zip(preds, labels):
-        pred = np.where(pred != -100, pred, tokenizer.pad_token_id)
-        label = np.where(label != -100, label, tokenizer.pad_token_id)
-
-        decoded_pred = tokenizer.decode(pred, skip_special_tokens=True)
-        decoded_label = tokenizer.decode(label, skip_special_tokens=True)
-
-        # Berechnung der Metrik für einzelne Prädiktion
-        bleu_score = metric.compute(predictions=[decoded_pred], references=[[decoded_label]])["bleu"]
-        bleu_scores.append(bleu_score)
-        print(bleu_score)
-
-    # Durchschnitt über alle BLEU-Scores
-    result = {"bleu": round(np.mean(bleu_scores), 4)}
-
-    # Speicher freigeben
+    # Speicherbereinigung: Entferne alle Variablen, die den GPU-Speicher beanspruchen
     del preds, labels, decoded_preds, decoded_labels
     gc.collect()
 
-    result = {k: round(v, 4) for k, v in result.items()}
+    # Rückgabe des BLEU-Scores
+    result = {"bleu": round(bleu_score, 4)}
+
     return result
 
 # Tokenisierung
