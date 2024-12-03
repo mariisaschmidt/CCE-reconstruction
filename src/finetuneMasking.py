@@ -89,7 +89,7 @@ if __name__ == '__main__':
     model = T5ForConditionalGeneration.from_pretrained(checkpoint) #.to(device)
     model = load_checkpoint_and_dispatch(
         model,
-        "t5-large",
+        checkpoint,
         device_map="auto",  # Automatische Verteilung der Modellteile
         offload_folder="offload",  # Speicherort für Offloading
     )
