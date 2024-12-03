@@ -71,6 +71,8 @@ if __name__ == '__main__':
         print("No checkpoint provided, defaulting to t5-small.")
         checkpoint = "t5-small"
 
+    print("CHECK:", checkpoint)
+
     dataset = datasets.load_from_disk(os.path.expanduser("~/data/MaskedTrainTestDataset"))
     batchsize = 1
     epochs = 1
