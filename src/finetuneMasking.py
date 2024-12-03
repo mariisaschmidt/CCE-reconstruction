@@ -23,8 +23,8 @@ def compute_metrics(eval_preds):
         decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
         # Bereinigung: Ersetze -100 durch pad_token_id, um den Speicherverbrauch zu reduzieren
-        decoded_preds = [np.where(pred != -100, pred, tokenizer.pad_token_id) for pred in decoded_preds]
-        decoded_labels = [np.where(label != -100, label, tokenizer.pad_token_id) for label in decoded_labels]
+        # decoded_preds = [np.where(pred != -100, pred, tokenizer.pad_token_id) for pred in decoded_preds]
+        # decoded_labels = [np.where(label != -100, label, tokenizer.pad_token_id) for label in decoded_labels]
 
         # Berechne BLEU-Score ohne unnötige Zwischenspeicherung
         bleu_score = metric.compute(predictions=decoded_preds, references=[[label] for label in decoded_labels])["bleu"]
