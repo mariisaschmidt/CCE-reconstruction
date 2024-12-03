@@ -79,7 +79,7 @@ if __name__ == '__main__':
     bleu = evaluate.load("bleu")
     em_metric = evaluate.load("exact_match")
 
-    result_file = open(prefix + "_" + args.corpus + "_evaluation_result.txt", "a")
+    result_file = open(prefix + "_" + "_evaluation_result.txt", "a")
 
     result_file.write("CHECKPOINT: " + checkpoint + " CORPUS: " + "Masked Eval Data" + "\n")
 
