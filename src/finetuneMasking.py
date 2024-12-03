@@ -12,28 +12,21 @@ def compute_metrics(eval_preds):
     if isinstance(preds, tuple):
         preds = preds[0]
 
-    # Verwendung von torch.no_grad(), um keine Gradienten zu speichern und GPU-Speicher zu sparen
     with torch.no_grad():
-        # Verschiebe die Tensoren auf die CPU, bevor die BLEU-Berechnung durchgeführt wird
         preds = preds.cpu().numpy() if isinstance(preds, torch.Tensor) else preds
         labels = labels.cpu().numpy() if isinstance(labels, torch.Tensor) else labels
 
-        # Decode in einem Schritt, aber direkt auf der CPU
         decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
         decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
-        # Bereinigung: Ersetze -100 durch pad_token_id, um den Speicherverbrauch zu reduzieren
-        # decoded_preds = [np.where(pred != -100, pred, tokenizer.pad_token_id) for pred in decoded_preds]
-        # decoded_labels = [np.where(label != -100, label, tokenizer.pad_token_id) for label in decoded_labels]
+        decoded_preds = [np.where(pred != -100, pred, tokenizer.pad_token_id) for pred in decoded_preds]
+        decoded_labels = [np.where(label != -100, label, tokenizer.pad_token_id) for label in decoded_labels]
 
-        # Berechne BLEU-Score ohne unnötige Zwischenspeicherung
         bleu_score = metric.compute(predictions=decoded_preds, references=[[label] for label in decoded_labels])["bleu"]
 
-    # Speicherbereinigung: Entferne alle Variablen, die den GPU-Speicher beanspruchen
     del preds, labels, decoded_preds, decoded_labels
     gc.collect()
 
-    # Rückgabe des BLEU-Scores
     result = {"bleu": round(bleu_score, 4)}
 
     return result
@@ -107,7 +100,7 @@ if __name__ == '__main__':
         train_dataset=tokenized_dataset["train"],
         eval_dataset=tokenized_dataset["test"],  # Kann auch ein separater Validierungsdatensatz sein
         tokenizer=tokenizer,
-        compute_metrics=compute_metrics,
+        #compute_metrics=compute_metrics,
     )
 
     # Training starten
