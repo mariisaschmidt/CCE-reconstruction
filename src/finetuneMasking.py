@@ -103,6 +103,7 @@ if __name__ == '__main__':
         fp16=True,
 #        gradient_accumulation_steps=2,
 #        gradient_checkpointing=True,
+        log_level="debug"
     )
 
     # Trainer einrichten
