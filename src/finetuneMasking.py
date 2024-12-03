@@ -65,8 +65,8 @@ if __name__ == '__main__':
 
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
 
-    torch.backends.cuda.matmul.allow_tf32 = True
-    torch.cuda.set_per_process_memory_fraction(0.9)
+#    torch.backends.cuda.matmul.allow_tf32 = True
+#    torch.cuda.set_per_process_memory_fraction(0.9)
 
     model = T5ForConditionalGeneration.from_pretrained(checkpoint) #.to(device)
     metric = evaluate.load("bleu")
@@ -84,10 +84,10 @@ if __name__ == '__main__':
         save_strategy="epoch",
         logging_dir=log_dir,
         push_to_hub=False,
-        optim="adafactor",
+#        optim="adafactor",
         fp16=True,
-        gradient_accumulation_steps=2,
-        gradient_checkpointing=True,
+#        gradient_accumulation_steps=2,
+#        gradient_checkpointing=True,
     )
 
     # Trainer einrichten
