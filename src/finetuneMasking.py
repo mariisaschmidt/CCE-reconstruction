@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
     dataset = datasets.load_from_disk(os.path.expanduser("~/data/MaskedTrainTestDataset"))
     batchsize = 4
-    epochs = 10
+    epochs = 5
 
     tokenizer = T5Tokenizer.from_pretrained(checkpoint)
     tokenized_dataset = dataset.map(tokenize_function, batched=True)
