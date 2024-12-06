@@ -19,15 +19,15 @@
 
 # echo "============================================================="
 
-# echo "Start training of: Exact Match / One Old"
+echo "Start training of: Exact Match / One Old"
 # echo "Start training of TigerSmall"
 # python3 finetune.py --dataset tiger --model_name  2011_10Ep_OneOld_TigerSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant OneOld
 
 # echo "Start training of TübaSmall"
 # python3 finetune.py --dataset tüba --model_name  2011_10Ep_OneOld_TübaSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant OneOld
 
-# echo "Start training of MergedSmall"
-# python3 finetune.py --dataset merged --model_name  2011_10Ep_OneOld_MergedSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant OneOld
+echo "Start training of MergedSmall"
+python3 finetune.py --dataset merged --model_name  GetDatasetSize  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant OneOld
 
 # echo "Start training of TigerBase"
 # python3 finetune.py --dataset tiger --model_name  2011_10Ep_OneOld_TigerBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant OneOld
@@ -39,15 +39,15 @@
 # python3 finetune.py --dataset merged --model_name  2011_10Ep_OneOld_MergedBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant OneOld
 
 # echo "============================================================="
-# echo "Start training of: One Old No No CCE"
-# echo "Start training of TigerSmall"
-# python3 finetune.py --dataset tiger --model_name  2011_10Ep_NoNoCCE_OneOld_TigerSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 1 --data_variant OneOld
+echo "Start training of: One Old No No CCE"
+echo "Start training of TigerSmall"
+python3 finetune.py --dataset tiger --model_name GetDatasetSize   --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 1 --data_variant OneOld
 
-# echo "Start training of TübaSmall"
-# python3 finetune.py --dataset tüba --model_name  2011_10Ep_NoNoCCE_OneOld_TübaSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 1 --data_variant OneOld
+echo "Start training of TübaSmall"
+python3 finetune.py --dataset tüba --model_name GetDatasetSize  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 1 --data_variant OneOld
 
-# echo "Start training of MergedSmall"
-# python3 finetune.py --dataset merged --model_name  2011_10Ep_NoNoCCE_OneOld_MergedSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 1 --data_variant OneOld
+echo "Start training of MergedSmall"
+python3 finetune.py --dataset merged --model_name GetDatasetSize --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 1 --data_variant OneOld
 
 # echo "Start training of TigerBase"
 # python3 finetune.py --dataset tiger --model_name  2011_10Ep_NoNoCCE_OneOld_TigerBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 1 --data_variant OneOld
@@ -59,15 +59,15 @@
 # python3 finetune.py --dataset merged --model_name  2011_10Ep_NoNoCCE_OneOld_MergedBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 1 --data_variant OneOld
 
 # echo "============================================================="
-# echo "Start training of: One New"
+echo "Start training of: One New"
 # echo "Start training of TigerSmall"
 # python3 finetune.py --dataset tiger --model_name  2011_10Ep_OneNew_TigerSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant OneNew
 
 # echo "Start training of TübaSmall"
 # python3 finetune.py --dataset tüba --model_name  2011_10Ep_OneNew_TübaSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant OneNew
 
-# echo "Start training of MergedSmall"
-# python3 finetune.py --dataset merged --model_name  2011_10Ep_OneNew_MergedSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant OneNew
+echo "Start training of MergedSmall"
+python3 finetune.py --dataset merged --model_name GetDatasetSize  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant OneNew
 
 # echo "Start training of TigerBase"
 # python3 finetune.py --dataset tiger --model_name  2011_10Ep_OneNew_TigerBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant OneNew
@@ -79,15 +79,15 @@
 # python3 finetune.py --dataset merged --model_name  2011_10Ep_OneNew_MergedBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant OneNew
 
 # echo "============================================================="
-# echo "Start training of: All Old"
+echo "Start training of: All Old"
 # echo "Start training of TigerSmall"
 # python3 finetune.py --dataset tiger --model_name  2011_10Ep_AllOld_TigerSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllOld
 
 # echo "Start training of TübaSmall"
 # python3 finetune.py --dataset tüba --model_name  2011_10Ep_AllOld_TübaSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllOld
 
-# echo "Start training of MergedSmall"
-# python3 finetune.py --dataset merged --model_name  2011_10Ep_AllOld_MergedSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllOld
+echo "Start training of MergedSmall"
+python3 finetune.py --dataset merged --model_name GetDatasetSize --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllOld
 
 # echo "Start training of TigerBase"
 # python3 finetune.py --dataset tiger --model_name  2011_10Ep_AllOld_TigerBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant AllOld
@@ -99,15 +99,15 @@
 # python3 finetune.py --dataset merged --model_name  2011_10Ep_AllOld_MergedBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant AllOld
 
 # echo "============================================================="
-# echo "Start training of: All New"
+echo "Start training of: All New"
 # echo "Start training of TigerSmall"
 # python3 finetune.py --dataset tiger --model_name  2011_10Ep_AllNew_TigerSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllNew
 
 # echo "Start training of TübaSmall"
 # python3 finetune.py --dataset tüba --model_name  2011_10Ep_AllNew_TübaSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllNew
 
-# echo "Start training of MergedSmall"
-# python3 finetune.py --dataset merged --model_name  2011_10Ep_AllNew_MergedSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllNew
+echo "Start training of MergedSmall"
+python3 finetune.py --dataset merged --model_name GetDatasetSize --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllNew
 
 # echo "Start training of TigerBase"
 # python3 finetune.py --dataset tiger --model_name  2011_10Ep_AllNew_TigerBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant AllNew
@@ -128,15 +128,15 @@
 # python3 finetune.py --dataset mergedMixed --model_name  2011_10Ep_AllNew_MixedMergedBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant AllNew
 
 # echo "============================================================="
-# echo "Start training of: All New 5050"
-# python3 finetune.py --dataset mergedFair --model_name  2011_10Ep_AllNew_FairMergedSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllNew
+echo "Start training of: All New 5050"
+python3 finetune.py --dataset mergedFair --model_name GetDatasetSize  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllNew
 
 # echo "Start training of MergedBase"
 # python3 finetune.py --dataset mergedFair --model_name  2011_10Ep_AllNew_FairMergedBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant AllNew
 
 echo "============================================================="
 echo "Start training of: All New 5050 Large"
-python3 finetune.py --dataset mergedFairLarge --model_name  2411_10Eps_AllNew_LaFairMergedSmall  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllNew
+python3 finetune.py --dataset mergedFairLarge --model_name GetDatasetSize  --pretrained_model /home/marisa/models/Aug25Small --remove_no_cce 0 --data_variant AllNew
 
 # echo "Start training of MergedBase"
 # python3 finetune.py --dataset mergedFairLarge --model_name  2211_5Eps_AllNew_LaFairMergedBase  --pretrained_model /home/marisa/models/Aug25Base --remove_no_cce 0 --data_variant AllNew

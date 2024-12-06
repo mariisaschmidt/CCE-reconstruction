@@ -12,6 +12,7 @@ import argparse
 from datasets import DatasetDict, Dataset
 from collections import defaultdict
 import random
+import sys
 
 sentence_counts = defaultdict(int)
 
@@ -378,61 +379,65 @@ if __name__ == '__main__':
             batchsize = 16
             epochs = 2
         
-        print("Loaded Dataset!")
+    print("Loaded Dataset!")
 
-        tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+    tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 
-        source_lang = "de"
-        target_lang = "de"
+    source_lang = "de"
+    target_lang = "de"
 
-        dataset = train_dataset 
-        dataset = dataset.filter(lambda example: len(example[t]) >= 20)
-        dataset = dataset.filter(lambda example: len(example[g]) >= 20)
+    dataset = train_dataset 
+    dataset = dataset.filter(lambda example: len(example[t]) >= 20)
+    dataset = dataset.filter(lambda example: len(example[g]) >= 20)
 
-        print("Preprocess Data: ")
-        tokenized_dataset = dataset.map(preprocess_function, batched=False)
+    print("Preprocess Data: ")
+    tokenized_dataset = dataset.map(preprocess_function, batched=False)
 
-        print("Correct the outputs of preprocess: ")
-        tokenized_dataset = tokenized_dataset.map(correct_inputs_masks_labels, batched=False)
+    print("Correct the outputs of preprocess: ")
+    tokenized_dataset = tokenized_dataset.map(correct_inputs_masks_labels, batched=False)
 
-        print("Create Train-Test-Split: ")
-        tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2, seed=3)
+    print("Create Train-Test-Split: ")
+    tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2, seed=3)
 
-        data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
+    print(tokenized_dataset)
+    sys.exit(0) # TODO: remove!
 
-        metric = evaluate.load("bleu")
+    data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
 
-        model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
+    metric = evaluate.load("bleu")
 
-        log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
+    model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
 
-        training_args = Seq2SeqTrainingArguments(
-        output_dir=model_name,
-        evaluation_strategy="epoch",
-        logging_dir=log_dir,
-        learning_rate=2e-5,
-        per_device_train_batch_size=batchsize,
-        per_device_eval_batch_size=batchsize,
-        weight_decay=0.01,
-        save_strategy="no",
-        num_train_epochs=epochs,
-        predict_with_generate=True,
-        fp16=True, # set true when cuda available
-        push_to_hub=False,
-        generation_max_length=256,
-        )
+    log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
 
-        trainer = Seq2SeqTrainer(
-            model=model,
-            args=training_args,
-            train_dataset=tokenized_dataset['train'],
-            eval_dataset=tokenized_dataset['test'],
-            tokenizer=tokenizer,
-            data_collator=data_collator,
-            compute_metrics=compute_metrics,
-        )
+    training_args = Seq2SeqTrainingArguments(
+    output_dir=model_name,
+    evaluation_strategy="epoch",
+    logging_dir=log_dir,
+    learning_rate=2e-5,
+    per_device_train_batch_size=batchsize,
+    per_device_eval_batch_size=batchsize,
+    weight_decay=0.01,
+    save_strategy="no",
+    num_train_epochs=epochs,
+    predict_with_generate=True,
+    fp16=True, # set true when cuda available
+    push_to_hub=False,
+    generation_max_length=256,
+    log_level="debug",
+    )
 
-        print("Train Model: ")
-        trainer.train()
-        print("Saving Model ..")
-        trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
+    trainer = Seq2SeqTrainer(
+        model=model,
+        args=training_args,
+        train_dataset=tokenized_dataset['train'],
+        eval_dataset=tokenized_dataset['test'],
+        tokenizer=tokenizer,
+        data_collator=data_collator,
+        compute_metrics=compute_metrics,
+    )
+
+    print("Train Model: ")
+    trainer.train()
+    print("Saving Model ..")
+    trainer.save_model(output_dir=os.path.expanduser("~/models/" + model_name))
