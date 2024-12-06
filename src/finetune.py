@@ -29,9 +29,9 @@ def add_prefix_to_duplicates(example):
     modified_sentence = prefix + " " + sentence
     modified_gold_standard = prefix + " " + gold_standard
 
-    print(modified_sentence)
-    print(modified_gold_standard)
-    print("\n")
+    #print(modified_sentence)
+    #print(modified_gold_standard)
+    #print("\n")
 
     modified_example = {key: value for key, value in example.items()}
     modified_example["Original sentence"] = modified_sentence
@@ -49,7 +49,7 @@ def balance_datasets(dataset_small, dataset_large, feature_columns):
         # Anzahl der Sätze mit Feature = 1 im kleineren Datensatz
         small_subset = dataset_small.filter(lambda x: (x[feature] == 1 ) or (x[feature] == "1"))
         count = len(small_subset)
-        print(feature, count)
+        #print(feature, count)
         
         # Zufällige Auswahl der gleichen Anzahl aus dem größeren Datensatz
         large_subset = dataset_large.filter(lambda x: (x[feature] == 1 ) or (x[feature] == "1"))
