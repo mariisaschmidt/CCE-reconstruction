@@ -311,9 +311,9 @@ echo "====================== EVAL ================================="
 
 # python3 test_model.py --checkpoint /home/marisa/models/2011_10Ep_AllNew_FairMergedBase  --corpus merged --prefix 2011_10Ep_AllNew_FaiMeBas
 
-echo "============================================================="
-echo "Start evaluation of: All New 5050 Large"
-python3 test_model.py --checkpoint /home/marisa/models/2411_10Eps_AllNew_LaFairMergedSmall --corpus merged --prefix 2411_10Ep_AllNew_LaFaiMeSm
+# echo "============================================================="
+# echo "Start evaluation of: All New 5050 Large"
+# python3 test_model.py --checkpoint /home/marisa/models/2411_10Eps_AllNew_LaFairMergedSmall --corpus merged --prefix 2411_10Ep_AllNew_LaFaiMeSm
 
 # python3 test_model.py --checkpoint /home/marisa/models/2211_AllNew_LaFairMergedBase  --corpus merged --prefix 2211_10Ep_AllNew_LaFaiMeBas
 
