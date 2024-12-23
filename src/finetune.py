@@ -107,39 +107,9 @@ if __name__ == '__main__':
             print("You need to provide a german llm for finetuning with ellipsis data!")
     
     if dataset_name != "":
-        if dataset_name == "tüba":
-            train_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_train.jsonl")
-            test_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_test.jsonl")
-            train_dataset = load_dataset("json", data_files=train_data, split='train')
-            print("Got train data")
-            test_dataset = load_dataset("json", data_files=test_data, split='train')
-            print("Got test data")
-            dataset = DatasetDict({"train": train_dataset,
-                                        "test": test_dataset
-                                        })
-            t = "Treebank-Sentence"
-            g = "Reconstructed-Sentence"
-            prefix = "reconstruct the ellipsis in this sentence: "
-
-        if dataset_name == "tiger":
-            train_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_train.jsonl")
-            test_data = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_test.jsonl")
-            train_dataset = load_dataset("json", data_files=train_data, split='train')
-            print("Got train data")
-            test_dataset = load_dataset("json", data_files=test_data, split='train')
-            print("Got test data")
-            dataset = DatasetDict({"train": train_dataset,
-                                        "test": test_dataset
-                                        })
-            t = "Original sentence"
-            g = "Canonical form"
-            prefix = "reconstruct the ellipsis in this sentence: "
-
         if dataset_name == "merged":
-            train_data1 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_train.jsonl")
-            test_data1 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tiger_test.jsonl")
-            train_data2 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_train.jsonl")
-            test_data2 = os.path.expanduser("~/data/CLEANED_ONE_NEW_tüba_test.jsonl")
+            train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
+            train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
 
             train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
             train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
@@ -156,25 +126,6 @@ if __name__ == '__main__':
             train_dataset = concatenate_datasets([train_dataset1, train_dataset2])
             print("Got train data")
 
-            test_dataset1 = load_dataset("json", data_files=test_data1, split='train')
-            test_dataset2 = load_dataset("json", data_files=test_data2, split='train')
-            test_dataset2 = test_dataset2.rename_column("Treebank-Sentence", "Original sentence")
-            test_dataset2 = test_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
-            cols_to_remove11 = test_dataset1.column_names
-            cols_to_remove22 = test_dataset2.column_names
-            cols_to_remove22.remove("Original sentence")
-            cols_to_remove22.remove("Canonical form")
-            test_dataset2 = test_dataset2.remove_columns(cols_to_remove22)
-            cols_to_remove11.remove("Original sentence")
-            cols_to_remove11.remove("Canonical form")
-            test_dataset1 = test_dataset1.remove_columns(cols_to_remove11)
-            test_dataset = concatenate_datasets([test_dataset1, test_dataset2])
-            print("Got test data")
-
-            dataset = DatasetDict({"train": train_dataset,
-                                        "test": test_dataset
-                                        })
-            
             t = "Original sentence"
             g = "Canonical form"
             prefix = "reconstruct the ellipsis in this sentence: "
@@ -237,8 +188,8 @@ if __name__ == '__main__':
     print("Optimize Hyperparams")
     my_kwargs = {
     "sampler": optuna.samplers.TPESampler(),
-    "study_name": "28Okt_study",
-    "storage": "sqlite:///28Okt_BLEU_study.db",
+    "study_name": "23Dec_study",
+    "storage": "sqlite:///23Dec_BLEU_study.db",
     "load_if_exists": True
     }
     
