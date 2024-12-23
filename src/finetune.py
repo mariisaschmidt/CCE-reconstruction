@@ -123,7 +123,7 @@ if __name__ == '__main__':
             cols_to_remove1.remove("Original sentence")
             cols_to_remove1.remove("Canonical form")
             train_dataset1 = train_dataset1.remove_columns(cols_to_remove1)
-            train_dataset = concatenate_datasets([train_dataset1, train_dataset2])
+            dataset = concatenate_datasets([train_dataset1, train_dataset2])
             print("Got train data")
 
             t = "Original sentence"
@@ -153,9 +153,8 @@ if __name__ == '__main__':
         print("Correct the outputs of preprocess: ")
         tokenized_dataset = tokenized_dataset.map(correct_inputs_masks_labels, batched=False)
 
-        if dataset_name == "g4":
-            print("Create Train-Test-Split: ")
-            tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2)
+        print("Create Train-Test-Split: ")
+        tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2)
 
     metric = evaluate.load("bleu")
     metric_em = evaluate.load("exact_match") 
