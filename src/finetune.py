@@ -414,7 +414,6 @@ if __name__ == '__main__':
     tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2, seed=3)
 
     print(tokenized_dataset)
-    sys.exit(0) # TODO: remove!
 
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
 
