@@ -81,43 +81,52 @@ def add_other_golds(input_file, output_file, sentcol, goldcol, finalgoldcol): # 
 # output_file = '/home/marisa/data/CLEANED_de_de_pairs.jsonl'
 # process_jsonl(input_file, output_file, "text", "gold_sentence")
 
-print("Cleaning TIGER Data: ")
-print("Train: ")
-input_file = '/home/marisa/data/tiger_train.jsonl'
-output_file = '/home/marisa/data/CLEANED_ONE_NEW_tiger_train.jsonl'
-# input_file = '/home/marisa/data/ALL_GOLDS_OLD_tiger_train.jsonl'
-# output_file = '/home/marisa/data/CLEANED_ALL_OLD_tiger_train.jsonl'
-#input_file = '/home/marisa/data/ALL_GOLDS_tiger_train.jsonl'
-#output_file = '/home/marisa/data/CLEANED_OLD_tiger_train.jsonl'
-process_jsonl(input_file, output_file, "Original sentence", "Canonical form")
-print("Test: ")
-input_file = '/home/marisa/data/tiger_test.jsonl'
-output_file = '/home/marisa/data/CLEANED_ONE_NEW_tiger_test.jsonl'
-# input_file = '/home/marisa/data/ALL_GOLDS_OLD_tiger_test.jsonl'
-# output_file = '/home/marisa/data/CLEANED_ALL_OLD_tiger_test.jsonl'
-#input_file = '/home/marisa/data/ALL_GOLDS_tiger_test.jsonl'
-#output_file = '/home/marisa/data/CLEANED_OLD_tiger_test.jsonl'
-process_jsonl(input_file, output_file, "Original sentence", "Canonical form")
+# print("Cleaning TIGER Data: ")
+# print("Train: ")
+# input_file = '/home/marisa/data/tiger_train.jsonl'
+# output_file = '/home/marisa/data/CLEANED_ONE_NEW_tiger_train.jsonl'
+# # input_file = '/home/marisa/data/ALL_GOLDS_OLD_tiger_train.jsonl'
+# # output_file = '/home/marisa/data/CLEANED_ALL_OLD_tiger_train.jsonl'
+# #input_file = '/home/marisa/data/ALL_GOLDS_tiger_train.jsonl'
+# #output_file = '/home/marisa/data/CLEANED_OLD_tiger_train.jsonl'
+# process_jsonl(input_file, output_file, "Original sentence", "Canonical form")
+# print("Test: ")
+# input_file = '/home/marisa/data/tiger_test.jsonl'
+# output_file = '/home/marisa/data/CLEANED_ONE_NEW_tiger_test.jsonl'
+# # input_file = '/home/marisa/data/ALL_GOLDS_OLD_tiger_test.jsonl'
+# # output_file = '/home/marisa/data/CLEANED_ALL_OLD_tiger_test.jsonl'
+# #input_file = '/home/marisa/data/ALL_GOLDS_tiger_test.jsonl'
+# #output_file = '/home/marisa/data/CLEANED_OLD_tiger_test.jsonl'
+# process_jsonl(input_file, output_file, "Original sentence", "Canonical form")
 
-print("Cleaning TüBa Data: ")
-print("Train: ")
-input_file = '/home/marisa/data/tüba_train.jsonl'
-output_file = '/home/marisa/data/CLEANED_ONE_NEW_tüba_train.jsonl'
-# input_file = '/home/marisa/data/ALL_GOLDS_OLD_tüba_train.jsonl'
-# output_file = '/home/marisa/data/CLEANED_ALL_OLD_tüba_train.jsonl'
-#input_file = '/home/marisa/data/ALL_GOLDS_tüba_train.jsonl'
-#output_file = '/home/marisa/data/CLEANED_OLD_tüba_train.jsonl'
-process_jsonl(input_file, output_file, "Treebank-Sentence", "Reconstructed-Sentence")
-print("Test: ")
-input_file = '/home/marisa/data/tüba_test.jsonl'
-output_file = '/home/marisa/data/CLEANED_ONE_NEW_tüba_test.jsonl'
-# input_file = '/home/marisa/data/ALL_GOLDS_OLD_tüba_test.jsonl'
-# output_file = '/home/marisa/data/CLEANED_ALL_OLD_tüba_test.jsonl'
-#input_file = '/home/marisa/data/ALL_GOLDS_tüba_test.jsonl'
-#output_file = '/home/marisa/data/CLEANED_OLD_tüba_test.jsonl'
-process_jsonl(input_file, output_file, "Treebank-Sentence", "Reconstructed-Sentence")
+# print("Cleaning TüBa Data: ")
+# print("Train: ")
+# input_file = '/home/marisa/data/tüba_train.jsonl'
+# output_file = '/home/marisa/data/CLEANED_ONE_NEW_tüba_train.jsonl'
+# # input_file = '/home/marisa/data/ALL_GOLDS_OLD_tüba_train.jsonl'
+# # output_file = '/home/marisa/data/CLEANED_ALL_OLD_tüba_train.jsonl'
+# #input_file = '/home/marisa/data/ALL_GOLDS_tüba_train.jsonl'
+# #output_file = '/home/marisa/data/CLEANED_OLD_tüba_train.jsonl'
+# process_jsonl(input_file, output_file, "Treebank-Sentence", "Reconstructed-Sentence")
+# print("Test: ")
+# input_file = '/home/marisa/data/tüba_test.jsonl'
+# output_file = '/home/marisa/data/CLEANED_ONE_NEW_tüba_test.jsonl'
+# # input_file = '/home/marisa/data/ALL_GOLDS_OLD_tüba_test.jsonl'
+# # output_file = '/home/marisa/data/CLEANED_ALL_OLD_tüba_test.jsonl'
+# #input_file = '/home/marisa/data/ALL_GOLDS_tüba_test.jsonl'
+# #output_file = '/home/marisa/data/CLEANED_OLD_tüba_test.jsonl'
+# process_jsonl(input_file, output_file, "Treebank-Sentence", "Reconstructed-Sentence")
 
 # print("Cleaning Eval Data: ")
 # input_file = '/home/marisa/data/evaluation_sentences.jsonl'
 # output_file = '/home/marisa/data/CLEANED_evaluation_sentences.jsonl'
 # process_jsonl(input_file, output_file, "Sentence", "Gold")
+
+print("Cleaning Erweiterte TIGER Data: ")
+input_file = '/home/marisa/data/erweitert_tiger_train.jsonl'
+output_file = '/home/marisa/data/CLEANED_erweitert_tiger_train.jsonl'
+# input_file = '/home/marisa/data/ALL_GOLDS_OLD_tiger_train.jsonl'
+# output_file = '/home/marisa/data/CLEANED_ALL_OLD_tiger_train.jsonl'
+#input_file = '/home/marisa/data/ALL_GOLDS_tiger_train.jsonl'
+#output_file = '/home/marisa/data/CLEANED_OLD_tiger_train.jsonl'
+process_jsonl(input_file, output_file, "Original sentence", "Canonical form")

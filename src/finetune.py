@@ -198,7 +198,7 @@ if __name__ == '__main__':
             prefix = "reconstruct the ellipsis in this sentence: "
             epochs = 10 #5
         if dataset_name == "erwTiger":
-            train_data = os.path.expanduser("~/data/erweitert_tiger_train.jsonl")
+            train_data = os.path.expanduser("~/data/CLEANED_erweitert_tiger_train.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
             if removeNoCce == 1:
                 cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
