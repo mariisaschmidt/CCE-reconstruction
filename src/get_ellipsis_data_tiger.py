@@ -31,9 +31,10 @@ if __name__ == '__main__':
         train_file = open("erweitert_tiger_train.jsonl", "a")
         #test_file = open("erweitert_tiger_test.jsonl", "a")
         for line in lines:
-            if(i <= 10746): #5847 #2950
-                train_file.write(dump_json(format_json(line)) + '\n')
-                i += 1
+            train_file.write(dump_json(format_json(line)) + '\n') # remove if if is used
+            # if(i <= 10746): #5847 #2950
+            #     train_file.write(dump_json(format_json(line)) + '\n')
+            #     i += 1
             # else:
             #     test_file.write(dump_json(format_json(line)) + '\n')
             #     i += 1
