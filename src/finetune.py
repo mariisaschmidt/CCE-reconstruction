@@ -200,17 +200,17 @@ if __name__ == '__main__':
         if dataset_name == "erwTiger":
             train_data = os.path.expanduser("~/data/CLEANED_erweitert_tiger_train.jsonl")
             train_dataset = load_dataset("json", data_files=train_data, split='train')
-            if removeNoCce == 1:
-                cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
-                print(train_dataset.num_rows)
-                train_dataset = train_dataset.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
-                print(train_dataset.num_rows)
             print("Got train data")
             t = "Original sentence"
             g = "Canonical form"
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
-            epochs = 5
+            if removeNoCce == 1:
+                epochs = 10
+                print("10 EPOCHS")
+            else:
+                epochs = 5
+                print("5 EPOCHS")
         if dataset_name == "merged":
             if data_variant == "OneOld":
                 train_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_train.jsonl")
