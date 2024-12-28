@@ -9,9 +9,9 @@ def dump_json(data):
 
 def format_json(data):
     return ast.literal_eval(data)
-
+# erweitert hat 13433 Sätze
 if __name__ == '__main__':
-    df = pd.read_csv("/home/marisa/data/TIGER-canonical-forms.csv", sep=";") # 0809-TIGER-canonical-forms.csv
+    df = pd.read_csv("/Users/marisa/data/ErweiterterTIGER/TIGER_erweitert.csv", sep=";") # 0809-TIGER-canonical-forms.csv
     df = df.fillna(np.nan).replace([np.nan], [" "])
     df = df.astype(str)
 
@@ -28,13 +28,13 @@ if __name__ == '__main__':
         
         #split_indx = (len(lines)//100) * 80
 
-        train_file = open("OLD_tiger_train.jsonl", "a")
-        test_file = open("OLD_tiger_test.jsonl", "a")
+        train_file = open("erweitert_tiger_train.jsonl", "a")
+        #test_file = open("erweitert_tiger_test.jsonl", "a")
         for line in lines:
-            if(i <= 2950): #5847
+            if(i <= 10746): #5847 #2950
                 train_file.write(dump_json(format_json(line)) + '\n')
                 i += 1
-            else:
-                test_file.write(dump_json(format_json(line)) + '\n')
-                i += 1
+            # else:
+            #     test_file.write(dump_json(format_json(line)) + '\n')
+            #     i += 1
         print("Done with: " + filename)
