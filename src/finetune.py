@@ -7,11 +7,77 @@ import numpy as np
 import os 
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
 import argparse
-from datasets import DatasetDict
+from datasets import DatasetDict, Dataset
 import optuna
 import optuna.visualization as vis
 from optuna.pruners import SuccessiveHalvingPruner
 from optuna.samplers import TPESampler
+import random
+from collections import defaultdict
+
+sentence_counts = defaultdict(int)
+
+def add_prefix_to_duplicates(example):
+    global sentence_counts
+
+    sentence = example["Original sentence"]
+    gold_standard = example["Canonical form"]
+
+    prefixe = ["Er sagt:", "Sie erzählt:", "Folgendes wird berichtet:"]
+    sentence_counts[sentence] += 1
+    prefix = random.choice(prefixe)
+
+    modified_sentence = prefix + " " + sentence
+    modified_gold_standard = prefix + " " + gold_standard
+
+    #print(modified_sentence)
+    #print(modified_gold_standard)
+    #print("\n")
+
+    modified_example = {key: value for key, value in example.items()}
+    modified_example["Original sentence"] = modified_sentence
+    modified_example["Canonical form"] = modified_gold_standard
+    
+    return modified_example
+
+def filter_no_cce(example):
+    return all((example[feature] == 0) or example[feature] == "0" for feature in feature_columns)
+
+def balance_datasets(dataset_small, dataset_large, feature_columns):
+    balanced_data = []
+    
+    for feature in feature_columns:
+        # Anzahl der Sätze mit Feature = 1 im kleineren Datensatz
+        small_subset = dataset_small.filter(lambda x: (x[feature] == 1 ) or (x[feature] == "1"))
+        count = len(small_subset)
+        #print(feature, count)
+        
+        # Zufällige Auswahl der gleichen Anzahl aus dem größeren Datensatz
+        large_subset = dataset_large.filter(lambda x: (x[feature] == 1 ) or (x[feature] == "1"))
+        sampled_large_subset = large_subset.shuffle(seed=42).select(range(min(count, len(large_subset))))
+        
+        # Kombinieren der Subsets
+        balanced_data.append(small_subset)
+        balanced_data.append(sampled_large_subset)
+    
+    # Anzahl der Sätze ohne CCE im kleineren Datensatz
+    small_subset = dataset_small.filter(filter_no_cce)
+    count = len(small_subset)
+    print("NO CCE", count)
+    
+    # Zufällige Auswahl der gleichen Anzahl aus dem größeren Datensatz
+    large_subset = dataset_large.filter(lambda x: (x[feature] == 0 ) or (x[feature] == "0"))
+    sampled_large_subset = large_subset.shuffle(seed=42).select(range(min(count, len(large_subset))))
+    
+    # Kombinieren der Subsets
+    balanced_data.append(small_subset)
+    balanced_data.append(sampled_large_subset)
+    
+    # Alle balancierten Subsets zusammenfügen
+    combined_dict = {
+        key: sum((subset[key] for subset in balanced_data), []) for key in dataset_small.features
+    }
+    return Dataset.from_dict(combined_dict)
 
 def preprocess_function(examples):
     inputs = prefix + examples[t]
@@ -130,6 +196,28 @@ if __name__ == '__main__':
             g = "Canonical form"
             prefix = "reconstruct the ellipsis in this sentence: "
 
+        if dataset_name == "mergedFairLarge":
+            train_data1 = os.path.expanduser("~/data/CLEANED_tiger_train.jsonl")
+            train_data2 = os.path.expanduser("~/data/CLEANED_tüba_train.jsonl")
+
+            train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
+            train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
+            train_dataset2 = train_dataset2.rename_column("Treebank-Sentence", "Original sentence")
+            train_dataset2 = train_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
+            
+            # Balancierter Datensatz
+            feature_columns = ['BCR', 'FCR', 'Gapping', 'SGF']
+            train_dataset = balance_datasets(train_dataset1, train_dataset2, feature_columns) # groß und klein tauschen für erweiterung
+            train_dataset.map(add_prefix_to_duplicates)
+            print(train_dataset)
+            print("Got train data")
+
+            train_dataset = train_dataset.shuffle(seed=3)
+
+            t = "Original sentence"
+            g = "Canonical form"
+            prefix = "reconstruct the ellipsis in this sentence: "
+
         if dataset_name == "g4":
             data = os.path.expanduser("~/data/CLEANED_de_de_pairs.jsonl")
             dataset = load_dataset("json", data_files=data, split='train')
@@ -187,8 +275,8 @@ if __name__ == '__main__':
     print("Optimize Hyperparams")
     my_kwargs = {
     "sampler": optuna.samplers.TPESampler(),
-    "study_name": "23Dec_study",
-    "storage": "sqlite:///23Dec_BLEU_study.db",
+    "study_name": "30Dec_study",
+    "storage": "sqlite:///30Dec_BLEU_study.db",
     "load_if_exists": True
     }
     
