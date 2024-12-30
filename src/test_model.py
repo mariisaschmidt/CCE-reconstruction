@@ -3,7 +3,7 @@ import os
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import argparse
 import evaluate
-from datasets import load_dataset
+from datasets import load_dataset, concatenate_datasets
 
 def get_predictions(ds, sc):
     inputs = ds[sc]
@@ -91,6 +91,23 @@ if __name__ == '__main__':
         sent_col = "Sentence"
         gold_col = "Gold"
         add_space = False
+    elif args.corpus == "merged":
+        test_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_test.jsonl")
+        test_data2 = os.path.expanduser("~/data/CLEANED_OLD_tüba_test.jsonl")
+
+        #test_data1 = os.path.expanduser("~/data/tiger_test.jsonl")
+        #test_data2 = os.path.expanduser("~/data/tüba_test.jsonl")
+
+        test_dataset1 = load_dataset("json", data_files=test_data1, split='train')
+        test_dataset2 = load_dataset("json", data_files=test_data2, split='train')
+        test_dataset2 = test_dataset2.rename_column("Treebank-Sentence", "Original sentence")
+        test_dataset2 = test_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
+        dataset = concatenate_datasets([test_dataset1, test_dataset2])
+        corpus = "One Old Merged Test"
+
+        sent_col = "Original sentence"
+        gold_col = "Canonical form"
+        add_space = True 
     else: 
         print("provide a corpus!")
     
