@@ -122,8 +122,6 @@ if __name__ == '__main__':
     if args.corpus != "merged" and args.corpus != "merged50":
         dataset = load_dataset("json", data_files=corpus, split='train')
 
-    dataset = load_dataset("json", data_files=corpus, split='train')
-
     fcr = dataset.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
     gapping = dataset.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
     bcr = dataset.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
