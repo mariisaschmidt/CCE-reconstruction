@@ -118,6 +118,10 @@ if __name__ == '__main__':
     
     tokenizer = AutoTokenizer.from_pretrained(checkpoint)
     model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
+
+    if args.corpus != "merged" and args.corpus != "merged50":
+        dataset = load_dataset("json", data_files=corpus, split='train')
+
     dataset = load_dataset("json", data_files=corpus, split='train')
 
     fcr = dataset.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
