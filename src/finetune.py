@@ -278,8 +278,8 @@ if __name__ == '__main__':
     print("Optimize Hyperparams")
     my_kwargs = {
     "sampler": optuna.samplers.TPESampler(),
-    "study_name": "31Dec_study",
-    "storage": "sqlite:///31Dec_EM_study.db",
+    "study_name": "01Jan_study",
+    "storage": "sqlite:///01Jan_EM+BLEU_study.db",
     "load_if_exists": True
     }
     
