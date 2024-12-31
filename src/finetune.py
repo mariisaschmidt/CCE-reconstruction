@@ -116,7 +116,7 @@ def compute_metrics(eval_preds):
     #result = {"exact_match": result["exact_match"]}
 
     result = {"bleu": result_bleu["bleu"],
-              "exact_match": result_em["em"]}
+              "exact_match": result_em["exact_match"]}
 
     #prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
     #result["gen_len"] = np.mean(prediction_lens)
