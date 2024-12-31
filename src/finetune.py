@@ -109,11 +109,14 @@ def compute_metrics(eval_preds):
 
     decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
 
-    # result = metric.compute(predictions=decoded_preds, references=decoded_labels)
-    # result = {"bleu": result["bleu"]}
+    result_bleu = metric.compute(predictions=decoded_preds, references=decoded_labels)
+    #result = {"bleu": result["bleu"]}
 
-    result = metric_em.compute(predictions=decoded_preds, references=decoded_labels, ignore_case=True, ignore_punctuation=True)
-    result = {"exact_match": result["exact_match"]}
+    result_em= metric_em.compute(predictions=decoded_preds, references=decoded_labels, ignore_case=True, ignore_punctuation=True)
+    #result = {"exact_match": result["exact_match"]}
+
+    result = {"bleu": result_bleu["bleu"],
+              "exact_match": result_em["em"]}
 
     #prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
     #result["gen_len"] = np.mean(prediction_lens)
