@@ -109,8 +109,7 @@ if __name__ == '__main__':
         dataset = concatenate_datasets([test_dataset1, test_dataset2])
         corpus = "One Old Merged Test"
 
-        for split in dataset.keys():
-            dataset[split].to_json(f"MergedEvalData-{split}.jsonl")
+        dataset.to_json("MergedEvalData.jsonl")
         print("Saved dataset!")
 
         sent_col = "Original sentence"
