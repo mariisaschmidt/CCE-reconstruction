@@ -70,7 +70,7 @@ if __name__ == '__main__':
     sent_col = "Masked"
     tokenizer = T5Tokenizer.from_pretrained(checkpoint)
     model = T5ForConditionalGeneration.from_pretrained(checkpoint)
-    dataset = datasets.load_from_disk(os.path.expanduser("~/data/MaskedEvalDataset"))
+    dataset = datasets.load_from_disk(os.path.expanduser("~/data/Masked+CCE_EvalDataset"))
 
     fcr = dataset.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
     gapping = dataset.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
