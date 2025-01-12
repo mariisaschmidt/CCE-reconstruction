@@ -20,6 +20,11 @@ def get_predictions(inputs):
 def add_one_space(sentence):
     return sentence + " "
 
+def remove_brackets_and_suffix(sentence):
+    # converts [word cce-type] to word
+    cleaned_sentence = re.sub(r'\[([^\s\]]+)\s[^\]]+\]', r'\1', sentence)
+    return cleaned_sentence
+
 def evaluate_model(file, bleu, exmatch, dataset, name, add_space):
     inputs = dataset[sent_col]
     predictions = get_predictions(inputs)
@@ -32,6 +37,8 @@ def evaluate_model(file, bleu, exmatch, dataset, name, add_space):
     file.write("======================" + name + "============================== \n")
     for j in range(0,2): # define multiple evaluation loops
         for i in range(0, len(predictions)):
+            predictions[i] = remove_brackets_and_suffix(predictions[i])
+            golds[i] = remove_brackets_and_suffix(golds[i])
             if j == 0:
                 file.write("====================== PRED VS GOLD ============================== \n")
                 file.write("pred: " + predictions[i] + "\n")
