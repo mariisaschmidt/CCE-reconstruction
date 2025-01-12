@@ -1,9 +1,9 @@
-echo "Start evaluation of Masked Small"
-python3 test_model.py --checkpoint /home/marisa/models/0601_10Ep_FairMaskedSmall --corpus merged --prefix GettingDataForDenis
+echo "Start evaluation of Masked 5 Eps"
+python3 test_model.py --checkpoint /home/marisa/models/1101_5Ep_CCEFairMaskedSmall --corpus merged --prefix 1201_5Ep_NoMasked_Masked+CCE_Small
 
-# python3 test_model.py --checkpoint /home/marisa/models/0601_5Ep_FairMaskedSmall --corpus merged --prefix 0601_NoMaskedEval_5Ep_MaskedSmall
+python3 test_model.py --checkpoint /home/marisa/models/1101_5Ep_CCEFairMaskedBase --corpus merged --prefix 1201_5Ep_NoMasked_Masked+CCE_Base
 
-# echo "Start evaluation of Masked Base"
-# python3 test_model.py --checkpoint /home/marisa/models/0601_10Ep_FairMaskedBase --corpus merged --prefix 0601_NoMaskedEval_MaskedBase
+echo "Start evaluation of Masked 10 Eps"
+python3 test_model.py --checkpoint /home/marisa/models/1101_10Ep_CCEFairMaskedSmall --corpus merged --prefix 1201_10Ep_NoMasked_Masked+CCE_Small
 
-# python3 test_model.py --checkpoint /home/marisa/models/0601_5Ep_FairMaskedBase --corpus merged --prefix 0601_NoMaskedEval_5Ep_MaskedBase
+python3 test_model.py --checkpoint /home/marisa/models/1101_10Ep_CCEFairMaskedBase --corpus merged --prefix 1201_10Ep_NoMasked_Masked+CCE_Base

@@ -35,6 +35,11 @@ def get_predictions(ds, sc):
 #     sentence = sentence.replace("\/", "")
 #     return sentence
 
+def remove_brackets_and_suffix(sentence):
+    # converts [word cce-type] to word
+    cleaned_sentence = re.sub(r'\[([^\s\]]+)\s[^\]]+\]', r'\1', sentence)
+    return cleaned_sentence
+
 def add_one_space(sentence):
     return sentence + " "
 
@@ -49,6 +54,9 @@ def evaluate_model(file, bleu, exmatch, dataset, name, add_space):
     file.write("======================" + name + "============================== \n")
     for j in range(0,2): # define multiple evaluation loops
         for i in range(0, len(predictions)):
+            if removeCCEType:
+                predictions[i] = remove_brackets_and_suffix(predictions[i])
+                golds[i] = remove_brackets_and_suffix(golds[i])
             if j == 0:
                 file.write("====================== PRED VS GOLD ============================== \n")
                 file.write("pred: " + predictions[i] + "\n")
@@ -71,8 +79,13 @@ if __name__ == '__main__':
     parser.add_argument("--prefix", type=str)
     args = parser.parse_args()
 
+    removeCCEType = False
+
     if args.checkpoint:
         checkpoint = args.checkpoint
+        if "Masked" in checkpoint:
+            removeCCEType = True 
+            print("Removing brackets and suffix from sentences!")
     else:
         print("You need to specify the path to the model checkpoint you want to load!")
         checkpoint = " "
