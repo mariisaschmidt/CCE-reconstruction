@@ -5,17 +5,16 @@ from transformers import AutoTokenizer
 from transformers import DataCollatorForSeq2Seq
 import evaluate
 import numpy as np 
-import re
 import os 
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
 import argparse
-from datasets import DatasetDict, Dataset
+from datasets import Dataset
 from collections import defaultdict
 import random
-import sys
 
 sentence_counts = defaultdict(int)
 
+# This function add one of three prefixes to a sentence 
 def add_prefix_to_duplicates(example):
     global sentence_counts
 
@@ -29,19 +28,17 @@ def add_prefix_to_duplicates(example):
     modified_sentence = prefix + " " + sentence
     modified_gold_standard = prefix + " " + gold_standard
 
-    #print(modified_sentence)
-    #print(modified_gold_standard)
-    #print("\n")
-
     modified_example = {key: value for key, value in example.items()}
     modified_example["Original sentence"] = modified_sentence
     modified_example["Canonical form"] = modified_gold_standard
     
     return modified_example
 
+# This function removes sentences that don't contain cce 
 def filter_no_cce(example):
     return all((example[feature] == 0) or example[feature] == "0" for feature in feature_columns)
 
+# This function is used to create a combined dataset that contains 50% data from dataset_small and 50% data from dataset_large
 def balance_datasets(dataset_small, dataset_large, feature_columns):
     balanced_data = []
     
@@ -78,24 +75,27 @@ def balance_datasets(dataset_small, dataset_large, feature_columns):
     }
     return Dataset.from_dict(combined_dict)
 
+# Simple preprocessing function that adds a prefix to the input sentence and apploes tokenization to get the model inputs
 def preprocess_function(examples):
     inputs = prefix + examples[t]
     targets = examples[g]
     model_inputs = tokenizer(inputs, text_target=targets, max_length=512, truncation=True, padding='longest', return_tensors='pt')
     return model_inputs
 
+# Somehow there is a [] too much, so we remove that here
 def correct_inputs_masks_labels(examples):
     examples['input_ids'] = examples['input_ids'][0] 
     examples['attention_mask'] = examples['attention_mask'][0] 
     examples['labels'] = examples['labels'][0] 
     return examples
 
+# Simple postprocessing function
 def postprocess_text(preds, labels):
     preds = [pred.strip() for pred in preds]
     labels = [[label.strip()] for label in labels]
-
     return preds, labels
 
+# Compute the evaluation metrics based on the predictions
 def compute_metrics(eval_preds):
     preds, labels = eval_preds
     if isinstance(preds, tuple):
@@ -109,20 +109,21 @@ def compute_metrics(eval_preds):
     decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
 
     result = metric.compute(predictions=decoded_preds, references=decoded_labels)
-    result = {"bleu": result["bleu"]}
+    result = {"bleu": result["bleu"]} # compute bleu score in this case
 
     prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
-    result["gen_len"] = np.mean(prediction_lens)
+    result["gen_len"] = np.mean(prediction_lens) # compute mean of length of the predicted sentences
     result = {k: round(v, 4) for k, v in result.items()}
     return result
 
 if __name__ == '__main__':
+    # since the vm has no UI, this code relies on command line arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=str)
     parser.add_argument("--model_name", type=str)
     parser.add_argument("--pretrained_model", type=str)
-    parser.add_argument("--remove_no_cce", type=int)
-    parser.add_argument("--data_variant", type=str)
+    parser.add_argument("--remove_no_cce", type=int) # should sentences without cce be removed? 1 = yes
+    parser.add_argument("--data_variant", type=str) # which variant of the dataset should be used? AllOld, AllNew, OneOld, OneNew, TSD 
     args = parser.parse_args()
 
     if args.dataset:
@@ -150,6 +151,13 @@ if __name__ == '__main__':
         else: 
             print("You need to provide a german llm for finetuning with ellipsis data!")
     
+    # The following block of code just determines 
+    #   - which dataset to load
+    #   - if it has to be further processed
+    #   - how the relevant columns are called
+    #   - values for batchsize and number of epochs
+    #   - task prefix 
+    # based on the given command line arguments (end of this block is line 404)
     if dataset_name != "":
         if dataset_name == "tüba":
             if data_variant == "OneOld":
@@ -395,17 +403,18 @@ if __name__ == '__main__':
         
     print("Loaded Dataset!")
 
-    tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+    tokenizer = AutoTokenizer.from_pretrained(checkpoint) # load tokenizer for the model
 
     source_lang = "de"
     target_lang = "de"
 
     dataset = train_dataset 
-    dataset = dataset.filter(lambda example: len(example[t]) >= 20)
+    # don't use sentences with length < 20
+    dataset = dataset.filter(lambda example: len(example[t]) >= 20) 
     dataset = dataset.filter(lambda example: len(example[g]) >= 20)
 
     print("Preprocess Data: ")
-    tokenized_dataset = dataset.map(preprocess_function, batched=False)
+    tokenized_dataset = dataset.map(preprocess_function, batched=False) # preprocess
 
     print("Correct the outputs of preprocess: ")
     tokenized_dataset = tokenized_dataset.map(correct_inputs_masks_labels, batched=False)
@@ -415,12 +424,13 @@ if __name__ == '__main__':
 
     print(tokenized_dataset)
 
-    data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint)   
+    data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint) # load data collator
 
-    metric = evaluate.load("bleu")
+    metric = evaluate.load("bleu") 
 
     model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
 
+    # set logging directory
     log_dir = os.path.expanduser("~/models/" + model_name + "/logs")
 
     training_args = Seq2SeqTrainingArguments(
@@ -437,7 +447,7 @@ if __name__ == '__main__':
     fp16=True, # set true when cuda available
     push_to_hub=False,
     generation_max_length=256,
-    log_level="debug",
+    log_level="debug", # enable more logs
     )
 
     trainer = Seq2SeqTrainer(
