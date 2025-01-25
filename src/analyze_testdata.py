@@ -1,5 +1,17 @@
 import os 
 from datasets import load_dataset, concatenate_datasets
+import nltk
+import numpy as np 
+
+def get_sentence_lengths(text):
+    sentences = nltk.sent_tokenize(text)  # Sätze aufteilen
+    word_counts = [len(sentence.split()) for sentence in sentences]  # Wörter pro Satz zählen
+    return word_counts
+
+def get_avg_length(dataset, text_column):
+    all_lengths = [length for example in dataset[text_column] for length in get_sentence_lengths(example)]
+    average_length = np.mean(all_lengths)
+    print(f"Durchschnittliche Anzahl Wörter pro Satz: {average_length:.4f} Wörter. \n")
 
 if __name__ == '__main__':
     test_data1 = os.path.expanduser("~/data/CLEANED_OLD_tiger_test.jsonl")
@@ -69,6 +81,9 @@ if __name__ == '__main__':
     print("MERGED - NoCCE")  
     print(noCCE)
 
+    print("SATZLÄNGE")
+    get_avg_length(dataset, "Reconstructed-Sentence")
+
     print("Creating a 50:50 Dataset now:")
     final_fcr = fcr1.select(range(111))
     final_gapping = gapping1.select(range(63))
@@ -79,6 +94,10 @@ if __name__ == '__main__':
 
     fifty_fifty_dataset = concatenate_datasets([final_dataset, fcr2, gapping2, bcr2, sgf2, noCCE1])
 
+    print("SATZLÄNGE")
+    get_avg_length(fifty_fifty_dataset, "Reconstructed-Sentence")
+
     print("======================================== \n")
     print("50:50 - Gesamt")
     print(fifty_fifty_dataset)
+

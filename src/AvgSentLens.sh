@@ -77,3 +77,8 @@ python3 get_avg_sentence_length.py --dataset mergedFair --remove_no_cce 0 --data
 echo "============================================================="
 echo "Start training of: All New 5050 Large"
 python3 get_avg_sentence_length.py --dataset mergedFairLarge --remove_no_cce 0 --data_variant AllNew
+
+
+echo "xxxxxxxxxxxxxxxxxxxxxxxx"
+echo "Info about Eval data"
+python3 analyze_testdata.py 
