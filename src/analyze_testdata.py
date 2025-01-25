@@ -82,7 +82,7 @@ if __name__ == '__main__':
     print(noCCE)
 
     print("SATZLÄNGE")
-    get_avg_length(dataset, "Reconstructed-Sentence")
+    get_avg_length(dataset, "Canonical form")
 
     print("Creating a 50:50 Dataset now:")
     final_fcr = fcr1.select(range(111))
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     fifty_fifty_dataset = concatenate_datasets([final_dataset, fcr2, gapping2, bcr2, sgf2, noCCE1])
 
     print("SATZLÄNGE")
-    get_avg_length(fifty_fifty_dataset, "Reconstructed-Sentence")
+    get_avg_length(fifty_fifty_dataset, "Canonical form")
 
     print("======================================== \n")
     print("50:50 - Gesamt")
