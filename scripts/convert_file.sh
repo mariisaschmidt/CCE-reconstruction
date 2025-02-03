@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+cd ../src/
+
 file_name=${1}
 
 local_file_name=$(echo "${file_name}" | cut -f8 -d/)
@@ -12,3 +14,5 @@ wget ${file_name}
 
 # rm "${bare_local_file_name}.txt"
 rm ${local_file_name}
+
+cd ..
