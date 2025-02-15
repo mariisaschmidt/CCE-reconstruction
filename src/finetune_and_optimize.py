@@ -7,17 +7,14 @@ import numpy as np
 import os 
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
 import argparse
-from datasets import DatasetDict, Dataset
+from datasets import Dataset
 import optuna
-import optuna.visualization as vis
-from optuna.pruners import SuccessiveHalvingPruner
-from optuna.samplers import TPESampler
 import random
 from collections import defaultdict
 
 sentence_counts = defaultdict(int)
 
-def add_prefix_to_duplicates(example):
+def add_prefix_to_duplicates(example): # add prefix to sentences that occur more than once
     global sentence_counts
 
     sentence = example["Original sentence"]
@@ -40,10 +37,10 @@ def add_prefix_to_duplicates(example):
     
     return modified_example
 
-def filter_no_cce(example):
+def filter_no_cce(example): # filter out examples without CCE
     return all((example[feature] == 0) or example[feature] == "0" for feature in feature_columns)
 
-def balance_datasets(dataset_small, dataset_large, feature_columns):
+def balance_datasets(dataset_small, dataset_large, feature_columns): # balance the datasets
     balanced_data = []
     
     for feature in feature_columns:
@@ -123,27 +120,10 @@ def compute_metrics(eval_preds):
     result = {k: round(v, 4) for k, v in result.items()}
     return result
 
-# def run_optuna():
-#     pruner = SuccessiveHalvingPruner()
-#     sampler = TPESampler()
-#     study = optuna.create_study(direction="maximize", sampler=sampler, pruner=pruner)
-#     study.optimize(lambda trial: objective(trial), n_trials=50)
-
-#     print("Best hyperparameters:", study.best_params)
-
-#     fig1 = vis.plot_optimization_history(study)
-#     fig2 = vis.plot_param_importances(study)
-#     fig3 = vis.plot_parallel_coordinate(study)
-
-#     # Graphen speichern
-#     fig1.write_image("optimization_history.png")
-#     fig2.write_image("param_importances.png")
-#     fig3.write_image("parallel_coordinates.png")
-
 def model_init():
     return AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
 
-def param_space(trial):
+def param_space(trial): # define hyperparameter search space
     return {
         "per_device_train_batch_size": trial.suggest_categorical            ("per_device_train_batch_size", [4, 8, 16]),
         "learning_rate": trial.suggest_float("learning_rate", 1e-5, 1e-4, log=True),
@@ -247,6 +227,7 @@ if __name__ == '__main__':
         print("Create Train-Test-Split: ")
         tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2)
 
+    # Define the model and training arguments
     metric = evaluate.load("bleu")
     metric_em = evaluate.load("exact_match") 
 

@@ -1,83 +1,85 @@
+echo "This script will get information about the average sentence length in each dataset."
+
 cd ../src
 
-echo "Start TSD"
-echo "Start TigerSmall"
+echo "TSD models"
+echo "TigerSmall"
 python3 get_avg_sentence_length.py --dataset tiger --remove_no_cce 0 --data_variant TSD
 
-echo "Start TübaSmall"
+echo "TübaSmall"
 python3 get_avg_sentence_length.py --dataset tüba --remove_no_cce 0 --data_variant TSD
 
-echo "Start MergedSmall"
+echo "MergedSmall"
 python3 get_avg_sentence_length.py --dataset merged --remove_no_cce 0 --data_variant TSD
 
 echo "============================================================="
 
-echo "Start training of: Exact Match / One Old"
-echo "Start TigerSmall"
+echo "Exact Match / One Old"
+echo "TigerSmall"
 python3 get_avg_sentence_length.py --dataset tiger --remove_no_cce 0 --data_variant OneOld
 
-echo "Start TübaSmall"
+echo "TübaSmall"
 python3 get_avg_sentence_length.py --dataset tüba --remove_no_cce 0 --data_variant OneOld
 
-echo "Start MergedSmall"
+echo "MergedSmall"
 python3 get_avg_sentence_length.py --dataset merged --remove_no_cce 0 --data_variant OneOld
 
 echo "============================================================="
-echo "Start training of: One Old No No CCE"
-echo "Start TigerSmall"
+echo "One Old No No CCE"
+echo "TigerSmall"
 python3 get_avg_sentence_length.py --dataset tiger --remove_no_cce 1 --data_variant OneOld
 
-echo "Start TübaSmall"
+echo "TübaSmall"
 python3 get_avg_sentence_length.py --dataset tüba --remove_no_cce 1 --data_variant OneOld
 
-echo "Start MergedSmall"
+echo "MergedSmall"
 python3 get_avg_sentence_length.py --dataset merged --remove_no_cce 1 --data_variant OneOld
 
 echo "============================================================="
-echo "Start training of: One New"
-echo "Start TigerSmall"
+echo "One New"
+echo "TigerSmall"
 python3 get_avg_sentence_length.py --dataset tiger --remove_no_cce 0 --data_variant OneNew
 
-echo "Start TübaSmall"
+echo "TübaSmall"
 python3 get_avg_sentence_length.py --dataset tüba --remove_no_cce 0 --data_variant OneNew
 
-echo "Start MergedSmall"
+echo "MergedSmall"
 python3 get_avg_sentence_length.py --dataset merged --remove_no_cce 0 --data_variant OneNew
 
 echo "============================================================="
-echo "Start training of: All Old"
-echo "Start TigerSmall"
+echo "All Old"
+echo "TigerSmall"
 python3 get_avg_sentence_length.py --dataset tiger --remove_no_cce 0 --data_variant AllOld
 
-echo "Start TübaSmall"
+echo "TübaSmall"
 python3 get_avg_sentence_length.py --dataset tüba --remove_no_cce 0 --data_variant AllOld
 
-echo "Start MergedSmall"
+echo "MergedSmall"
 python3 get_avg_sentence_length.py --dataset merged --remove_no_cce 0 --data_variant AllOld
 
 echo "============================================================="
-echo "Start training of: All New"
-echo "Start TigerSmall"
+echo "All New"
+echo "TigerSmall"
 python3 get_avg_sentence_length.py --dataset tiger --remove_no_cce 0 --data_variant AllNew
 
-echo "Start TübaSmall"
+echo "TübaSmall"
 python3 get_avg_sentence_length.py --dataset tüba --remove_no_cce 0 --data_variant AllNew
 
-echo "Start MergedSmall"
+echo "MergedSmall"
 python3 get_avg_sentence_length.py --dataset merged --remove_no_cce 0 --data_variant AllNew
 
 echo "============================================================="
-echo "Start training of: All New Mixed"
+echo "All New Mixed"
 
-echo "Start MergedSmall"
+echo "MergedSmall"
 python3 get_avg_sentence_length.py --dataset mergedMixed --remove_no_cce 0 --data_variant AllNew
 
 echo "============================================================="
-echo "Start training of: All New 5050"
+echo "All New 5050"
 python3 get_avg_sentence_length.py --dataset mergedFair --remove_no_cce 0 --data_variant AllNew
 
 echo "============================================================="
-echo "Start training of: All New 5050 Large"
+echo "All New 5050 Large"
 python3 get_avg_sentence_length.py --dataset mergedFairLarge --remove_no_cce 0 --data_variant AllNew
 
 

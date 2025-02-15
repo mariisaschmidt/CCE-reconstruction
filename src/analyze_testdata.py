@@ -1,19 +1,29 @@
+# 
+
 import os 
 from datasets import load_dataset, concatenate_datasets
 import nltk
 import numpy as np 
 
+## \brief Splits text into sentences and counts words in each sentence.
+#  \param text The input text to be processed.
+#  \return A list of word counts for each sentence.
 def get_sentence_lengths(text):
     sentences = nltk.sent_tokenize(text)  # Sätze aufteilen
     word_counts = [len(sentence.split()) for sentence in sentences]  # Wörter pro Satz zählen
     return word_counts
 
+## \brief Calculates and prints the average sentence length in a dataset.
+#  \param dataset The dataset containing text data.
+#  \param text_column The column name in the dataset containing the text.
 def get_avg_length(dataset, text_column):
     all_lengths = [length for example in dataset[text_column] for length in get_sentence_lengths(example)]
     average_length = np.mean(all_lengths)
     print(f"Durchschnittliche Anzahl Wörter pro Satz: {average_length:.4f} Wörter. \n")
 
+## \
 if __name__ == '__main__':
+    # Load the test data
     test_data1 = os.path.expanduser("../data/CLEANED_OLD_tiger_test.jsonl")
     test_data2 = os.path.expanduser("../data/CLEANED_OLD_tüba_test.jsonl")
 
@@ -23,6 +33,7 @@ if __name__ == '__main__':
     test_dataset2 = test_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
     dataset = concatenate_datasets([test_dataset1, test_dataset2])
 
+    # Filter the datasets
     fcr1 = test_dataset1.filter(lambda example: example["FCR"] == 1 or example["FCR"] == "1")
     gapping1 = test_dataset1.filter(lambda example: example["Gapping"] == 1 or example["Gapping"] == "1")
     bcr1 = test_dataset1.filter(lambda example: example["BCR"] == 1 or example["BCR"] == "1")
@@ -41,6 +52,7 @@ if __name__ == '__main__':
     sgf = dataset.filter(lambda example: example["SGF"] == 1 or example["SGF"] == "1")
     noCCE = dataset.filter(lambda example: (example["SGF"] == 0 or example["SGF"] == "0") and (example["BCR"] == 0 or example["BCR"] == "0") and (example["FCR"]== 0 or example["FCR"] == "0") and (example["Gapping"] == 0 or example["Gapping"] == "0"))
 
+    # Print some statistics
     print("Hier ein paar Info's über die Testdaten: ")
     print("TIGER - Gesamt")
     print(test_dataset1)
@@ -99,6 +111,7 @@ if __name__ == '__main__':
     print("NoCCE: ")
     get_avg_length(noCCE, "Canonical form")
 
+    # Create a 50:50 dataset
     print("Creating a 50:50 Dataset now:")
     final_fcr = fcr1.select(range(111))
     final_gapping = gapping1.select(range(63))
@@ -109,6 +122,7 @@ if __name__ == '__main__':
 
     fifty_fifty_dataset = concatenate_datasets([final_dataset, fcr2, gapping2, bcr2, sgf2, noCCE1])
 
+    # Print some more statistics
     print("SATZLÄNGE")
     get_avg_length(fifty_fifty_dataset, "Canonical form")
 

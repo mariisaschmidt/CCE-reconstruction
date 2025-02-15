@@ -31,7 +31,6 @@ def compute_metrics(eval_preds):
 
     return result
 
-# Tokenisierung
 def tokenize_function(example):
     inputs = tokenizer(example["Masked"], padding="max_length", truncation=True, max_length=128)
     targets = tokenizer(example["Target"], padding="max_length", truncation=True, max_length=128)
@@ -57,6 +56,7 @@ if __name__ == '__main__':
 
     print("CHECK:", checkpoint)
 
+    # Datensatz laden
     dataset = datasets.load_from_disk(os.path.expanduser("../data/FairMasked+CCE_TrainTestDataset"))
 
     batchsize = 4
@@ -66,8 +66,10 @@ if __name__ == '__main__':
     tokenized_dataset = dataset.map(tokenize_function, batched=True)
     print(tokenized_dataset)
 
+    # Device auswählen
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
 
+    # Modell und Metrik laden
     model = T5ForConditionalGeneration.from_pretrained(checkpoint) 
     metric = evaluate.load("bleu")
     log_dir = os.path.expanduser("../models/" + model_name + "/logs")
