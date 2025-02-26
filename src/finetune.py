@@ -11,6 +11,7 @@ import argparse
 from datasets import Dataset
 from collections import defaultdict
 import random
+import sys
 
 sentence_counts = defaultdict(int)
 
@@ -423,6 +424,12 @@ if __name__ == '__main__':
     tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2, seed=3)
 
     print(tokenized_dataset)
+    ds_name = "csv_" + dataset_name + "_" + data_variant + "_" + str(removeNoCce)
+    print("Dataset Name: ", ds_name)
+    tokenized_dataset["train"].to_csv(ds_name + "_train.csv")
+    tokenized_dataset["test"].to_csv(ds_name + "_test.csv")
+
+    sys.exit()
 
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint) # load data collator
 
