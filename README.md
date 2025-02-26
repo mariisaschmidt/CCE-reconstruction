@@ -3,14 +3,14 @@ This is the top level Readme.
 For more information have a look at src/README.md
 
 ## Project Structure
-CCE-reconstruction/
-├── data/                   # Directory for corpus files
-├── models/                 # Directory for model files
-├── scripts/                # Directory for bash scripts
-├── src/                    # Directory for source code
-├── visualizations/         # Directory for visualization notebooks
-├── run.sh                  # Bash script to set up and run the system
-└── README.md               # Top level Readme
+- CCE-reconstruction/
+  - data/                   -> Directory for corpus files
+  - models/                 -> Directory for model files
+  - scripts/                -> Directory for bash scripts
+  - src/                    -> Directory for source code
+  - visualizations/         -> Directory for visualization notebooks
+  - run.sh                  -> Bash script to set up and run the system
+  - README.md               -> Top level Readme
 
 ## Quickly run the system
 For convenience we offer a bash script to simplify using our system. 
