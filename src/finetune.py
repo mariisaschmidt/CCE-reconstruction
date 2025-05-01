@@ -393,6 +393,45 @@ if __name__ == '__main__':
             batchsize = 4
             prefix = "reconstruct the ellipsis in this sentence: "
             epochs = 10
+        if dataset_name == "ECBAE":
+            # TIGER ERWEITERT + TüBa 
+            # Ein Gold, Aktualisiert
+            # Gemischt
+            train_data1 = os.path.expanduser("../data/CLEANED_erweitert_tiger_train.jsonl") # Erweiterter TIGER
+            train_data2 = os.path.expanduser("../data/CLEANED_tüba_train.jsonl") # TüBa
+
+            train_dataset1 = load_dataset("json", data_files=train_data1, split='train')
+            train_dataset2 = load_dataset("json", data_files=train_data2, split='train')
+            train_dataset2 = train_dataset2.rename_column("Treebank-Sentence", "Original sentence")
+            train_dataset2 = train_dataset2.rename_column("Reconstructed-Sentence", "Canonical form")
+            if removeNoCce == 1:
+                cols_to_check = ['BCR', 'FCR', 'Gapping', 'SGF']
+                print(train_dataset1.num_rows)
+                train_dataset1 = train_dataset1.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
+                print(train_dataset1.num_rows)
+                print(train_dataset2.num_rows)
+                train_dataset2 = train_dataset2.filter(lambda row: not all(row[col] == "0" for col in cols_to_check))
+                print(train_dataset2.num_rows)
+            cols_to_remove1 = train_dataset1.column_names
+            cols_to_remove2 = train_dataset2.column_names
+            cols_to_remove2.remove("Original sentence")
+            cols_to_remove2.remove("Canonical form")
+            train_dataset2 = train_dataset2.remove_columns(cols_to_remove2)
+            cols_to_remove1.remove("Original sentence")
+            cols_to_remove1.remove("Canonical form")
+            train_dataset1 = train_dataset1.remove_columns(cols_to_remove1)
+            train_dataset = concatenate_datasets([train_dataset1, train_dataset2])
+            print("Got train data")
+
+            train_dataset = train_dataset.shuffle(seed=3)
+            #dataset.save_to_disk("MixedMergedTrainDataset")
+            
+            t = "Original sentence"
+            g = "Canonical form"
+            batchsize = 4
+            prefix = "reconstruct the ellipsis in this sentence: "
+            epochs = 10 #5
+
         if dataset_name == "g4":
             data = os.path.expanduser("../data/CLEANED_de_de_pairs.jsonl")
             train_dataset = load_dataset("json", data_files=data, split='train')
@@ -424,12 +463,12 @@ if __name__ == '__main__':
     tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.2, seed=3)
 
 # UNCOMMENT ONLY IF YOU WANT TO SAVE THE DATASET AS CSV
-    # print(tokenized_dataset)
-    # ds_name = "csv_" + dataset_name + "_" + data_variant + "_" + str(removeNoCce)
-    # print("Dataset Name: ", ds_name)
-    # tokenized_dataset["train"].to_csv(ds_name + "_train.csv")
-    # tokenized_dataset["test"].to_csv(ds_name + "_test.csv")
-    # sys.exit()
+    print(tokenized_dataset)
+    ds_name = "csv_" + dataset_name + "_" + data_variant + "_" + str(removeNoCce)
+    print("Dataset Name: ", ds_name)
+    tokenized_dataset["train"].to_csv(ds_name + "_train.csv")
+    tokenized_dataset["test"].to_csv(ds_name + "_test.csv")
+    #sys.exit()
 
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=checkpoint) # load data collator
 
