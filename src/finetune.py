@@ -490,7 +490,7 @@ if __name__ == '__main__':
     save_strategy="no",
     num_train_epochs=epochs,
     predict_with_generate=True,
-    fp16=False, #True, # set true when cuda available
+    fp16=True, # set true when cuda available
     push_to_hub=False,
     generation_max_length=256,
     log_level="debug", # enable more logs
