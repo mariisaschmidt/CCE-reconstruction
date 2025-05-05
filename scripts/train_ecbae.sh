@@ -7,6 +7,6 @@ echo "Start training of: TigerErw+TüBa Mixed One New Mixed"
 echo "TigerBase"
 python3 finetune.py --dataset ECBAE --model_name 10Ep_TErw+TB_Base --pretrained_model ../models/Aug25Base --remove_no_cce 0
 
-python3 test_model.py --checkpoint ../models/10Ep_TErw+TB_Base --corpus merged --prefix 01052025_ecbae_TErw+TB_Base
+python3 test_model.py --checkpoint ../models/10Ep_TErw+TB_Base --corpus merged --prefix 05052025_ecbae_TErw+TB_Base
 
 cd ../
