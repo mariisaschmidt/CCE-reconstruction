@@ -57,7 +57,8 @@ if __name__ == '__main__':
     print("CHECK:", checkpoint)
 
     # Datensatz laden
-    dataset = datasets.load_from_disk(os.path.expanduser("../data/FairMasked+CCE_TrainTestDataset"))
+    # dataset = datasets.load_from_disk(os.path.expanduser("../data/FairMasked+CCE_TrainTestDataset"))
+    dataset = datasets.load_from_disk(os.path.expanduser("../data/ECBAEMasked_TrainTestDataset"))
 
     batchsize = 4
     epochs = 5
